@@ -1,0 +1,4 @@
+node_modules/
+v1/htservdocs/settings.js
+v1/registered.txt
+.crossbar/key.priv

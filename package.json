@@ -1,0 +1,26 @@
+{
+  "name": "Kadecot-JS",
+  "version": "0.0.0",
+  "description": "node.js version of Kadecot",
+  "main": "main.js",
+  "dependencies": {
+    "autobahn": "~0.10.1",
+    "echonet-lite": "~0.0.15",
+    "express": "~4.14.0",
+    "websocket": "~1.0.23",
+    "when": "~3.7.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SonyCSL/Kadecot-JS.git"
+  },
+  "author": "Shigeru Owada et al.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SonyCSL/Kadecot-JS/issues"
+  }
+}
