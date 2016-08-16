@@ -1,3 +1,3 @@
-var REGIST_URL = '' ; // Kadecot cloud terminal registartion URL
-var UUID = '' ; // Random UUID string (typically 45 characters)
-var ACCOUNT_NAME = 'HelloKadecot' ; // Arbitrary name of Kadecot
+var REGIST_URL = '' ; // Kadecot cloud terminal registartion URL (Eg. https://[cloud host name]/terminal_regist.html
+var UUID = '' ; // Random UUID string (typically 45 random characters)
+var ACCOUNT_NAME = 'HelloKadecot' ; // Arbitrary name of your Kadecot user (Eg. Arbitrary string is accepted, but you may want to change to your favorite name
