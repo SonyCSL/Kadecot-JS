@@ -34,7 +34,12 @@ Then install node libraries by hitting
 $ npm install
 ```
 
-Rename v1/htserverdocs/settings.js.orig to v1/htserverdocs/settings.js and edit it.
+Also rename v1/htserverdocs/settings.js.orig to v1/htserverdocs/settings.js and edit it.
+
+```
+$ cp v1/htserverdocs/settings.js.orig v1/htserverdocs/settings.js
+$ vi v1/htserverdocs/settings.js
+```
 
 ## Running
 run crossbar by:
