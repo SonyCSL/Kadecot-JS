@@ -32,12 +32,7 @@ cloudsock.on('connect', function(connection) {
  
 
 exports.connect = function( terminal_token,bridge_server ){
-	log('Connect to:') ;
-	console.log(arguments) ;
-
-	// httpHeaders.put("origin", "kadecot://" + mService.getPackageName());
-	// httpHeaders.put("Sec-WebSocket-Protocol", "wamp.2.json");
-
+	// Redudant setting of 'wamp.2.json'?
 	cloudsock.connect('wss://'+bridge_server+'/bridge?k='+terminal_token
 		, 'wamp.2.json'
 		,'kadecot://com.sonycsl.Kadecot',{'Sec-WebSocket-Protocol':'wamp.2.json'});

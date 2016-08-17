@@ -13,6 +13,7 @@ try {
 } catch (e) {   // When running in browser, AutobahnJS will be included without a module system
    var when = autobahn.when;
 }
+var PluginInterface = require('./plugin-interface.js') ;
 
 //////////////////////////////////////
 // Just start plugins
@@ -30,7 +31,8 @@ function init_plugins(){
 		files.filter(function(dirname){
 			return fs.lstatSync(PLUGINS_FOLDER+dirname).isDirectory();
 		}).forEach(function (dirname) {
-			require('./plugins/'+dirname+'/index.js').init(REALM,ROUTER_URL) ;
+			var pluginInterface = new PluginInterface(REALM,ROUTER_URL,dirname /* as PLUGIN_PREFIX */) ;
+			require('./plugins/'+dirname+'/index.js').init(pluginInterface) ;
 		});
 	});
 }
@@ -83,7 +85,7 @@ exports.init = function(_REALM,_ROUTER_URL){
 				if( plugins[prefix] != undefined ){
 					log('Duplicate plugin registration request for ' + prefix) ;
 					session.call("wamp.session.kill"
-						, [session_id], {reason: "because", message: "foobar"}); //.then(session.log, session.log)
+						, [session_id], {reason: "A plugin with same prefix already registered.", message: "A plugin with same prefix already registered."}); //.then(session.log, session.log)
 					return ;
 				}
 				register_plugin(session_id , prefix) ;

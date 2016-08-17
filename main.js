@@ -1,9 +1,4 @@
 /////////////////////////////////////////////////////////////////
-// settings arguments are provided liks this:
-// PORT=8088 node main.js
-
-/////////////////////////////////////////////////////////////////
-// PORT : web interface port number (default 8082)
 // ROUTER_URL : Wamp router (Crossbar.io only) url. (default ws://127.0.0.1:41314/ws)
 // Ex)  ROUTER_URL=ws://[WAMP_ROUTER_HOST]:[WAMP_ROUTER_PORT]/ws node main.js
 

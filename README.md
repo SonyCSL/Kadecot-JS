@@ -1,4 +1,4 @@
-# Kadecot|JS is the node.js version of kadecot.
+# Kadecot|JS is the node.js version of Kadecot.
 
 Uses [crossbar.io](http://crossbar.io/docs/Installation-on-CentOS-and-RedHat/) and [Autobahn|js](http://autobahn.ws/js/) as [WAMP](http://wamp.ws) stack. Also uses [npm echonet-lite](https://www.npmjs.com/package/echonet-lite) in echonet lite plugin.
 
@@ -43,7 +43,7 @@ run crossbar by:
 
 Crossbar setting file exists under [.crossbar](.crossbar) directory.
 
-start kadecot main functionalities and plugins by:
+start Kadecot main functionalities and plugins by:
 
     node main.js
 
@@ -53,7 +53,7 @@ If you don't willing to use local crossbar, start main.js as follows:
 
 You can check the API call by accessing 'http://[server]:8082/index.html' from your web browser.
 
-## Difference from Android kadecot:
+## Difference from Android Kadecot:
 
 - realm (API version) is currently only 'v1' (Previously, it was 'default'
 - WAMP parameters are embed in different field of wamp messages
@@ -69,7 +69,7 @@ In [WAMP](http://wamp.ws) protocol, message passings are strictly isolated accor
 In [main.js](main.js), a web server and a version-specific provider ([v1/provider.js](v1/provider.js) ) is started.
 Currently the web server is only used for wamp client sample, but in future, default system manager will be hosted.
 
-[v1/provider.js](v1/provider.js) tries to connect to WAMP router. If successful, it registers some kadecot-specific public WAMP procedure (*getDeviceList*) and some used for plugin registration (*registerplugin*,*registerdevice*,*unregisterdevice*), and subscribes to crossbar-specific topic *wamp.session.on_leave*, to monitor plugin detachment.
+[v1/provider.js](v1/provider.js) tries to connect to WAMP router. If successful, it registers some Kadecot-specific public WAMP procedure (*getDeviceList*) and some used for plugin registration (*registerplugin*,*registerdevice*,*unregisterdevice*), and subscribes to crossbar-specific topic *wamp.session.on_leave*, to monitor plugin detachment.
 After this, plugins under [v1/plugins/](v1/plugins/) are scanned and inited.
 
 During plugin initialization, each plugin is also connected to WAMP router. This connection is notified to the provider by calling WAMP procedure *com.sonycsl.kadecot.provider.procedure.registerplugin* with desired plugin prefix declared.
