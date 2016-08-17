@@ -1,12 +1,12 @@
 {
-    "pid": 8722, 
+    "pid": 5422, 
     "argv": [
-        "/opt/crossbar/bin/crossbar", 
+        "/usr/local/bin/crossbar", 
         "start"
     ], 
     "options": {
         "cdc": false, 
-        "cbdir": "/home/dev/Kadecot-JS/.crossbar", 
+        "cbdir": "/home/o/Kadecot-JS/.crossbar", 
         "config": "config.json", 
         "logdir": null, 
         "logtofile": false, 
