@@ -1,37 +1,50 @@
 'use strict';
-//////////////////////////////////////
+
 // Load libraries
 const autobahn = require('autobahn');
 
 class PluginInterface {
-  constructor (realm, router_url, plugin_prefix) {
+  /**
+   * Constructor
+   * @param  {String} realm         [description]
+   * @param  {String} routerURL     [description]
+   * @param  {String} pluginPrefix  [description]
+   */
+  constructor (realm, routerURL, pluginPrefix) {
     this.realm = realm;
-    this.router_url = router_url;
-    this.plugin_prefix = plugin_prefix;
-    this.log = function(msg) {
-      console.log(this.plugin_prefix + ':' + msg);
+    this.routerURL = routerURL;
+    this.pluginPrefix = pluginPrefix;
+    this.log = function (msg) {
+      console.log(`${this.pluginPrefix}: ${msg}`);
     };
     this.devices = {};
   }
 
+  /**
+   * Connect to router.
+   * @param  {Object}   callbacks         [description]
+   * @param  {Function} callbacks.onopen  [description]
+   * @param  {Function} callbacks.onclose [description]
+   */
   connectRouter (callbacks) {
     this.connection = new autobahn.Connection({
       realm: this.realm,
-      url: this.router_url
+      url: this.routerURL
     });
 
     this.connection.onclose = () => {
-      if (typeof callbacks.onclose == 'function') {
+      if (typeof callbacks.onclose === 'function') {
         callbacks.onclose.call(this);
       }
       this.session = undefined;
     };
+
     this.connection.onopen = (session) => {
       this.session = session;
-      this.log('connection to ' + this.router_url + ' success.');
-      this.session.call('com.sonycsl.kadecot.provider.procedure.registerplugin', [this.session.id, this.plugin_prefix]);
+      this.log(`Connection to ${this.routerURL} success.`);
+      this.session.call('com.sonycsl.kadecot.provider.procedure.registerplugin', [this.session.id, this.pluginPrefix]);
 
-      if (typeof callbacks.onopen == 'function') {
+      if (typeof callbacks.onopen === 'function') {
         callbacks.onopen.call(this);
       }
     };
@@ -40,14 +53,21 @@ class PluginInterface {
     this.log('Plugin loaded.');
   }
 
-  // Should be changed to return promise, rather than calling onreegisteredfunc callback..
+  /**
+   * Register device
+   * @param  {String} uuid        [description]
+   * @param  {String} deviceType  [description]
+   * @param  {String} description [description]
+   * @param  {String} nickname    [description]
+   * @return {Promise<autobahn.Result,autobahn.Error>}   [description]
+   */
   registerDevice (uuid, deviceType, description, nickname) {
     if (!this.session) {
       return Promise.reject(new Error('No session'));
     }
     const deviceInfo = {
       uuid: uuid,
-      protocol: this.plugin_prefix.substring(this.plugin_prefix.lastIndexOf('.') + 1),
+      protocol: this.pluginPrefix.split('.').reverse()[0],
       deviceType: deviceType,
       description: description,
       nickname: nickname
@@ -55,7 +75,7 @@ class PluginInterface {
     this.devices[uuid] = deviceInfo;
 
     const promise =
-      this.session.call('com.sonycsl.kadecot.provider.procedure.registerdevice', [this.plugin_prefix], deviceInfo)
+      this.session.call('com.sonycsl.kadecot.provider.procedure.registerdevice', [this.pluginPrefix], deviceInfo)
         .then((re) => {
           if (re.success) {
             this.devices[uuid].deviceId = re.deviceId;
@@ -65,34 +85,43 @@ class PluginInterface {
     return promise;
   }
 
+  /**
+   * Unregister Device
+   * @param  {String} uuid [description]
+   * @return {Promise<autobahn.Result,autobahn.Error>}      [description]
+   */
   unregisterDevice (uuid) {
     if (!this.session) {
       return Promise.reject(new Error('No session'));
     }
     const promise =
       this.session.call('com.sonycsl.kadecot.provider.procedure.unregisterdevice', [uuid])
-      .then((re) => {
-        delete this.devices[uuid];
-        this.devices[uuid] = undefined;
-        return re;
-      });
+        .then((re) => {
+          this.devices[uuid] = undefined;
+          return re;
+        });
     return promise;
   }
 
-  // registerProcedures
-  // proclist is an array of the procedure definition object:
-  // Example of such object:
-  //{
-  //	name:'GeneralLighting.set' //=> the real name is connected to plugin prefix+'.procedure.'
-  //	,procedure:function(deviceIdArray, argObj){
-  //		// deviceIdArray is an array of devices. argObj is the parameter given by the procedure caller.
-  //		return {} ;
-  //	}
-  //}
-
+  /**
+   * registerProcedures
+   * proclist is an array of the procedure definition object:
+   * Example of such object:
+   * {
+   *   // the real name is connected to plugin prefix+'.procedure.'
+   *	 name:'GeneralLighting.set',
+   *   procedure: function (deviceIdArray, argObj) {
+   *		 // deviceIdArray is an array of devices. argObj is the parameter given by the procedure caller.
+   *		 return {};
+   *	 }
+   * }
+   *
+   * @param  {Object[]} procList [description]
+   * @return {Promise<autobahn.Registration[],autobahn.Error>} [description]
+   */
   registerProcedures (procList) {
     const procedures = procList.map((procInfo) => {
-      return this.session.register(this.plugin_prefix + '.procedure.' + procInfo.name, (deviceIdArray, argObj, details) => {
+      return this.session.register(`${this.pluginPrefix}.procedure.${procInfo.name}`, (deviceIdArray, argObj, details) => {
         return {
           success: true,
           procedure: details.procedure,
@@ -103,9 +132,14 @@ class PluginInterface {
     return Promise.all(procedures);
   }
 
-  publish (topic, arg_array) {
-    if (this.session == undefined || !(arg_array instanceof Array)) return;
-    this.session.publish(this.plugin_prefix + '.procedure.' + topic, arg_array);
+  /**
+   * [publish description]
+   * @param  {String} topic     [description]
+   * @param  {Array}  argsArray [description]
+   */
+  publish (topic, argsArray) {
+    if (this.session == undefined || !(argsArray instanceof Array)) return;
+    this.session.publish(`${this.pluginPrefix}.procedure.${topic}`, argsArray);
   }
 }
 
