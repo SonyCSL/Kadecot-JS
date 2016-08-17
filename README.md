@@ -65,7 +65,7 @@ You can check the API call by accessing 'http://[server]:8082/index.html' from y
 
 ## Overall architecture
 
-![Kadecot|JS architecture](http://lifedesign.tech/wp-content/uploads/2016/08/KadecotJS-Architecture.png)
+![Kadecot|JS architecture](http://lifedesign.tech/wp-content/uploads/2016/08/KadecotJS-Architecture.png?0)
 
 ## Boot flow (uncompleted)
 To support future API change, main logics are all under v1/ directory.
