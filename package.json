@@ -10,7 +10,9 @@
     "websocket": "~1.0.23",
     "when": "~3.7.7"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "3.3.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
