@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src='/js/wamp-client.js'></script>
+<script src='/js/wamp-client-manager.js'></script>
+<script>
+/* kadecot_init argument can contain the following parameters
+
+///////////////////////
+// mandatory
+///////////////////////
+
+// callback when connected
+onconnect : function(device_list,wamp){}
+
+///////////////////////
+// optional
+///////////////////////
+
+// callback when disconnected
+ondisconnect : function(error_object){}
+
+
+// specifies requested devices.
+// each device object should contain protocol, deviceType, deviceId, and nickname.
+manifest : [ {device object 1},{device object 2}, .. ]
+
+// currently unused.
+scope : "scope string"
+*/
+
+function kadecot_init(arg) {
+  if (typeof arg == 'function')
+    arg = {
+      onconnect: arg
+    };
+
+  if (typeof arg.scope != 'string') arg.scope = 'com.sonycsl.kadecot';
+
+  if (typeof arg.onconnect != 'function') {
+    alert('kadecot_init : onconnect callback should be specified!');
+    return;
+  }
+
+  if (typeof arg.ondisconnect != 'function')
+    arg.ondisconnect = function() {}
+
+
+  function connectLocal(host) {
+    var wampClient = new WampClientManager();
+    var conn, interf;
+    wampClient.WampClientTransport = {
+      open: function(_interf) {
+        interf = _interf;
+        conn = new WebSocket('ws://'+host+':41314/ws', ['wamp.2.json']);
+
+        conn.onopen = function() {
+          interf.onopen();
+        };
+
+        conn.onerror = function(error) {
+          interf.onerror(error);
+        };
+
+        conn.onmessage = function(e) {
+          interf.onmessage(e.data);
+        };
+
+      },
+      send: function(data) {
+        conn.send(data);
+      },
+      close: function(e) {
+        interf.onclose(e);
+      }
+    };
+
+    wampClient.connect(arg.scope, arg.manifest, arg.onconnect, arg.ondisconnect);
+
+  };
+
+  var urlVars = {};
+  if (location.search.length > 0) {
+    var token;
+    var sharp_i = location.href.indexOf('#');
+    if (sharp_i >= 0)
+      token = location.href.substring(sharp_i + 1);
+
+    var eqs = location.search.split(/[\?&]/);
+    eqs.forEach(function(eq) {
+      var terms = eq.split('=');
+      if (terms.length < 2) return;
+      urlVars[terms[0]] = terms[1];
+    });
+    urlVars._token = token;
+  }
+
+  connectLocal(location.hostname);
+}
+
+
+onload = function(){
+} ;
+
+function start(){
+	kadecot_init(function(devlist,wamp){
+		console.log(devlist);
+/*
+		wamp.sendCall({}
+			, "com.sonycsl.kadecot.echonetlite.procedure.GeneralLighting.set", [devlist[0].deviceId], {"propertyName":"OperationStatus","propertyValue":[48]}
+			, function(ret) {
+				console.log(ret) ;
+		        });
+*/
+	}) ;
+}
+</script>
+</head>
+<body>
+<input type='button' onclick='start();' value='connect'></input>
+</body>
+</html>
