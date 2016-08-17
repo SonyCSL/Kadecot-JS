@@ -84,26 +84,7 @@ var elsocket = EL.initialize( [myEOJ], function( rinfo, els ) {
 			if( pluginInterface != undefined )
 				pluginInterface.onDeviceFound(objkey,objDoc.deviceType,objDoc.deviceType,objDoc.deviceType+rinfo.address+'.'+tgtEOJ.substring(4)
 					,function(){
-						/*
-						// register procedures
-						var procedures = [{
-							name:'GeneralLighting.set'
-							,procedure:function(deviceIdArray, argObj){
-								return {success:true,procedure:arguments[2].procedure} ;
-							}
-						}] ;
-						procedures.filter(function(proc_info){
-							return session.register(PLUGIN_PREFIX+'.procedure.'+proc_info.name, proc_info.procedure) ;
-						}) ;
-						when.all(procedures).then(
-							function () {
-								log("All procedures/topics registered.");
-							},
-							function () {
-								log("Registration/Subscription failed!", arguments);
-							}
-						);
-						*/
+						// register procedures here
 					}) ;
 		}) ;
 	}
