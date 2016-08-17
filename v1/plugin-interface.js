@@ -1,111 +1,146 @@
-//////////////////////////////////////
+'use strict';
+
 // Load libraries
-var autobahn , when ;
-try {
-   autobahn = require('autobahn');
-   when = require('when');
-} catch (e) {   // When running in browser, AutobahnJS will be included without a module system
-   var when = autobahn.when;
+const autobahn = require('autobahn');
+
+class PluginInterface {
+  /**
+   * Constructor
+   * @param  {String} realm         [description]
+   * @param  {String} routerURL     [description]
+   * @param  {String} pluginPrefix  [description]
+   */
+  constructor (realm, routerURL, pluginPrefix) {
+    this.realm = realm;
+    this.routerURL = routerURL;
+    this.pluginPrefix = pluginPrefix;
+    this.log = function (msg) {
+      console.log(`${this.pluginPrefix}: ${msg}`);
+    };
+    this.devices = {};
+  }
+
+  /**
+   * Connect to router.
+   * @param  {Object}   callbacks         [description]
+   * @param  {Function} callbacks.onopen  [description]
+   * @param  {Function} callbacks.onclose [description]
+   */
+  connectRouter (callbacks) {
+    this.connection = new autobahn.Connection({
+      realm: this.realm,
+      url: this.routerURL
+    });
+
+    this.connection.onclose = () => {
+      if (typeof callbacks.onclose === 'function') {
+        callbacks.onclose.call(this);
+      }
+      this.session = undefined;
+    };
+
+    this.connection.onopen = (session) => {
+      this.session = session;
+      this.log(`Connection to ${this.routerURL} success.`);
+      this.session.call('com.sonycsl.kadecot.provider.procedure.registerplugin', [this.session.id, this.pluginPrefix]);
+
+      if (typeof callbacks.onopen === 'function') {
+        callbacks.onopen.call(this);
+      }
+    };
+    this.connection.open();
+
+    this.log('Plugin loaded.');
+  }
+
+  /**
+   * Register device
+   * @param  {String} uuid        [description]
+   * @param  {String} deviceType  [description]
+   * @param  {String} description [description]
+   * @param  {String} nickname    [description]
+   * @return {Promise<autobahn.Result,autobahn.Error>}   [description]
+   */
+  registerDevice (uuid, deviceType, description, nickname) {
+    if (!this.session) {
+      return Promise.reject(new Error('No session'));
+    }
+    const deviceInfo = {
+      uuid: uuid,
+      protocol: this.pluginPrefix.split('.').reverse()[0],
+      deviceType: deviceType,
+      description: description,
+      nickname: nickname
+    };
+    this.devices[uuid] = deviceInfo;
+
+    const promise =
+      this.session.call('com.sonycsl.kadecot.provider.procedure.registerdevice', [this.pluginPrefix], deviceInfo)
+        .then((re) => {
+          if (re.success) {
+            this.devices[uuid].deviceId = re.deviceId;
+          }
+          return re;
+        });
+    return promise;
+  }
+
+  /**
+   * Unregister Device
+   * @param  {String} uuid [description]
+   * @return {Promise<autobahn.Result,autobahn.Error>}      [description]
+   */
+  unregisterDevice (uuid) {
+    if (!this.session) {
+      return Promise.reject(new Error('No session'));
+    }
+    const promise =
+      this.session.call('com.sonycsl.kadecot.provider.procedure.unregisterdevice', [uuid])
+        .then((re) => {
+          this.devices[uuid] = undefined;
+          return re;
+        });
+    return promise;
+  }
+
+  /**
+   * registerProcedures
+   * proclist is an array of the procedure definition object:
+   * Example of such object:
+   * {
+   *   // the real name is connected to plugin prefix+'.procedure.'
+   *	 name:'GeneralLighting.set',
+   *   procedure: function (deviceIdArray, argObj) {
+   *		 // deviceIdArray is an array of devices. argObj is the parameter given by the procedure caller.
+   *		 return {};
+   *	 }
+   * }
+   *
+   * @param  {Object[]} procList [description]
+   * @return {Promise<autobahn.Registration[],autobahn.Error>} [description]
+   */
+  registerProcedures (procList) {
+    const procedures = procList.map((procInfo) => {
+      return this.session.register(`${this.pluginPrefix}.procedure.${procInfo.name}`, (deviceIdArray, argObj, details) => {
+        return {
+          success: true,
+          procedure: details.procedure,
+          value: procInfo.procedure.call(this, deviceIdArray, argObj)
+        };
+      });
+    });
+    return Promise.all(procedures);
+  }
+
+  /**
+   * [publish description]
+   * @param  {String} topic     [description]
+   * @param  {Array}  argsArray [description]
+   */
+  publish (topic, argsArray) {
+    if (this.session == undefined || !(argsArray instanceof Array)) return;
+    this.session.publish(`${this.pluginPrefix}.procedure.${topic}`, argsArray);
+  }
 }
 
-
-function PluginInterface(realm,router_url,plugin_prefix){
-	this.realm = realm ; this.router_url = router_url ; this.plugin_prefix = plugin_prefix ;
-	this.log = function(msg){ console.log(this.plugin_prefix + ':'+msg); } ;
-	this.devices = {} ;
-}
-
-PluginInterface.prototype.connectRouter = function(callbacks){
-	var self = this ;
-	self.connection = new autobahn.Connection({
-		realm: self.realm
-		,url: self.router_url
-	});
-
-	self.connection.onclose = function(){
-		if(typeof callbacks.onclose == 'function' )
-			callbacks.onclose.call(self) ;
-		self.session = undefined ;
-	} ;
-	self.connection.onopen = function(session){
-		self.session = session ;
-		self.log('connection to '+self.router_url+' success.') ;
-		self.session.call('com.sonycsl.kadecot.provider.procedure.registerplugin'
-			,[self.session.id,self.plugin_prefix]) ;
-
-		if( typeof callbacks.onopen == 'function' )
-			callbacks.onopen.call(self) ;
-	} ;
-	self.connection.open() ;
-
-	self.log('Plugin loaded.') ;
-} ;
-
-// Should be changed to return promise, rather than calling onreegisteredfunc callback..
-PluginInterface.prototype.onDeviceFound = function(uuid,deviceType,description,nickname,onregisteredfunc){
-	var self = this ;
-	if( self.session == undefined ) return ;
-	var d = {
-		uuid:uuid
-		, protocol:self.plugin_prefix.substring(self.plugin_prefix.lastIndexOf('.')+1)
-		, deviceType:deviceType
-		, description:description
-		, nickname:nickname
-	} ;
-	self.devices[uuid] = d ;
-
-	self.session.call('com.sonycsl.kadecot.provider.procedure.registerdevice'
-			,[self.plugin_prefix],d).then(function(re){
-				if( re.success == true ){
-					self.devices[uuid].deviceId = re.deviceId;
-					if( typeof onregisteredfunc == 'function' )
-						onregisteredfunc.call(self) ;
-				}
-			}) ;
-}
-
-PluginInterface.prototype.onDeviceLost = function(uuid,onunregistered_func){
-	var self = this ;
-	if( self.session == undefined ) return ;
-	self.session.call('com.sonycsl.kadecot.provider.procedure.unregisterdevice'
-			,[uuid]).then(function(re){
-				delete self.devices[uuid] ;
-				self.devices[uuid] = undefined ;
-				if( typeof onunregistered_func == 'function' )
-					onunregistered_func.call(self);
-			}) ;
-}
-
-// registerProcedures
-// proclist is an array of the procedure definition object:
-// Example of such object:
-//{
-//	name:'GeneralLighting.set' //=> the real name is connected to plugin prefix+'.procedure.'
-//	,procedure:function(deviceIdArray, argObj){
-//		// deviceIdArray is an array of devices. argObj is the parameter given by the procedure caller.
-//		return {} ;
-//	}
-//}
-
-PluginInterface.prototype.registerProcedures = function(proclist){
-	var self = this ;
-	var procedures = [] ;
-	proclist.forEach(function(proc_info){
-		procedures.push( self.session.register(self.plugin_prefix+'.procedure.'+proc_info.name, function(deviceIdArray,argObj){
-			return {
-				success:true
-				,procedure:arguments[2].procedure
-				,value:proc_info.procedure.call(self,deviceIdArray,argObj)
-			} ;
-		} ) ) ;
-	}) ;
-	return when.all(procedures);
-} ;
-
-PluginInterface.prototype.publish = function(topic,arg_array){
-	var self = this ;
-	if( self.session == undefined || !(arg_array instanceof Array)) return ;
-	self.session.publish(self.plugin_prefix+'.procedure.'+topic, arg_array);
-} ;
-
-module.exports = PluginInterface ;
+module.exports = PluginInterface;
