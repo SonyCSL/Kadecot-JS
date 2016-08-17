@@ -2,7 +2,6 @@
 //////////////////////////////////////
 // Load libraries
 const autobahn = require('autobahn');
-const when = require('when');
 
 class PluginInterface {
   constructor (realm, router_url, plugin_prefix) {
@@ -91,18 +90,17 @@ class PluginInterface {
   //	}
   //}
 
-  registerProcedures (proclist) {
-    const procedures = [];
-    proclist.forEach((proc_info) => {
-      procedures.push(this.session.register(this.plugin_prefix + '.procedure.' + proc_info.name, (deviceIdArray, argObj) => {
+  registerProcedures (procList) {
+    const procedures = procList.map((procInfo) => {
+      return this.session.register(this.plugin_prefix + '.procedure.' + procInfo.name, (deviceIdArray, argObj, details) => {
         return {
           success: true,
-          procedure: arguments[2].procedure,
-          value: proc_info.procedure.call(this, deviceIdArray, argObj)
+          procedure: details.procedure,
+          value: procInfo.procedure.call(this, deviceIdArray, argObj)
         };
-      }));
+      });
     });
-    return when.all(procedures);
+    return Promise.all(procedures);
   }
 
   publish (topic, arg_array) {
