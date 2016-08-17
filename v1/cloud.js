@@ -13,31 +13,118 @@ cloudsock.on('connectFailed', function(error) {
   console.log('Connect Error: ' + error.toString());
 });
 
-cloudsock.on('connect', function(connection) {
-  console.log('WebSocket cloudsock Connected');
-  connection.on('error', function(error) {
-    console.log("Connection Error: " + error.toString());
-  });
-  connection.on('close', function() {
-    console.log('wamp Connection Closed');
-  });
-  connection.on('message', function(message) {
-    if (message.type === 'utf8') {
-      var msg = message.utf8Data;
+var clients = {} ;
 
-      console.log("Received: '" + msg + "'");
-    }
-  });
+cloudsock.on('connect', function(sconn) {
+	console.log('Connected to cloud');
+	clients = {} ;
 
-  //connection.sendUTF('devlist:[]');
+	sconn.on('error', function(error) {
+		console.log("Cloud connection Error: " + error.toString());
+	});
+	sconn.on('close', function() {
+		console.log('Cloud connection closed');
+	});
+	sconn.on('message', function(message) {
+		if (message.type === 'utf8') {
+			var msg = message.utf8Data;
+			var client_id ;
+
+			function finishSocket(bWithClose){
+				if( clients[client_id] != undefined ){
+					if( clients[client_id].sock != undefined && bWithClose)
+						clients[client_id].sock.close() ;
+					clients[client_id] = undefined ;
+					delete clients[client_id] ;
+				}
+				console.log('Kadecot connection('+client_id+') closed.') ;
+			}
+
+
+			console.log("Received from cloud: '" + msg + "'");
+			var colon_i = msg.indexOf(':') ;
+			if( colon_i == -1 ) return ;	// error
+			var cmd = msg.substring(0,colon_i) ;
+			msg = msg.substring(colon_i+1) ;
+			if( cmd === 'wamp' ){
+				colon_i = msg.indexOf(':') ;
+				if( colon_i == -1 ) return ;	// error
+				client_id = msg.substring(0,colon_i) ;
+				if( clients[client_id] != undefined && clients[client_id].conn != undefined ){
+					clients[client_id].conn.send( msg.substring(colon_i+1) ) ;
+					console.log('Cloud ('+client_id + ') => Kadecot : '+msg.substring(colon_i+1)) ;
+
+				} else {
+					// client is not connected yet.
+					if( clients[client_id] == undefined ) clients[client_id] = {} ;
+					if( clients[client_id].msg_queue == undefined ) clients[client_id].msg_queue = [] ;
+					clients[client_id].msg_queue.push(msg.substring(colon_i+1)) ;
+				}
+
+			} else if( cmd === 'onclientconnected' ){
+				client_id = msg ;
+				if( clients[client_id] !== undefined && clients[client_id].sock !== undefined )
+					clients[client_id].sock.close() ;
+				if( clients[client_id] == undefined ) clients[client_id] = {} ;
+
+				var csock = new WebSocketClient() ;
+				clients[client_id].sock = csock ;
+
+
+				csock.on('connectFailed',function(error) {
+					console.log(client_id+' connect Error: ' + error.toString());
+					finishSocket() ;
+				});
+				csock.on('connect',function(cconn){
+					console.log('Client '+client_id+' is connected to Kadecot server.') ;
+					clients[client_id].conn = cconn ;
+					cconn.on('error',function(error){
+						console.log(client_id+" connection error: " + error.toString());
+						finishSocket() ;
+					}) ;
+					cconn.on('close',function(error){
+						console.log(client_id+" connection closed: " + error.toString());
+						finishSocket() ;
+					}) ;
+					cconn.on('message', function(message) {	// From Kadecot server
+						if (message.type === 'utf8') {
+							var msg = message.utf8Data;
+							sconn.send('wamp:'+client_id+':'+msg) ;
+							console.log('Kadecot =>Cloud ('+client_id+'): '+'wamp:'+client_id+':'+msg) ;
+						}
+					}) ;
+
+					// Send queued msg to Kadecot server at once
+					if( clients[client_id].msg_queue instanceof Array ){
+						clients[client_id].msg_queue.forEach(function(msg){
+							cconn.send(msg) ;
+							console.log('Cloud ('+client_id+')=> Kadecot : '+msg) ;
+						}) ;
+					}
+					clients[client_id].msg_queue = undefined ;
+					delete clients[client_id].msg_queue ;
+				}) ;
+
+				csock.connect(ROUTER_URL, 'wamp.2.json' /*, 'kadecot://com.sonycsl.Kadecot', {
+					'Sec-WebSocket-Protocol': 'wamp.2.json'} */) ;
+
+			} else if( cmd === 'onclientdisconnected' ){
+				client_id = msg ;
+				finishSocket() ;
+			}
+		}
+	});
+
+	//connection.sendUTF('devlist:[]');
 });
 
-
-exports.connect = function(terminal_token, bridge_server) {
-  // Redudant setting of 'wamp.2.json'?
-  cloudsock.connect('wss://' + bridge_server + '/bridge?k=' + terminal_token, 'wamp.2.json', 'kadecot://com.sonycsl.Kadecot', {
-    'Sec-WebSocket-Protocol': 'wamp.2.json'
-  });
+var ROUTER_URL ;
+exports.connect = function(terminal_token, bridge_server, router_url) {
+	ROUTER_URL = router_url ;
+	// Redudant setting of 'wamp.2.json'?
+	cloudsock.connect('wss://' + bridge_server + '/bridge?k=' + terminal_token, 'wamp.2.json', 'kadecot://com.sonycsl.Kadecot', {
+		'Sec-WebSocket-Protocol': 'wamp.2.json'
+	});
 };
 
 

@@ -162,7 +162,7 @@ exports.init = function(_REALM, _ROUTER_URL) {
   fs.stat(REGISTERED_INFO_CACHE_FILE, function(err, stat) {
     if (err != null) return;
     var cache = fs.readFileSync(REGISTERED_INFO_CACHE_FILE).toString().split("\n");
-    cloud.connect(cache[0], cache[1]);
+    cloud.connect(cache[0], cache[1], ROUTER_URL);
   });
 
   htserv = require('./htserv.js').start(31413, {
@@ -171,7 +171,7 @@ exports.init = function(_REALM, _ROUTER_URL) {
       log('Bridge server :' + re.bridge_server);
 
       fs.writeFile(REGISTERED_INFO_CACHE_FILE, re.terminal_token + "\n" + re.bridge_server);
-      cloud.connect(re.terminal_token, re.bridge_server);
+      cloud.connect(re.terminal_token, re.bridge_server, ROUTER_URL);
     }
   });
 };
