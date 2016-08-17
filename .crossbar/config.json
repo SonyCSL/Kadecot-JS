@@ -1,53 +1,77 @@
 {
   "version": 2,
   "controller": {},
-  "workers": [
-  {
+  "workers": [{
     "type": "router",
-    "realms": [
-    {
+    "realms": [{
       "name": "v1",
-      "roles": [
-      {
+      "roles": [{
         "name": "anonymous",
-        "permissions": [
-        {
-          "uri": "",
-          "match": "prefix",
-          "allow":
-          {
+        "permissions": [{
+          "uri": "*",
+          "allow": {
             "call": true,
             "register": true,
             "publish": true,
             "subscribe": true
-          },
-          "disclose":
-          {
-            "caller": false,
-            "publisher": false
-          },
-          "cache": true
+          }
+        },
+        {
+          "uri": "wamp.*",
+          "allow": {
+            "call": false,
+            "register": false,
+            "publish": false,
+            "subscribe": false
+          }
+        }]
+      },
+      {
+        "name": "provider",
+        "permissions": [{
+          "uri": "*",
+          "allow": {
+            "call": true,
+            "register": true,
+            "publish": true,
+            "subscribe": true
+          }
+        },
+        {
+          "uri": "wamp.*",
+          "allow": {
+            "call": true,
+            "register": false,
+            "publish": true,
+            "subscribe": true
+          }
         }]
       }]
     }],
-    "transports": [
-    {
+    "transports": [{
       "type": "web",
-      "endpoint":
-      {
+      "endpoint": {
         "type": "tcp",
         "port": 41314
       },
-      "paths":
-      {
-        "/":
-        {
-          "type": "static",
-          "directory": "../web"
-        },
-        "ws":
-        {
-          "type": "websocket"
+      "paths": {
+        "ws": {
+          "type": "websocket",
+          "auth": {
+            "ticket": {
+              "type": "static",
+              "principals": {
+                "kadecot-provider": {
+                  "ticket": "KADECOT_PROVIDER",
+                  "role": "provider"
+                }
+              }
+            },
+            "anonymous": {
+              "type": "static",
+              "role": "anonymous"
+            }
+          }
         }
       }
     }]

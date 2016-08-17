@@ -76,7 +76,16 @@ exports.init = function(_REALM, _ROUTER_URL) {
   // Connect to Wamp router
   var connection = new autobahn.Connection({
     url: ROUTER_URL,
-    realm: REALM
+    realm: REALM,
+    authmethods: ["ticket"],
+    authid: "kadecot-provider",
+    onchallenge: (session, method, extra) => {
+      if (method === "ticket") {
+        return "KADECOT_PROVIDER";
+      } else {
+        throw new Error('Failed to authenticate');
+      }
+    }
   });
 
   connection.onopen = function(session) {
