@@ -42,38 +42,42 @@ class PluginInterface {
   }
 
   // Should be changed to return promise, rather than calling onreegisteredfunc callback..
-  onDeviceFound (uuid, deviceType, description, nickname, onregisteredfunc) {
-    if (this.session == undefined) return;
-    const d = {
+  registerDevice (uuid, deviceType, description, nickname) {
+    if (!this.session) {
+      return Promise.reject(new Error('No session'));
+    }
+    const deviceInfo = {
       uuid: uuid,
       protocol: this.plugin_prefix.substring(this.plugin_prefix.lastIndexOf('.') + 1),
       deviceType: deviceType,
       description: description,
       nickname: nickname
     };
-    this.devices[uuid] = d;
+    this.devices[uuid] = deviceInfo;
 
-    this.session.call('com.sonycsl.kadecot.provider.procedure.registerdevice', [this.plugin_prefix], d)
-      .then((re) => {
-        if (re.success == true) {
-          this.devices[uuid].deviceId = re.deviceId;
-          if (typeof onregisteredfunc == 'function') {
-            onregisteredfunc.call(this);
+    const promise =
+      this.session.call('com.sonycsl.kadecot.provider.procedure.registerdevice', [this.plugin_prefix], deviceInfo)
+        .then((re) => {
+          if (re.success) {
+            this.devices[uuid].deviceId = re.deviceId;
           }
-        }
-      });
+          return re;
+        });
+    return promise;
   }
 
-  onDeviceLost (uuid, onunregistered_func) {
-    if (this.session == undefined) return;
-    this.session.call('com.sonycsl.kadecot.provider.procedure.unregisterdevice', [uuid])
+  unregisterDevice (uuid) {
+    if (!this.session) {
+      return Promise.reject(new Error('No session'));
+    }
+    const promise =
+      this.session.call('com.sonycsl.kadecot.provider.procedure.unregisterdevice', [uuid])
       .then((re) => {
         delete this.devices[uuid];
         this.devices[uuid] = undefined;
-        if (typeof onunregistered_func == 'function') {
-          onunregistered_func.call(this);
-        }
+        return re;
       });
+    return promise;
   }
 
   // registerProcedures
