@@ -44,7 +44,7 @@ class PluginInterface {
   // Should be changed to return promise, rather than calling onreegisteredfunc callback..
   onDeviceFound (uuid, deviceType, description, nickname, onregisteredfunc) {
     if (this.session == undefined) return;
-    var d = {
+    const d = {
       uuid: uuid,
       protocol: this.plugin_prefix.substring(this.plugin_prefix.lastIndexOf('.') + 1),
       deviceType: deviceType,
@@ -88,7 +88,7 @@ class PluginInterface {
   //}
 
   registerProcedures (proclist) {
-    var procedures = [];
+    const procedures = [];
     proclist.forEach((proc_info) => {
       procedures.push(this.session.register(this.plugin_prefix + '.procedure.' + proc_info.name, (deviceIdArray, argObj) => {
         return {
