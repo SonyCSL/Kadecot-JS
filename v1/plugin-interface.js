@@ -140,10 +140,11 @@ class PluginInterface {
    * [publish description]
    * @param  {String} topic     [description]
    * @param  {Array}  argsArray [description]
+   * @param  {Object}  argsObject [description]
    */
-  publish (topic, argsArray) {
+  publish (topic, argsArray, argsObject) {
     if (this.session == undefined || !(argsArray instanceof Array)) return;
-    this.session.publish(`${this.pluginPrefix}.procedure.${topic}`, argsArray);
+    this.session.publish(`${this.pluginPrefix}.topic.${topic}`, argsArray, argsObject);
   }
 }
 

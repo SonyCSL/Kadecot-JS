@@ -23,9 +23,26 @@ exports.init = function(_pluginInterface) {
 				});
 
 				EL.on('data', (res) => {
-					//console.log('[RECEIVE] ---------------------------------------');
-					//console.log(JSON.stringify(res['message'], null, '  '));
-					//console.log('---------------------------------------');
+					if( res.message.esv !== 'INF' )	return ;
+
+					registerELDevice(res.device.address , res.message.seoj).then(function(re){
+						var dev = re.result ;
+						if( !dev || dev.doc == null ) return ;
+						var epcs = dev.doc.epc ;
+						for( var propertyName in epcs ){
+							if( epcs[propertyName].value != res.message.prop[0].epc ) continue ;
+							var pv ;
+							if( res.message.prop[0].buffer == null ) pv = null ;
+							else {
+								pv = [] ;
+								var i8a = new Int8Array(res.message.prop[0].buffer) ;
+								for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
+							}
+
+							pluginInterface.publish( dev.deviceType+'.'+propertyName,[dev.deviceId]
+								,{propertyName:propertyName,propertyValue:pv} ) ;
+						}
+					}) ;
 				});
 			}
 		});
@@ -47,122 +64,146 @@ var EL  = new EchonetLite({'type':'lan'}) ;
 var EOJs = {};
 var objDocs = {} ; // eoj_hex => objDoc map
 
-function onELDeviceFound(res){
-	var device = res.device;
-	var address = device.address;
-	for( var ei=0;ei<device.eoj.length;++ei ){
-		(function(){
-			var eoj_id = ei ;
-			var eoj = device.eoj[eoj_id];
+function getEOJHexFromEOJArray( eojArray ){
+	var ret = eojArray[1].toString(16); // Class code
+	while( ret.length<2 ) ret = '0' + ret ;
+	ret = eojArray[0].toString(16)+ret; // Class group code
+	while( ret.length<4 ) ret = '0' + ret ;
+	return ret.toUpperCase() ;
+}
+function getObjKey(address,eoj_hex){ return address+':'+eoj_hex; }
 
-			var eojstr = eoj[1].toString(16); // Class code
-			while( eojstr.length<2 ) eojstr = '0'+eojstr ;
-			eojstr = eoj[0].toString(16)+eojstr; // Class group code
-			while( eojstr.length<4 ) eojstr = '0'+eojstr ;
+function registerELDevice( address,eojArray ){
 
-			var eoj_hex = eojstr.toUpperCase() ;
+	return new Promise((acpt,rjct) => {
 
-			pluginInterface.log('EOJ found:0x'+eoj_hex) ;
+	var eoj_hex = getEOJHexFromEOJArray(eojArray) ;
 
-			var objkey = address + ':' + eoj_hex;
-			if( EOJs[objkey] !== undefined ){ return ; } // previously found device
+	var objkey = getObjKey(address,eoj_hex) ;
+	if( EOJs[objkey] !== undefined ){ acpt({success:true,result:EOJs[objkey]}); return ; } // previously found device
 
-			function onObjDocFound(objDoc){
-				var dev = {
-					uuid:objkey
-					,eoj:device.eoj[eoj_id]
-					,deviceType:objDoc.deviceType
-					,description:objDoc.deviceType
-					,nickname:objDoc.deviceType + '@' + address + '/0x' + eoj_hex
-					,address:address
-					,doc:objDoc
-				} ;
-				EOJs[objkey] = dev ;
-				if(pluginInterface != undefined)
-					pluginInterface.registerDevice( dev.uuid,dev.deviceType,dev.description,dev.nickname)
-						.then((re) => {
-							dev.deviceId = re.deviceId;
-							//pluginInterface.log('Device '+eoj_hex+' ('+dev.deviceType+') registered.') ;
-						}) ;
+	// pluginInterface.log('New EOJ found:0x'+eoj_hex) ;
+
+	var dev = {
+		uuid:objkey
+		,eoj:eojArray
+		,deviceType:eoj_hex
+		,description:'Unknown device'
+		,nickname:'Unknown@' + address + '/0x' + eoj_hex
+		,address:address
+	} ;
+	EOJs[objkey] = dev ;	// Temporal object is set.
+
+	function onObjDocFound(objDoc){
+		// Replace some properties.
+		dev.deviceType = objDoc.deviceType ;
+		dev.description = objDoc.deviceType ;
+		dev.nickname = objDoc.deviceType + '@' + address + '/0x' + eoj_hex ;
+		dev.doc = objDoc ;
+	}
+	function registerDevice(){
+		if(pluginInterface != undefined){
+			pluginInterface.registerDevice( dev.uuid,dev.deviceType,dev.description,dev.nickname)
+				.then((re) => {
+					dev.deviceId = re.deviceId;
+					//pluginInterface.log('Device '+eoj_hex+' ('+dev.deviceType+') registered.') ;
+					acpt({success:true,result:dev}) ;
+				} ).catch(function(err){
+					acpt({success:false,reason:err}) ;
+				}) ;
+		} else {
+			acpt({success:true,result:dev}) ;
+		}
+	}
+
+	// Potential bug: What if second devices with same eoj_hex found before objDoc is read?
+	if( objDocs[eoj_hex] === null ){		// not found
+		registerDevice() ;
+		return ;
+	} else if( objDocs[eoj_hex] !== undefined ){	// already exists
+		onObjDocFound( objDocs[eoj_hex] ) ;
+	} else {					// search from now
+		objDocs[eoj_hex] = null ;
+		setEOJDocs(eoj_hex, function(objDoc) {
+			if (objDoc == null) {
+				console.log('Document for ' + eoj_hex + ' not found.');
+				return;
 			}
 
-			// Potential bug: What if second devices with same eoj_hex found before objDoc is read?
-			if( objDocs[eoj_hex] === null ){		// not found
-				return ;
-			} else if( objDocs[eoj_hex] !== undefined ){	// already exists
-				onObjDocFound( objDocs[eoj_hex] ) ;
-			} else {					// search from now
-				objDocs[eoj_hex] = null ;
-				setEOJDocs(eoj_hex, function(objDoc) {
-					if (objDoc == null) {
-						console.log('Document for ' + eoj_hex + ' not found.');
-						return;
-					}
+			function genProcResult(bSet,deviceArray,argObj){
+				return new Promise(function(acept2,rjct2){
+					if( deviceArray.length == 0 ){
+						rjct2('Device array cannot be empty') ;
+					} else {
+						if( deviceArray.length>1 )
+							console.log('two or more device ids cannot be accepted') ;
+						var devid = deviceArray[0] ;
 
-					function genProcResult(bSet,deviceArray,argObj){
-						return new Promise(function(acept,rjct){
-							if( deviceArray.length == 0 ){
-								rjct('Device array cannot be empty') ;
-							} else {
-								if( deviceArray.length>1 )
-									console.log('two or more device ids cannot be accepted') ;
-								var devid = deviceArray[0] ;
-
-								for( var objkey in EOJs ){
-									var dev = EOJs[objkey] ;
-									if( dev.deviceId != devid ) continue ;
-									var args = [
-										dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
-										,(err,res)=>{
-											if( err )	rjct(res) ;
-											else {
-												var pv ;
-												if( res.message.prop[0].buffer == null ) pv = argObj.propertyValue ;
-												else {
-													pv = [] ;
-													var i8a = new Int8Array(res.message.prop[0].buffer) ;
-													for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
-												}
-
-												acept({
-													propertyName:argObj.propertyName
-													,propertyValue:pv
-												}) ;
-											}
+						for( var objkey in EOJs ){
+							var dev = EOJs[objkey] ;
+							if( dev.deviceId != devid ) continue ;
+							var args = [
+								dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
+								,(err,res)=>{
+									if( err )	rjct2(res) ;
+									else {
+										var pv ;
+										if( res.message.prop[0].buffer == null ) pv = argObj.propertyValue ;
+										else {
+											pv = [] ;
+											var i8a = new Int8Array(res.message.prop[0].buffer) ;
+											for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
 										}
-									] ;
-									if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
-									else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
-									return ;
-								} ;
-								rjct( 'No device found for deviceId='+devid ) ;
-							}
-						}) ;
+
+										acept2({
+											propertyName:argObj.propertyName
+											,propertyValue:pv
+											,digest:res.message.prop[0].edt
+										}) ;
+									}
+								}
+							] ;
+							if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
+							else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
+							return ;
+						} ;
+						rjct2( 'No device found for deviceId='+devid ) ;
 					}
-
-					var procs = [
-						{
-							name:objDoc.deviceType + '.set'
-							,procedure: (deviceArray,argObj) => {
-								return genProcResult(true,deviceArray,argObj) ;
-							}
-						}
-						,{
-							name:objDoc.deviceType + '.get'
-							,procedure: (deviceArray,argObj) => {
-								return genProcResult(false,deviceArray,argObj) ;
-							}
-						}
-					] ;
-					pluginInterface.registerProcedures(procs) ;
-
-					objDocs[eoj_hex] = objDoc ;
-					onObjDocFound( objDoc ) ;
 				}) ;
 			}
-		})() ;
 
+			var procs = [
+				{
+					name:objDoc.deviceType + '.set'
+					,procedure: (deviceArray,argObj) => {
+						return genProcResult(true,deviceArray,argObj) ;
+					}
+				}
+				,{
+					name:objDoc.deviceType + '.get'
+					,procedure: (deviceArray,argObj) => {
+						return genProcResult(false,deviceArray,argObj) ;
+					}
+				}
+			] ;
+			pluginInterface.registerProcedures(procs) ;
+
+			objDocs[eoj_hex] = objDoc ;
+			onObjDocFound( objDoc ) ;
+			registerDevice() ;
+		}) ;
 	}
+	}) ;
+}
+
+function onELDeviceFound(res,callback){
+	var device = res.device;
+	var address = device.address;
+	var ps = [] ;
+	for( var ei=0;ei<device.eoj.length;++ei )
+		ps.push(registerELDevice( address,device.eoj[ei] ) ) ;
+
+	Promise.all(ps).then(callback).catch(callback);
 }
 
 var fs = require('fs');
@@ -213,7 +254,7 @@ function setEOJDocs(eoj_hex, onget_cb) {
 
       onget_cb(retobj);
     } else {
-      //console.log('File '+'0x'+eoj_hex+'.csv'+' does not exist..') ;
+      console.log('File '+'0x'+eoj_hex+'.csv'+' does not exist..') ;
       onget_cb(null);
     }
   });

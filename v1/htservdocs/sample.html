@@ -99,33 +99,50 @@ function kadecot_init(arg) {
 }
 
 
-onload = function(){
-} ;
+function log(msg){document.body.innerHTML = document.body.innerHTML + msg+'<br />';}
 
-function start(){
-	kadecot_init(function(devlist,wamp){
+var wamp , aircon ;
+
+function onset(){
+	wamp.sendCall({}
+		, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.set"
+		, [aircon.deviceId], {"propertyName":"OperationStatus","propertyValue":[0x30]}
+		, function(ret) {
+			log(JSON.stringify(ret)) ;
+	        });
+}
+
+function onget(){
+	wamp.sendCall({}
+		, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.get"
+		, [aircon.deviceId], {"propertyName":"OperationStatus"}
+		, function(ret) {
+			log(JSON.stringify(ret)) ;
+	        });
+}
+
+onload = function(){
+	kadecot_init(function(devlist,_wamp){
 		console.log(devlist);
+		wamp = _wamp ;
 		devlist.forEach(function(dev){
 			if( dev.protocol !== 'echonetlite' || dev.deviceType !== 'HomeAirConditioner') return ;
-if( true ){
-			wamp.sendCall({}
-				, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.get", [dev.deviceId], {"propertyName":"OperationStatus"}
-				, function(ret) {
-					console.log(ret) ;
-			        });
-} else {
-			wamp.sendCall({}
-				, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.set", [dev.deviceId], {"propertyName":"OperationStatus","propertyValue":[0x31]}
-				, function(ret) {
-					console.log(ret) ;
-			        });
-}
+			aircon = dev ;
+
+			log('Air-conditoner found.') ;
+
+			wamp.sendSubscribe({},"com.sonycsl.kadecot.echonetlite.topic.HomeAirConditioner.OperationStatus"
+				,function(r){log('Value changed : '+JSON.stringify(r));}
+				,function(){log('Subscribed : '+JSON.stringify(arguments));}
+			);
+			return ;
 		}) ;
 	}) ;
 }
 </script>
 </head>
 <body>
-<input type='button' onclick='start();' value='connect'></input>
+<input type='button' onclick='onset();' value='set'></input> <input type='button' onclick='onget();' value='get'></input><br />
+<hr />
 </body>
 </html>
