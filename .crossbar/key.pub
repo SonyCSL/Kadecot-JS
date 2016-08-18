@@ -1,6 +1,6 @@
 Crossbar.io public key for node authentication
 
-creator: o@Liva
-created-at: 2016-08-17T12:48:29.575Z
-machine-id: 6bdc3bdde430f4802b96c30754281494
-public-key-ed25519: 3dd7bff5f7001196bfc2e5791d646ff77f1bb14e992c0f770566ce96d397ef9d
+creator: kadecot@ubuntu
+created-at: 2016-08-18T04:54:55.390Z
+machine-id: aae726c6136e809f60a7d4b857aad458
+public-key-ed25519: c170f39ac78cb14bf1486a3ddac546a07643ce140cac7917ae964dd66c745d0b

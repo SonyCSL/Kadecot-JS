@@ -4,7 +4,11 @@
   "description": "node.js version of Kadecot",
   "main": "main.js",
   "dependencies": {
-    "node-echonet-lite": "^0.0.2"
+    "autobahn": "~0.10.1",
+    "node-echonet-lite": "^0.0.2",
+    "express": "~4.14.0",
+    "websocket": "~1.0.23",
+    "when": "~3.7.7"
   },
   "devDependencies": {},
   "scripts": {
