@@ -99,7 +99,7 @@ exports.init = function(_REALM, _ROUTER_URL) {
           deviceList: dl
         };
       }), session.register(PREFIX + '.procedure.registerplugin', function(args, kwargs, details) {
-        log("Plugin registration requested:" + JSON.stringify(args));
+        //log("Plugin registration requested:" + JSON.stringify(args));
         var session_id = args[0],
           prefix = args[1];
         if (plugins[prefix] != undefined) {
@@ -119,7 +119,6 @@ exports.init = function(_REALM, _ROUTER_URL) {
       , session.subscribe('wamp.session.on_leave', function(args) {
         unregister_plugin(args[0]);
       }), session.register(PREFIX + '.procedure.registerdevice', function(args, kwargs, details) {
-        console.log('RegisterDevice:' + JSON.stringify(arguments));
         var plugin_prefix = args[0];
         var d = kwargs; //JSON.parse(JSON.stringify(args[0])) ;
         var key = plugin_prefix + "." + d.uuid;
@@ -132,6 +131,9 @@ exports.init = function(_REALM, _ROUTER_URL) {
         d.deviceId = deviceid_count++;
         d.status = true;
         devices[key] = d;
+
+        console.log('Device '+d.deviceId+':'+kwargs.protocol+':'+kwargs.deviceType+'/'+kwargs.uuid+' registered.');
+
         return {
           success: true,
           deviceId: d.deviceId

@@ -105,13 +105,14 @@ onload = function(){
 function start(){
 	kadecot_init(function(devlist,wamp){
 		console.log(devlist);
-/*
-		wamp.sendCall({}
-			, "com.sonycsl.kadecot.echonetlite.procedure.GeneralLighting.set", [devlist[0].deviceId], {"propertyName":"OperationStatus","propertyValue":[48]}
-			, function(ret) {
-				console.log(ret) ;
-		        });
-*/
+		devlist.forEach(function(dev){
+			if( dev.protocol !== 'echonetlite' || dev.deviceType !== 'HomeAirConditioner') return ;
+			wamp.sendCall({}
+				, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.set", [dev.deviceId], {"propertyName":"OperationStatus","propertyValue":[48]}
+				, function(ret) {
+					console.log(ret) ;
+			        });
+		}) ;
 	}) ;
 }
 </script>
