@@ -56,7 +56,7 @@ If you don't willing to use local crossbar, start main.js as follows:
 
     ROUTER_URL=ws://[WAMP_ROUTER_HOST]:[WAMP_ROUTER_PORT]/ws node main.js
 
-You can check the API call by accessing 'http://[host]:31413/sample.html' from your web browser.
+You can check the API call by accessing *http://[host]:31413/sample.html* from your web browser (assuming there is one ECHONET Lite Air-conditioner exists).
 
 ## Difference from Android Kadecot:
 
@@ -80,6 +80,7 @@ After this, plugins under [v1/plugins/](v1/plugins/) are scanned and inited.
 During plugin initialization, each plugin is also connected to WAMP router. This connection is notified to the provider by calling WAMP procedure *com.sonycsl.kadecot.provider.procedure.registerplugin* with desired plugin prefix declared.
 
 [v1/provider.js](v1/provider.js) also starts a little web server on port 31413 to host sample app (sample.html).
+sample.html assums there is one ECHONET Lite Air-conditioner exists.
 
 Try these by accessing http://[host]:31413/sample.html
 
@@ -93,3 +94,6 @@ Try these by accessing http://[host]:31413/sample.html
 - Check cloud ability (cloud-side source code should also be released)
 - npm packaging
 - Develop REST API
+
+## Acknowledgements
+- [Futomi Hatano](https://github.com/futomi) helped me a lot to quickly modify his [node echonet-lite library](https://github.com/futomi/node-echonet-lite) to match my request. Thank you very much!!
