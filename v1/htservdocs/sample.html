@@ -107,11 +107,19 @@ function start(){
 		console.log(devlist);
 		devlist.forEach(function(dev){
 			if( dev.protocol !== 'echonetlite' || dev.deviceType !== 'HomeAirConditioner') return ;
+if( true ){
 			wamp.sendCall({}
-				, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.set", [dev.deviceId], {"propertyName":"OperationStatus","propertyValue":[48]}
+				, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.get", [dev.deviceId], {"propertyName":"OperationStatus"}
 				, function(ret) {
 					console.log(ret) ;
 			        });
+} else {
+			wamp.sendCall({}
+				, "com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.set", [dev.deviceId], {"propertyName":"OperationStatus","propertyValue":[0x31]}
+				, function(ret) {
+					console.log(ret) ;
+			        });
+}
 		}) ;
 	}) ;
 }

@@ -122,11 +122,15 @@ class PluginInterface {
   registerProcedures (procList) {
     const procedures = procList.map((procInfo) => {
       return this.session.register(`${this.pluginPrefix}.procedure.${procInfo.name}`, (deviceIdArray, argObj, details) => {
-        return {
-          success: true,
-          procedure: details.procedure,
-          value: procInfo.procedure.call(this, deviceIdArray, argObj)
-        };
+        return new Promise((res,rej) => {
+		Promise.all([ // Use Promise.all, because procInfo.procedure can return either real value or promise
+			procInfo.procedure(deviceIdArray, argObj)
+		]).then(function(resArray){
+			res( { success: true, procedure: details.procedure, result: resArray[0] } ) ;
+		}).catch(function(err){
+			rej( { success: false, procedure: details.procedure, reason: err } ) ;
+		}) ;
+	}) ;
       });
     });
     return Promise.all(procedures);

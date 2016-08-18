@@ -1,19 +1,19 @@
 {
-    "pid": 3269, 
+    "pid": 3367, 
+    "argv": [
+        "/usr/local/bin/crossbar", 
+        "start"
+    ], 
     "options": {
-        "reactor": null, 
         "cdc": false, 
-        "loglevel": "info", 
+        "cbdir": "/home/o/Kadecot-JS/.crossbar", 
+        "config": "config.json", 
+        "logdir": null, 
         "logtofile": false, 
+        "loglevel": "info", 
+        "colour": "auto", 
         "logformat": "standard", 
         "command": "start", 
-        "logdir": null, 
-        "config": "config.json", 
-        "colour": "auto", 
-        "cbdir": "/home/kadecot/Kadecot-JS/.crossbar"
-    }, 
-    "argv": [
-        "/home/kadecot/.local/bin/crossbar", 
-        "start"
-    ]
+        "reactor": null
+    }
 }
