@@ -1,6 +1,6 @@
 # Kadecot|JS is the node.js version of Kadecot.
 
-Uses [crossbar.io](http://crossbar.io/docs/Installation-on-CentOS-and-RedHat/) and [Autobahn|js](http://autobahn.ws/js/) as [WAMP](http://wamp.ws) stack. Also uses [node echonet-lite](https://github.com/futomi/node-echonet-lite) in echonet lite plugin.
+Uses [crossbar.io](http://crossbar.io/docs/Installation-on-CentOS-and-RedHat/) and [Autobahn|js](http://autobahn.ws/js/) as [WAMP](http://wamp.ws) stack. Also uses [node echonet-lite](https://www.npmjs.com/package/node-echonet-lite) in echonet lite plugin.
 
 For developers, please see ["For developers" section](#for-developers).
 
@@ -96,4 +96,4 @@ Try these by accessing http://[host]:31413/sample.html
 - Develop REST API
 
 ## Acknowledgements
-- [Futomi Hatano](https://github.com/futomi) helped me a lot to quickly modify his [node echonet-lite library](https://github.com/futomi/node-echonet-lite) to match my request. Thank you very much!!
+- [Futomi Hatano](https://github.com/futomi) helped me a lot to quickly modify his [node echonet-lite library](https://www.npmjs.com/package/node-echonet-lite) to match my request. Thank you very much!!
