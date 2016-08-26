@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="js/jquery.min.js"></script>
+<script src="md5.js"></script>
+<script src="settings.js"></script>
+<script>
+// in settings.js, UUID, REGIST_URL, and ACCOUNT_NAME are set.
+
+function register(){
+	var tokenmd5 = CybozuLabs.MD5.calc(UUID) ;
+	var tokenmd5_dbl = CybozuLabs.MD5.calc(tokenmd5) ;
+	var srctoken = tokenmd5_dbl.substring(0,16)+tokenmd5 ;
+	location.href = REGIST_URL + '?' + location.href + '&' + srctoken + '&' + ACCOUNT_NAME ;
+}
+
+onload = function(){
+	var li = location.href.lastIndexOf('#') ;
+	if( li > 0 ){
+		var access_token = location.href.substring(li+1) ;
+		li = access_token.indexOf(',') ;
+		var bridge_server = access_token.substring(li+1) ;
+		access_token = access_token.substring(0,li) ;
+
+		$.getJSON(location.origin+'/api?func=registered&terminal_token='+access_token+'&bridge_server='+bridge_server+'&callback=?'
+			,function(){location.href = location.origin+'/index.html';}) ;
+	}
+}
+
+</script>
+</head>
+<body>
+<input type='button' onclick='register();' value='Register'></input>
+</body>
+</html>

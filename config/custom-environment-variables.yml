@@ -1,0 +1,9 @@
+servers:
+  rest:
+    port: REST_SERVER_PORT
+  wamp:
+    protocol: WAMP_ROUTER_PROTOCOL
+    host: WAMP_ROUTER_HOST
+    port: WAMP_ROUTER_PORT
+    pathname: WAMP_ROUTER_PATH
+    url: WAMP_ROUTER_URL
