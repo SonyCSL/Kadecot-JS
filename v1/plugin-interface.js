@@ -126,9 +126,13 @@ class PluginInterface {
 		Promise.all([ // Use Promise.all, because procInfo.procedure can return either real value or promise
 			procInfo.procedure(deviceIdArray, argObj)
 		]).then(function(resArray){
-			res( { success: true, procedure: details.procedure, result: resArray[0] } ) ;
+			resArray[0].success = true ;
+			res( new autobahn.Result([], resArray[0]) ) ;
+			//res( { success: true, procedure: details.procedure, result: resArray[0] } ) ;
 		}).catch(function(err){
-			rej( { success: false, procedure: details.procedure, reason: err } ) ;
+			err.success = false ;
+			rej( new autobahn.Result([], err) ) ;
+			//rej( { success: false, procedure: details.procedure, reason: err } ) ;
 		}) ;
 	}) ;
       });

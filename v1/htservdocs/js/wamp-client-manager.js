@@ -651,7 +651,7 @@ function WampClientManager() {
       }, function() {
         // request device list
         self.sendCall({}, "com.sonycsl.kadecot.provider.procedure.getDeviceList", [], {}, function(ret) {
-          connected_callback(ret[3][0].deviceList, self);
+          connected_callback(ret[4].deviceList, self);
         });
       });
     });

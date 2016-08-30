@@ -2,6 +2,7 @@ node_modules/
 v1/htservdocs/settings.js
 v1/registered.txt
 .crossbar/key.priv
+.crossbar/key.pub
 
 # Created by https://www.gitignore.io/api/node,python
 

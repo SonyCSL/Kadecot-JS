@@ -126,16 +126,27 @@ onload = function(){
 		console.log(devlist);
 		wamp = _wamp ;
 		devlist.forEach(function(dev){
-			if( dev.protocol !== 'echonetlite' || dev.deviceType !== 'HomeAirConditioner') return ;
-			aircon = dev ;
+			if( dev.protocol === 'test' && dev.deviceType == 'TestObject' ){
+				wamp.sendCall(
+					{}
+					,"com.sonycsl.kadecot.test.procedure.TestProcedure"
+					,[dev.deviceId]
+					,{"propertyName":"OperationStatus","propertyValue":[48]}
+					,function(re){
+console.log('TestProcedure result:');
+console.log(re) ;
+					}
+				);
+			} else if( dev.protocol === 'echonetlite' && dev.deviceType === 'HomeAirConditioner'){
+				aircon = dev ;
 
-			log('Air-conditoner found.') ;
+				log('Air-conditoner found.') ;
 
-			wamp.sendSubscribe({},"com.sonycsl.kadecot.echonetlite.topic.HomeAirConditioner.OperationStatus"
-				,function(r){log('Value changed : '+JSON.stringify(r));}
-				,function(){log('Subscribed : '+JSON.stringify(arguments));}
-			);
-			return ;
+				wamp.sendSubscribe({},"com.sonycsl.kadecot.echonetlite.topic.HomeAirConditioner.OperationStatus"
+					,function(r){log('Value changed : '+JSON.stringify(r));}
+					,function(){log('Subscribed : '+JSON.stringify(arguments));}
+				);
+			}
 		}) ;
 	}) ;
 }

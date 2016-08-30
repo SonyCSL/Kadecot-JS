@@ -95,9 +95,9 @@ exports.init = function(_REALM, _ROUTER_URL) {
       session.register(PREFIX + '.procedure.getDeviceList', function(args, kwargs, details) {
         var dl = [];
         for (uuid in devices) dl.push(devices[uuid]);
-        return {
+        return new autobahn.Result([], {
           deviceList: dl
-        };
+        });
       }), session.register(PREFIX + '.procedure.registerplugin', function(args, kwargs, details) {
         //log("Plugin registration requested:" + JSON.stringify(args));
         var session_id = args[0],
