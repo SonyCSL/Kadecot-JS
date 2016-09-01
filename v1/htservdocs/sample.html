@@ -133,8 +133,8 @@ onload = function(){
 					,[dev.deviceId]
 					,{"propertyName":"OperationStatus","propertyValue":[48]}
 					,function(re){
-console.log('TestProcedure result:');
-console.log(re) ;
+						console.log('TestProcedure result:');
+						console.log(re) ;
 					}
 				);
 			} else if( dev.protocol === 'echonetlite' && dev.deviceType === 'HomeAirConditioner'){
@@ -143,9 +143,20 @@ console.log(re) ;
 				log('Air-conditoner found.') ;
 
 				wamp.sendSubscribe({},"com.sonycsl.kadecot.echonetlite.topic.HomeAirConditioner.OperationStatus"
-					,function(r){log('Value changed : '+JSON.stringify(r));}
+					,function(r){log('Published : '+JSON.stringify(r));}
 					,function(){log('Subscribed : '+JSON.stringify(arguments));}
 				);
+				wamp.sendCall(
+					{}
+					,"com.sonycsl.kadecot.echonetlite.procedure.HomeAirConditioner.set"
+					,[dev.deviceId]
+					,{"propertyName":"OperationStatus","propertyValue":[48]}
+					,function(re){
+						console.log('OperationStatus result:');
+						console.log(re) ;
+					}
+				);
+
 			}
 		}) ;
 	}) ;

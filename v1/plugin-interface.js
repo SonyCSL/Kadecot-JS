@@ -127,11 +127,11 @@ class PluginInterface {
 			procInfo.procedure(deviceIdArray, argObj)
 		]).then(function(resArray){
 			resArray[0].success = true ;
-			res( new autobahn.Result([], resArray[0]) ) ;
+			res( new autobahn.Result([ deviceIdArray[0] ], resArray[0]) ) ;
 			//res( { success: true, procedure: details.procedure, result: resArray[0] } ) ;
 		}).catch(function(err){
 			err.success = false ;
-			rej( new autobahn.Result([], err) ) ;
+			rej( new autobahn.Result([ deviceIdArray[0] ], err) ) ;
 			//rej( { success: false, procedure: details.procedure, reason: err } ) ;
 		}) ;
 	}) ;
