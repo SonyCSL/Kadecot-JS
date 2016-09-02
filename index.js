@@ -1,21 +1,29 @@
 'use strict';
 
 const url = require('url');
-const config = require('config');
+const readConfigAsync = require('./utils/read-config');
+const defaultConfig = require('./utils/default.config.js');
+
 const RestServer = require('./rest-server');
 const WampServer = require('./wamp-server');
 
-new RestServer().listen(config.get('servers.rest.port'), () => {
-  //
-});
+readConfigAsync(defaultConfig)
+.then((config) => {
+  new RestServer().listen(config.servers.rest.port, () => {
+    //
+  });
 
-const WAMP_ROUTER_URL =
-  config.has('servers.wamp.url')
-  ? config.get('servers.wamp.url')
-  : url.format(config.get('servers.wamp'));
+  const WAMP_ROUTER_URL =
+    (config.servers.wamp.url)
+    ? config.servers.wamp.url
+    : url.format(config.servers.wamp);
 
-new WampServer({
-  url: WAMP_ROUTER_URL
-}).init(() => {
-  //
+  new WampServer({
+    url: WAMP_ROUTER_URL
+  }).init(() => {
+    //
+  });
+})
+.catch((err) => {
+  console.error(err.stack || err);
 });

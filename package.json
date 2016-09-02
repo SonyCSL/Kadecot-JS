@@ -12,9 +12,10 @@
   "dependencies": {
     "autobahn": "0.10.1",
     "co": "4.6.0",
-    "config": "1.21.0",
+    "cosmiconfig": "1.1.0",
     "express": "4.14.0",
     "fs-promise": "0.5.0",
+    "lodash.defaultsdeep": "4.6.0",
     "log4js": "0.6.38",
     "node-echonet-lite": "0.0.4",
     "object.entries": "1.0.3",
