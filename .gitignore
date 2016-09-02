@@ -1,5 +1,6 @@
 node_modules/
 v1/htservdocs/settings.js
+v1/htservdocs/initSettings.sh
 v1/registered.txt
 .crossbar/key.priv
 .crossbar/key.pub
