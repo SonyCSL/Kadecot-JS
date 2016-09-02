@@ -99,122 +99,152 @@ function registerELDevice( address,eojArray ){
 
 	return new Promise((acpt,rjct) => {
 
-	var eoj_hex = getEOJHexFromEOJArray(eojArray) ;
+		var eoj_hex = getEOJHexFromEOJArray(eojArray) ;
 
-	getObjKey(address,eoj_hex).then((objkey)=>{
-		if( EOJs[objkey] !== undefined ){ acpt({success:true,result:EOJs[objkey]}); return ; } // previously found device
+		getObjKey(address,eoj_hex).then((objkey)=>{
+			if( EOJs[objkey] !== undefined ){ acpt({success:true,result:EOJs[objkey]}); return ; } // previously found device
 
-		//pluginInterface.log('New EOJ found:0x'+eoj_hex) ;
+			pluginInterface.log('New ECHONET Object (EOJ) found:0x'+eoj_hex) ;
 
-		var dev = {
-			uuid:objkey
-			,eoj:eojArray
-			,deviceType:eoj_hex
-			,description:'Unknown device'
-			,nickname:'Unknown@' + address + '/0x' + eoj_hex
-			,address:address
-		} ;
-		EOJs[objkey] = dev ;	// Temporal object is set.
+			var dev = {
+				uuid:objkey
+				,eoj:eojArray
+				,deviceType:eoj_hex
+				,description:'Unknown device'
+				,nickname:'Unknown@' + address + '/0x' + eoj_hex
+				,address:address
+			} ;
+			EOJs[objkey] = dev ;	// Temporal object is set.
 
-		function onObjDocFound(objDoc){
-			// Replace some properties.
-			dev.deviceType = objDoc.deviceType ;
-			dev.description = objDoc.deviceType ;
-			dev.nickname = objDoc.deviceType + '@' + address + '/0x' + eoj_hex ;
-			dev.doc = objDoc ;
-		}
-		function registerDevice(){
-			if(pluginInterface != undefined){
-				pluginInterface.registerDevice( dev.uuid,dev.deviceType,dev.description,dev.nickname)
-					.then((re) => {
-						dev.deviceId = re.deviceId;
-						//pluginInterface.log('Device '+eoj_hex+' ('+dev.deviceType+') registered.') ;
-						acpt({success:true,result:dev}) ;
-					} ).catch(function(err){
-						acpt({success:false,reason:err}) ;
-					}) ;
-			} else {
-				acpt({success:true,result:dev}) ;
+			function onObjDocFound(objDoc){
+				// Replace some properties.
+				dev.deviceType = objDoc.deviceType ;
+				dev.description = null ;
+				dev.nickname = objDoc.deviceType + '@' + address + '/0x' + eoj_hex ;
+				dev.doc = objDoc ;
 			}
-		}
-
-		// Potential bug: What if second devices with same eoj_hex found before objDoc is read?
-		if( objDocs[eoj_hex] === null ){		// not found
-			registerDevice() ;
-			return ;
-		} else if( objDocs[eoj_hex] !== undefined ){	// already exists
-			onObjDocFound( objDocs[eoj_hex] ) ;
-		} else {					// search from now
-			objDocs[eoj_hex] = null ;
-			setEOJDocs(eoj_hex, function(objDoc) {
-				if (objDoc == null) {
-					console.log('Document for ' + eoj_hex + ' not found.');
-					return;
-				}
-
-				function genProcResult(bSet,deviceArray,argObj){
-					return new Promise(function(acept2,rjct2){
-						if( deviceArray.length == 0 ){
-							rjct2('Device array cannot be empty') ;
-						} else {
-							if( deviceArray.length>1 )
-								console.log('two or more device ids cannot be accepted') ;
-							var devid = deviceArray[0] ;
-
-							for( var objkey in EOJs ){
-								var dev = EOJs[objkey] ;
-								if( dev.deviceId != devid ) continue ;
-								var args = [
-									dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
-									,(err,res)=>{
-										if( err )	rjct2(res) ;
-										else {
-											var pv ;
-											if( res.message.prop[0].buffer == null ) pv = argObj.propertyValue ;
-											else {
-												pv = [] ;
-												var i8a = new Int8Array(res.message.prop[0].buffer) ;
-												for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
-											}
-
-											acept2({
-												propertyName:argObj.propertyName
-												,propertyValue:pv
-												,digest:res.message.prop[0].edt
-											}) ;
-										}
-									}
-								] ;
-								if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
-								else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
-								return ;
+			function registerDevice(){
+				if(pluginInterface != undefined){
+					// Check additional properties
+					var propToChk = [0x81,0x8b,0x8c,0x8d,0x8e] ;
+					var description = {} ;
+					function getAdditionalProperty(){
+						if( propToChk.length == 0 ){
+							// Device registration main
+							dev.description = description ;
+							pluginInterface.registerDevice( dev.uuid,dev.deviceType,dev.description,dev.nickname )
+							.then((re) => {
+								dev.deviceId = re.deviceId;
+								//pluginInterface.log('Device '+eoj_hex+' ('+dev.deviceType+') registered.') ;
+								acpt({success:true,result:dev}) ;
+							} ).catch(function(err){
+								acpt({success:false,reason:err}) ;
+							}) ;
+							return ;
+						}
+						var prop = propToChk.shift() ;
+						var prop_hex = '0x'+('0'+prop.toString(16)).slice(-2).toUpperCase() ;
+						EL.getPropertyValue(address,eojArray,prop,(err,res) => {
+							for( key in res.message.data){
+								description[key] = res.message.data[key] ;
 							} ;
-							rjct2( 'No device found for deviceId='+devid ) ;
-						}
-					}) ;
+							if( err != null || res.message.prop[0].buffer == null ){	// Error
+								description[prop_hex] = null ;
+								getAdditionalProperty() ;
+							} else {
+								var i8a = new Int8Array(res.message.prop[0].buffer ) ;
+								i8a = Array.prototype.map.call(i8a, (en) => (en<0?256+en:en) ) ;
+
+								description[prop_hex] = i8a ;
+
+								setTimeout(getAdditionalProperty,500) ;
+							}
+						}) ;
+					}
+					getAdditionalProperty() ;
+				} else {
+					rjct({success:false,result:dev,reason:'PluginInteface is undefined.'}) ;
 				}
+			}
 
-				var procs = [
-					{
-						name:objDoc.deviceType + '.set'
-						,procedure: (deviceArray,argObj) => {
-							return genProcResult(true,deviceArray,argObj) ;
-						}
-					}
-					,{
-						name:objDoc.deviceType + '.get'
-						,procedure: (deviceArray,argObj) => {
-							return genProcResult(false,deviceArray,argObj) ;
-						}
-					}
-				] ;
-				pluginInterface.registerProcedures(procs) ;
-
-				objDocs[eoj_hex] = objDoc ;
-				onObjDocFound( objDoc ) ;
+			// Potential bug: What if second devices with same eoj_hex found before objDoc is read?
+			if( objDocs[eoj_hex] === null ){		// not found
 				registerDevice() ;
-			}) ;
-		}
+				return ;
+			} else if( objDocs[eoj_hex] !== undefined ){	// already exists. No need to register procedures.
+				onObjDocFound( objDocs[eoj_hex] ) ;
+				registerDevice() ;
+			} else {					// search from now
+				objDocs[eoj_hex] = null ;
+				setEOJDocs(eoj_hex, function(objDoc) {
+					if (objDoc == null) {
+						console.log('Document for ' + eoj_hex + ' not found.');
+						return;
+					}
+
+					function genProcResult(bSet,deviceArray,argObj){
+						return new Promise(function(acept2,rjct2){
+							if( deviceArray.length == 0 ){
+								rjct2('Device array cannot be empty') ;
+							} else {
+								if( deviceArray.length>1 )
+									console.log('two or more device ids cannot be accepted') ;
+								var devid = deviceArray[0] ;
+
+								for( var objkey in EOJs ){
+									var dev = EOJs[objkey] ;
+									if( dev.deviceId != devid ) continue ;
+									var args = [
+										dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
+										,(err,res)=>{
+											if( err )	rjct2(res) ;
+											else {
+												var pv ;
+												if( res.message.prop[0].buffer == null ) pv = argObj.propertyValue ;
+												else {
+													pv = [] ;
+													var i8a = new Int8Array(res.message.prop[0].buffer) ;
+													for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
+												}
+
+												acept2({
+													propertyName:argObj.propertyName
+													,propertyValue:pv
+													,digest:res.message.prop[0].edt
+												}) ;
+											}
+										}
+									] ;
+									if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
+									else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
+									return ;
+								} ;
+								rjct2( 'No device found for deviceId='+devid ) ;
+							}
+						}) ;
+					}
+
+					var procs = [
+						{
+							name:objDoc.deviceType + '.set'
+							,procedure: (deviceArray,argObj) => {
+								return genProcResult(true,deviceArray,argObj) ;
+							}
+						}
+						,{
+							name:objDoc.deviceType + '.get'
+							,procedure: (deviceArray,argObj) => {
+								return genProcResult(false,deviceArray,argObj) ;
+							}
+						}
+					] ;
+					pluginInterface.registerProcedures(procs) ;
+
+					objDocs[eoj_hex] = objDoc ;
+					onObjDocFound( objDoc ) ;
+					registerDevice() ;
+				}) ;
+			}
 		}) ;
 	}) ;
 }
