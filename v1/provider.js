@@ -169,10 +169,11 @@ exports.init = function(_REALM, _ROUTER_URL) {
 
   cloud = require('./cloud.js');
 
-  var REGISTERED_INFO_CACHE_FILE = './' + REALM + '/registered.txt';
-  fs.stat(REGISTERED_INFO_CACHE_FILE, function(err, stat) {
+  cloud.REGISTERED_INFO_CACHE_FILE = './' + REALM + '/registered.txt';
+
+  fs.stat(cloud.REGISTERED_INFO_CACHE_FILE, function(err, stat) {
     if (err != null) return;
-    var cache = fs.readFileSync(REGISTERED_INFO_CACHE_FILE).toString().split("\n");
+    var cache = fs.readFileSync(cloud.REGISTERED_INFO_CACHE_FILE).toString().split("\n");
     cloud.connect(cache[0], cache[1], ROUTER_URL);
   });
 
@@ -181,7 +182,7 @@ exports.init = function(_REALM, _ROUTER_URL) {
       log('Terminal token:' + re.terminal_token);
       log('Bridge server :' + re.bridge_server);
 
-      fs.writeFile(REGISTERED_INFO_CACHE_FILE, re.terminal_token + "\n" + re.bridge_server);
+      fs.writeFile(cloud.REGISTERED_INFO_CACHE_FILE, re.terminal_token + "\n" + re.bridge_server);
       cloud.connect(re.terminal_token, re.bridge_server, ROUTER_URL);
     }
   });

@@ -22,9 +22,16 @@ cloudsock.on('connect', function(sconn) {
 	sconn.on('error', function(error) {
 		console.log("Cloud connection Error: " + error.toString());
 	});
+
 	sconn.on('close', function() {
-		console.log('Cloud connection closed');
+		for( var c in clients ){
+			if( clients[c].conn != undefined )
+				clients[c].conn.close() ;
+		}
+		clients = {} ;
+		console.log('Disconnected all connections.') ;
 	});
+
 	sconn.on('message', function(message) {
 		if (message.type === 'utf8') {
 			var msg = message.utf8Data;
@@ -32,14 +39,13 @@ cloudsock.on('connect', function(sconn) {
 
 			function finishSocket(bWithClose){
 				if( clients[client_id] != undefined ){
-					if( clients[client_id].sock != undefined && bWithClose)
-						clients[client_id].sock.close() ;
+					if( clients[client_id].conn != undefined && bWithClose)
+						clients[client_id].conn.close() ;
 					clients[client_id] = undefined ;
 					delete clients[client_id] ;
 				}
 				console.log('Kadecot connection('+client_id+') closed.') ;
 			}
-
 
 			console.log("Received from cloud: '" + msg + "'");
 			var colon_i = msg.indexOf(':') ;
@@ -51,9 +57,20 @@ cloudsock.on('connect', function(sconn) {
 				if( colon_i == -1 ) return ;	// error
 				client_id = msg.substring(0,colon_i) ;
 				if( clients[client_id] != undefined && clients[client_id].conn != undefined ){
-					clients[client_id].conn.send( msg.substring(colon_i+1) ) ;
-					console.log('Cloud ('+client_id + ') => Kadecot : '+msg.substring(colon_i+1)) ;
-
+					var msg_body = msg.substring(colon_i+1) ;
+					if( msg_body.indexOf('[6,{') == 0 ){
+						if( JSON.parse(msg_body)[1].detail == 'TerminalRemovedFromDB' ){
+							// Terminal delete request from cloud
+							require('fs').unlink(exports.REGISTERED_INFO_CACHE_FILE) ;
+							sconn.close() ;
+							console.log('Cloud connection disconnected and registration information is erased.') ;
+							console.log('To connect cloud again, please access http://localhost:31413/register.html to register terminal infomation to cloud again.') ;
+							return ;
+						}
+					}
+					// Just forward message
+					clients[client_id].conn.send( msg_body ) ;
+					console.log('Cloud ('+client_id + ') => Kadecot : '+msg_body) ;
 				} else {
 					// client is not connected yet.
 					if( clients[client_id] == undefined ) clients[client_id] = {} ;
@@ -63,7 +80,8 @@ cloudsock.on('connect', function(sconn) {
 
 			} else if( cmd === 'onclientconnected' ){
 				client_id = msg ;
-				if( clients[client_id] !== undefined && clients[client_id].sock !== undefined )
+				if( clients[client_id] !== undefined && clients[client_id].sock !== undefined
+				 && typeof clients[client_id].sock.close === 'function' )
 					clients[client_id].sock.close() ;
 				if( clients[client_id] == undefined ) clients[client_id] = {} ;
 
@@ -83,7 +101,7 @@ cloudsock.on('connect', function(sconn) {
 						finishSocket() ;
 					}) ;
 					cconn.on('close',function(error){
-						console.log(client_id+" connection closed: " + error.toString());
+						console.log('Client ' + client_id+" connection closed: " + error.toString());
 						finishSocket() ;
 					}) ;
 					cconn.on('message', function(message) {	// From Kadecot server
