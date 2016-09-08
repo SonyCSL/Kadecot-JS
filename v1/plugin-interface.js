@@ -109,11 +109,11 @@ class PluginInterface {
    * Example of such object:
    * {
    *   // the real name is connected to plugin prefix+'.procedure.'
-   *	 name:'GeneralLighting.set',
+   *   name:'GeneralLighting.set',
    *   procedure: function (deviceIdArray, argObj) {
-   *		 // deviceIdArray is an array of devices. argObj is the parameter given by the procedure caller.
-   *		 return {};
-   *	 }
+   *     // deviceIdArray is an array of devices. argObj is the parameter given by the procedure caller.
+   *     return {};
+   *   }
    * }
    *
    * @param  {Object[]} procList [description]
@@ -121,21 +121,22 @@ class PluginInterface {
    */
   registerProcedures (procList) {
     const procedures = procList.map((procInfo) => {
-      return this.session.register(`${this.pluginPrefix}.procedure.${procInfo.name}`, (deviceIdArray, argObj, details) => {
-        return new Promise((res,rej) => {
-		Promise.all([ // Use Promise.all, because procInfo.procedure can return either real value or promise
-			procInfo.procedure(deviceIdArray, argObj)
-		]).then(function(resArray){
-			resArray[0].success = true ;
-			res( new autobahn.Result([ deviceIdArray[0] ], resArray[0]) ) ;
-			//res( { success: true, procedure: details.procedure, result: resArray[0] } ) ;
-		}).catch(function(err){
-			err.success = false ;
-			rej( new autobahn.Result([ deviceIdArray[0] ], err) ) ;
-			//rej( { success: false, procedure: details.procedure, reason: err } ) ;
-		}) ;
-	}) ;
-      });
+      return this.session.register(
+        `${this.pluginPrefix}.procedure.${procInfo.name}`,
+        (deviceIdArray, argObj, details) => {
+          // Support to return either real value or promise
+          return Promise.resolve(procInfo.procedure(deviceIdArray, argObj))
+            .then((res) => {
+              res.success = true;
+              const resultInstance = new autobahn.Result([], res);
+              return Promise.resolve(resultInstance);
+            })
+            .catch((err) => {
+              const errorInstance = new autobahn.Error(err, [], { success: false });
+              return Promise.reject(errorInstance);
+            });
+        }
+      );
     });
     return Promise.all(procedures);
   }
