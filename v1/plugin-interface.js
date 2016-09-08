@@ -129,7 +129,8 @@ class PluginInterface {
           return Promise.resolve(procInfo.procedure(deviceIdArray, argObj))
             .then((res) => {
               res.success = true;
-              const resultInstance = new autobahn.Result([], res);
+              const resultInstance =
+                new autobahn.Result([ deviceIdArray[0] ], res);
               return Promise.resolve(resultInstance);
             })
             .catch((err) => {
@@ -137,7 +138,8 @@ class PluginInterface {
                 err = { error: err };
               }
               err.success = false;
-              const resultInstance = new autobahn.Result([], err);
+              const resultInstance =
+                new autobahn.Result([ deviceIdArray[0] ], err);
               return Promise.resolve(resultInstance);
             });
         }
