@@ -2,6 +2,7 @@
 
 // Load libraries
 const autobahn = require('autobahn');
+const isError = require('lodash.iserror');
 
 class PluginInterface {
   /**
@@ -132,8 +133,12 @@ class PluginInterface {
               return Promise.resolve(resultInstance);
             })
             .catch((err) => {
-              const errorInstance = new autobahn.Error(err, [], { success: false });
-              return Promise.reject(errorInstance);
+              if (isError(err) || typeof err !== 'object') {
+                err = { error: err };
+              }
+              err.success = false;
+              const resultInstance = new autobahn.Result([], err);
+              return Promise.resolve(resultInstance);
             });
         }
       );
