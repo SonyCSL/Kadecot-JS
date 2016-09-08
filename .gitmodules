@@ -1,0 +1,3 @@
+[submodule "v1/plugins/gotapi/DeviceConnect-NodeJS"]
+	path = v1/plugins/gotapi/DeviceConnect-NodeJS
+	url = https://github.com/DeviceConnect/DeviceConnect-NodeJS.git

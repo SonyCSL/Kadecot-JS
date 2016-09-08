@@ -1,0 +1,19 @@
+{
+  "name": "gotapi",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "3846masa",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "0.14.0",
+    "deviceconnect-manager": "file:DeviceConnect-NodeJS/packages/deviceconnect-manager",
+    "deviceconnect-plugin-host": "file:DeviceConnect-NodeJS/packages/deviceconnect-plugin-host",
+    "lodash.flattendeep": "4.4.0",
+    "lodash.uniq": "4.5.0"
+  }
+}
