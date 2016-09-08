@@ -6,6 +6,14 @@ Access [DeviceConnect] via Kadecot|JS WAMP.
 
 ## Usage
 
+### Installation
+
+```
+git submodule init
+(cd DeviceConnect-NodeJS && patch -p0) < ./DeviceConnect-NodeJS.patch
+npm i
+```
+
 ### Procedure
 
 `gotapi.procedure.{profile}` or `gotapi.procedure.{profile}.{method}`

@@ -1,0 +1,52 @@
+diff --git packages/deviceconnect-manager/config.js packages/deviceconnect-manager/config.js
+old mode 100644
+new mode 100755
+index e3f4b49..e2aee2f
+--- packages/deviceconnect-manager/config.js
++++ packages/deviceconnect-manager/config.js
+@@ -1,5 +1,5 @@
+ var fs = require('fs');
+-var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
++var config = JSON.parse(fs.readFileSync(__dirname + './config.json', 'utf8'));
+ 
+ config.http = createServerConfig(config.http);
+ if (config.http.port === undefined) {
+diff --git packages/deviceconnect-manager/deviceconnect-manager.js packages/deviceconnect-manager/deviceconnect-manager.js
+old mode 100644
+new mode 100755
+index 2b89316..831f48b
+--- packages/deviceconnect-manager/deviceconnect-manager.js
++++ packages/deviceconnect-manager/deviceconnect-manager.js
+@@ -7,7 +7,7 @@ var Request = require('./request');
+ var Response = require('./response');
+ 
+ var app = express();
+-var packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
++var packageJson = JSON.parse(fs.readFileSync(__dirname + './package.json', 'utf8'));
+ var ownProfiles = [];
+ config.supports.forEach(function(profile) {
+     ownProfiles.push(require(profile.module));
+@@ -56,7 +56,7 @@ app.all(['/:api/:profile', '/:api/:profile/:attribute', '/:api/:profile/:interfa
+                 res.json(obj.json);
+             }
+         });
+-    
++
+     if (req.params.api !== 'gotapi') {
+         res.status(404).send('404 Not Found');
+         return;
+diff --git packages/deviceconnect-manager/plugin-manager.js packages/deviceconnect-manager/plugin-manager.js
+old mode 100644
+new mode 100755
+index 25c80e0..ef0b489
+--- packages/deviceconnect-manager/plugin-manager.js
++++ packages/deviceconnect-manager/plugin-manager.js
+@@ -3,7 +3,7 @@ var crypto = require('crypto');
+ var config = require('./config');
+ 
+ var plugins = {};
+-searchPlugins('../', plugins);
++searchPlugins(__dirname + '/../', plugins);
+ 
+ function searchPlugins(rootPath, plugins) {
+     var dirNames;
