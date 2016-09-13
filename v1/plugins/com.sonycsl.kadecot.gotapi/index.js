@@ -133,7 +133,7 @@ class GotAPIManagerPlugin {
 
   registerGotAPIManager () {
     return this._pluginInterface.registerDevice(
-      'GotAPIManager', // UUID
+      'gotapi.manager:manager:nttdocomo:0:gotapimanager', // UUID
       'GotAPIManager', // deviceType
       'GotAPIManager', // description
       'GotAPIManager'  // nickname
