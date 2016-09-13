@@ -80,13 +80,20 @@ class GotAPIManagerPlugin {
   }
 
   _checkDevices () {
-    this._axios('/servicediscovery')
-      .then((res) => {
+    Promise.all([
+      this._axios('/servicediscovery'),
+      this._axios('/system')
+    ])
+      .then((results) => {
+        const currentServices = results[0].data.services;
+        const plugins = results[1].data.plugins;
         const services = {};
-        for (let service of res.data.services) {
+        for (let service of currentServices) {
           services[service.id] = service;
           if (!this._services.hasOwnProperty(service.id)) {
-            this.registerService(service);
+            const packageName =
+              (plugins.filter((p) => service.id.match(p.id))[0] || {}).packageName;
+            this.registerService(service, packageName);
           }
         }
         for (let serviceId in this._services) {
@@ -101,9 +108,11 @@ class GotAPIManagerPlugin {
       });
   }
 
-  registerService (service) {
+  registerService (service, packageName) {
+    packageName = packageName || '';
+    const category = packageName.split('.').reverse()[0] || '';
     this._pluginInterface.registerDevice(
-      `GOTAPI_${service.id}`, // UUID
+      `gotapi.${packageName}:${category}:nttdocomo:0:${service.id}`, // UUID
       service.name, // deviceType
       service.name, // description
       service.name  // nickname
