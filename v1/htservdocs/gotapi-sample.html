@@ -26,8 +26,8 @@
             interf.onmessage(ev.data);
           };
         },
-        send: conn.send.bind(conn),
-        close: interf.onclose.bind(interf)
+        send: function (data) { conn.send(data); },
+        close: function (_ev) { interf.onclose(_ev); }
       };
       wampClient.connect(args.scope, args.manifest, args.onconnect, args.ondisconnect);
     }

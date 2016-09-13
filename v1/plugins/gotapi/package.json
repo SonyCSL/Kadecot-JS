@@ -11,9 +11,12 @@
   "license": "MIT",
   "dependencies": {
     "axios": "0.14.0",
-    "deviceconnect-manager": "file:DeviceConnect-NodeJS/packages/deviceconnect-manager",
-    "deviceconnect-plugin-host": "file:DeviceConnect-NodeJS/packages/deviceconnect-plugin-host",
+    "cosmiconfig": "1.1.0",
     "lodash.flattendeep": "4.4.0",
-    "lodash.uniq": "4.5.0"
+    "log4js": "0.6.38"
+  },
+  "peerDependencies": {
+    "deviceconnect-manager": "*",
+    "deviceconnect-plugin-host": "*"
   }
 }

@@ -3,11 +3,12 @@
  */
 'use strict';
 
-const manager = require('deviceconnect-manager/deviceconnect-manager');
-const http = require('http');
+const cosmiconfig = require('cosmiconfig');
+const url = require('url');
 const path = require('path');
 const axios = require('axios');
-const _ = require('./lodash');
+const _ = require('./utils/lodash');
+const log4js = require('log4js');
 
 const PORT = 4035;
 
@@ -15,20 +16,64 @@ class GotAPIManagerPlugin {
   constructor (_pluginInterface) {
     this._pluginInterface = _pluginInterface;
     this._services = {};
-    http.createServer(manager).listen(PORT, () => {
-      console.log('listen on port 4035');
-      this._init();
+    this._devices = {};
+    this._config = {
+      hostname: 'localhost',
+      port: 4035,
+      ssl: false,
+      createServer: true
+    };
+    log4js.configure({
+      appenders: [{
+        type: 'console',
+        category: 'GotAPI',
+        layout: {
+          type: 'pattern',
+          pattern: '%[%-5p %c%] - %m'
+        }
+      }]
+    });
+    this._logger = log4js.getLogger('GotAPI');
+
+    this._readConfig().then(() => {
+      if (this._config.createServer) {
+        const manager = require('deviceconnect-manager/deviceconnect-manager');
+        const http = require('http');
+        http.createServer(manager).listen(PORT, () => {
+          this._logger.info('listen on port 4035');
+          this._init();
+        });
+      } else {
+        this._init();
+      }
+    });
+  }
+
+  _readConfig () {
+    return cosmiconfig('GotAPI', {
+      configPath: path.resolve(__dirname, './config.yml')
+    }).then((result) => {
+      this._config = Object.assign(this._config, result.config);
+    }).catch(() => {
+      return Promise.resolve();
     });
   }
 
   _init () {
+    const baseURL =
+      url.format({
+        protocol: this._config.ssl ? 'https:' : 'http:',
+        hostname: this._config.hostname,
+        port: this._config.port,
+        pathname: '/gotapi'
+      });
     this._axios = axios.create({
-      baseURL: `http://localhost:${PORT}/gotapi/`
+      baseURL: baseURL
     });
     this._pluginInterface.connectRouter({
       onopen: () => {
-        this.registerGotAPIManager().bind(this);
-        this._checkDevices().bind(this);
+        this.registerGotAPIManager();
+        this._checkDevices();
       },
       onclose: (function () {}).bind(this)
     });
@@ -52,42 +97,29 @@ class GotAPIManagerPlugin {
         this._services = services;
       })
       .then(() => {
-        setTimeout(this._checkDevices, 1000);
+        setTimeout(() => this._checkDevices(), 1000);
       });
   }
 
   registerService (service) {
     this._pluginInterface.registerDevice(
-      service.id, // UUID
+      `GOTAPI_${service.id}`, // UUID
       service.name, // deviceType
       service.name, // description
       service.name  // nickname
     )
-    .then((re) => {
-      if (!re.success) return;
-      const procedures = service.scopes.map((name) => ({
-        name: `${name}.get`,
-        procedure: (deviceIdArray, argObj) => {
-          console.log('procedure:', service.id, deviceIdArray, argObj);
-
-          return this._axios.get({
-            url: `/${name}`,
-            params: { serviceId: service.id }
-          }).then((res) => {
-            if (res.status === 200 && res.data.result === 0) {
-              return Promise.resolve(res.data);
-            } else {
-              return Promise.reject(res.data);
-            }
-          });
-        }
-      }));
-      this._pluginInterface.registerProcedures(procedures);
-    });
+    .then((res) => {
+      if (!res.success) return;
+      this._logger.info('Registered:', service.name);
+      this._devices[res.deviceId] = service.id;
+      const procedures = this.createProcedures(service.scopes || service.plugins);
+      return this._pluginInterface.registerProcedures(procedures);
+    })
+    .catch(() => Promise.resolve());
   }
 
   unregisterService (service) {
-    this._pluginInterface.unregisterDevice(service.id);
+    this._pluginInterface.unregisterDevice(`GOTAPI_${service.id}`);
   }
 
   registerGotAPIManager () {
@@ -100,50 +132,40 @@ class GotAPIManagerPlugin {
       if (!re.success) return;
       return this._axios.get('/system');
     }).then((res) => {
-      const supports = [];
-      supports.push.apply(supports, res.data.supports);
-      supports.push.apply(supports, res.data.plugins.map((p) => p.supports));
-      return _.uniq(_.flattenDeep(supports));
-    }).then((supports) => {
-      const procedures = supports.map((name) => {
-        const methods = [ '', 'GET', 'POST', 'DELETE', 'PUT' ];
-
-        return methods.map((method) => ({
-          name: [ name, method.toLowerCase() ].filter((t) => t).join('.'),
-          procedure: (ids, params) => {
-            params.method = method || params.method;
-            return this.procedureMethod(ids, params, name);
-          }
-        }));
-      });
-
+      const procedures = this.createProcedures(res.data.supports);
       return this._pluginInterface.registerProcedures(_.flattenDeep(procedures));
-    }).then(() => {
-      return this._pluginInterface.registerProcedures([
-        {
-          name: 'reregister',
-          procedure: () => {
-            return this.registerGotAPIManager()
-              .catch(() => Promise.resolve()).then(() => ({}));
-          }
-        }
-      ]);
     });
   }
 
-  procedureMethod (deviceIdArray, rawParams, name) {
+  createProcedures (supports) {
+    const procedures = supports.map((name) => {
+      const methods = [ '', 'GET', 'POST', 'DELETE', 'PUT' ];
+      return methods.map((method) => ({
+        name: [ name, method.toLowerCase() ].filter((t) => t).join('.'),
+        procedure: (ids, params) => {
+          params.method = method || params.method;
+          return this.procedureMethod(ids, params, name);
+        }
+      }));
+    });
+    return _.flattenDeep(procedures);
+  }
+
+  procedureMethod (deviceIds, rawParams, name) {
     const requestPath =
       path.join(name, rawParams.interface || '', rawParams.attribute || '');
-    const data = rawParams.data;
+    const data = rawParams._raw;
+    const method = rawParams.method || 'GET';
     const params = Object.assign({}, rawParams, {
       interface: undefined,
       attribute: undefined,
       method: undefined,
-      data: undefined
+      _raw: undefined,
+      serviceId: this._devices[deviceIds[0]]
     });
 
     return this._axios.request({
-      method: params.method || 'GET',
+      method: method,
       url: requestPath,
       params: params,
       data: data

@@ -1,20 +1,20 @@
 diff --git packages/deviceconnect-manager/config.js packages/deviceconnect-manager/config.js
 old mode 100644
 new mode 100755
-index e3f4b49..e2aee2f
+index e3f4b49..7cf3b8b
 --- packages/deviceconnect-manager/config.js
 +++ packages/deviceconnect-manager/config.js
 @@ -1,5 +1,5 @@
  var fs = require('fs');
 -var config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-+var config = JSON.parse(fs.readFileSync(__dirname + './config.json', 'utf8'));
++var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
  
  config.http = createServerConfig(config.http);
  if (config.http.port === undefined) {
 diff --git packages/deviceconnect-manager/deviceconnect-manager.js packages/deviceconnect-manager/deviceconnect-manager.js
 old mode 100644
 new mode 100755
-index 2b89316..831f48b
+index 2b89316..39b2f3e
 --- packages/deviceconnect-manager/deviceconnect-manager.js
 +++ packages/deviceconnect-manager/deviceconnect-manager.js
 @@ -7,7 +7,7 @@ var Request = require('./request');
@@ -22,7 +22,7 @@ index 2b89316..831f48b
  
  var app = express();
 -var packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-+var packageJson = JSON.parse(fs.readFileSync(__dirname + './package.json', 'utf8'));
++var packageJson = JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf8'));
  var ownProfiles = [];
  config.supports.forEach(function(profile) {
      ownProfiles.push(require(profile.module));

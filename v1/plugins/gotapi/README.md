@@ -9,9 +9,17 @@ Access [DeviceConnect] via Kadecot|JS WAMP.
 ### Installation
 
 ```
-git submodule init
-(cd DeviceConnect-NodeJS && patch -p0) < ./DeviceConnect-NodeJS.patch
+# First, install dependencies
 npm i
+
+# When you use DeviceConnect-NodeJS, please run below
+git submodule init && git submodule update
+(cd DeviceConnect-NodeJS && patch -p0) < ./DeviceConnect-NodeJS.patch
+npm i DeviceConnect-NodeJS/packages/deviceconnect-manager
+npm i DeviceConnect-NodeJS/packages/deviceconnect-plugin-host
+
+# Edit config.yml
+cp ./config.template.yml ./config.yml
 ```
 
 ### Procedure
@@ -25,8 +33,7 @@ npm i
 |method|HTTP method (if not included in procedure name)|`'GET'`|
 |interface||`undefined`|
 |attribute||`undefined`|
-|data|POST or PUT data|`undefined`|
-|serviceId|That got via `servicediscovery`|`undefined`|
+|_raw|POST or PUT data|`undefined`|
 
 And any query parameters.
 
