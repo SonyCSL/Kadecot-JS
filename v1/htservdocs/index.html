@@ -1,1 +1,45 @@
-Top page
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Kadecot WebUI</title>
+  </head>
+  <body>
+    <h1>Kadecot WebUI</h1>
+
+    <h2>Links</h2>
+    <ul>
+      <li>
+        <a href="./register.html">Register to Cloud</a>
+      </li>
+      <li>
+        <a href="./installer/">Web Installer</a>
+      </li>
+      <li>
+        <a href="./settings/">Settings</a>
+      </li>
+      <li>
+        <a id="jsonpTester" href="./APIQueryGenerator/">JSONP Tester</a>
+      </li>
+    </ul>
+
+    <h2>Info</h2>
+    <h3>Ports</h3>
+    <p>
+      80, 31413 (this is example)
+    </p>
+    <h3>LICENSES</h3>
+    <ul>
+      <li>
+        <a href="https://example.com" target="_blank">
+          EXAMPLE (MIT)
+        </a>
+      </li>
+    </ul>
+
+    <script>
+      var testerLink = document.getElementById('jsonpTester');
+      testerLink.setAttribute('href', './APIQueryGenerator?k=' + location.hostname);
+    </script>
+  </body>
+</html>
