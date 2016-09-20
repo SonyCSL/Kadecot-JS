@@ -11,7 +11,9 @@
     "websocket": "~1.0.23",
     "when": "~3.7.7"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint-plugin-html": "1.5.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
