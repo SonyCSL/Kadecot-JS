@@ -3,6 +3,7 @@
 const express = require('express');
 const path = require('path');
 const autobahn = require('autobahn');
+const JSONPRouterFactory = require('./htserv/JSONPRouter');
 
 class HTTPServer {
   constructor (realm, routerURL, callbacks) {
@@ -42,65 +43,7 @@ class HTTPServer {
 
     this.app.use(express.static(path.resolve(__dirname, './htservdocs')));
 
-    this.app.set('jsonp callback name', 'callback');
-    const JSONPRouter = express.Router();
-
-    JSONPRouter.use('/*', (req, res, next) => {
-      if (!this.session) res.status(500).jsonp({ error: 'Server isn\'t ready yet.'});
-      else next();
-    });
-
-    JSONPRouter.use('/:deviceId', (req, res) => {
-      const deviceId = parseInt(req.params.deviceId, 10);
-      const params = JSON.parse(req.query.params || '{}');
-      let procedure = req.query.procedure;
-
-      Promise.resolve()
-        .then(() => {
-          return this.session.call('com.sonycsl.kadecot.provider.procedure.getDeviceList');
-        })
-        .then((result) => {
-          return result.kwargs.deviceList.filter((d) => d.deviceId === deviceId);
-        })
-        .then((device) => {
-          if (device.length !== 1) {
-            return Promise.reject(new Error('Device is not fould.'));
-          } else {
-            return device[0];
-          }
-        })
-        .then((deviceInfo) => {
-          if (deviceInfo.protocol === 'echonetlite') {
-            procedure = `${deviceInfo.deviceType}.${procedure}`;
-          }
-          const procedureName = `${deviceInfo.prefix}.procedure.${procedure}`;
-          return this.session.call(
-            procedureName,
-            [ deviceId ],
-            params
-          );
-        })
-        .then((result) => {
-          res.jsonp(result.kwargs);
-        })
-        .catch((error) => {
-          res.jsonp({ error: error.message || error });
-          return Promise.resolve();
-        });
-    });
-
-    JSONPRouter.use('/', (req, res) => {
-      this.session.call('com.sonycsl.kadecot.provider.procedure.getDeviceList')
-        .then((result) => {
-          res.jsonp(result.kwargs);
-        })
-        .catch((error) => {
-          res.jsonp({ error: error.message || error });
-          return Promise.resolve();
-        });
-    });
-
-    this.app.use(`/jsonp/${this.realm}/devices`, JSONPRouter);
+    this.app.use(`/jsonp/${this.realm}/devices`, JSONPRouterFactory(this));
   }
 
   start (portNo) {
