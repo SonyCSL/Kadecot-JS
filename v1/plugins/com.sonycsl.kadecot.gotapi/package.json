@@ -14,9 +14,5 @@
     "cosmiconfig": "1.1.0",
     "lodash.flattendeep": "4.4.0",
     "log4js": "0.6.38"
-  },
-  "peerDependencies": {
-    "deviceconnect-manager": "*",
-    "deviceconnect-plugin-host": "*"
   }
 }
