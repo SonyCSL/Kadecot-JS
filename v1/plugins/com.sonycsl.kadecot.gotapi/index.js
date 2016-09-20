@@ -68,7 +68,10 @@ class GotAPIManagerPlugin {
         pathname: '/gotapi'
       });
     this._axios = axios.create({
-      baseURL: baseURL
+      baseURL: baseURL,
+      headers: {
+        Origin: 'http://example.com',
+      },
     });
     this._pluginInterface.connectRouter({
       onopen: () => {
@@ -113,7 +116,7 @@ class GotAPIManagerPlugin {
     const category = packageName.split('.').reverse()[0] || '';
     this._pluginInterface.registerDevice(
       `gotapi.${packageName}:${category}:nttdocomo:0:${service.id}`, // UUID
-      service.name, // deviceType
+      packageName, // deviceType
       service.name, // description
       service.name  // nickname
     )
@@ -134,7 +137,7 @@ class GotAPIManagerPlugin {
   registerGotAPIManager () {
     return this._pluginInterface.registerDevice(
       'gotapi.manager:manager:nttdocomo:0:gotapimanager', // UUID
-      'GotAPIManager', // deviceType
+      'device-connect', // deviceType
       'GotAPIManager', // description
       'GotAPIManager'  // nickname
     ).then((re) => {
@@ -173,6 +176,7 @@ class GotAPIManagerPlugin {
       serviceId: this._devices[deviceIds[0]]
     });
 
+    this._logger.info(requestPath);
     return this._axios.request({
       method: method,
       url: requestPath,
