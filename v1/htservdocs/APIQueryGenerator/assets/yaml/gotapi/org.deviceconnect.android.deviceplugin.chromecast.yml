@@ -1,0 +1,344 @@
+name: 'ChromeCast DevicePlugin Support Profile'
+prefix: com.sonycsl.kadecot.gotapi
+rpc:
+  System:
+    name: System
+    procedure: system.get
+    doc: "## System API\n\n| インターフェース名称 | Version | 種別    |\n| :--------- | :------ | :---- |\n| System API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンのシステム情報を提供するAPI\nDevice Connect ManagerのバージョンやサポートするAPI一覧、インストールされているデバイスプラグイン一覧などのアプリケーション情報を取得する。\n\n| HTTPメソッド | URI            |\n| :------- | :------------- |\n| GET      | /gotapi/system |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>バージョン</td>\n    <td colspan=\"2\" text-align=\"center\">version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>Device Connect Manager バージョンの文字列。</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>サポートしているI/Fのプロファイル名一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>プラグイン一覧</td>\n    <td colspan=\"2\" text-align=\"center\">plugins</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>サポートしているプラグインの一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"5\"></td>\n    <td>id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインを識別するID。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグイン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインのバージョン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>デバイスプラグインのサポートするプロファイル名の配列。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>packageName</td>\n    <td>string</td>\n    <td>○</td>\n    <td>デバイスプラグインのパッケージ名。</td>\n  </tr>\n\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/system\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"version\":\"1.0\",\n        \"supports\":[\n            \"authorization\",\n            \"availability\",\n            \"servicediscovery\",\n        \t\"serviceinfomation\",\n            \"system\"\n        ],\n       \"plugins\": [\n           {\n               \"id\": \"xxx1.localhost.deviceconnect.org\",\n               \"name\": \"Exampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"battery\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.example.deviceplugin\"\n           },\n           {\n               \"id\": \"xxx2.localhost.deviceconnect.org\",\n               \"name\": \"Sampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"light\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.sample.deviceplugin\"\n           }\n       ]\n    }\n"
+    docType: markdown
+  DeviceSystemWakeUp_PUT:
+    name: DeviceSystemWakeUp_PUT
+    procedure: system.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: device/wakeup
+      pluginId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Device System WakeUp API PUT\n\n| インターフェース名称               | Version | 種別    |\n| :----------------------- | :------ | :---- |\n| Device System WakeUp API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスプラグインの機能を有効にする。\nデバイスプラグインによっては、設定画面が起動してデバイスとの接続を行う。\n\n| HTTPメソッド | URI                          |\n| :------- | :--------------------------- |\n| PUT      | /gotapi/system/device/wakeup |\n\n| 論理名     | 物理名      | データ型   | 省略  | 設定値           |\n| :------ | :------- | :----- | :-- | :------------ |\n| プラグインID | pluginId | string | -   | 取得対象デバイスプラグイン |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/system/device/wakeup\t\t\t\t\t```\n\n|PUTデータ|\n\\|:--\\|\n|pluginId=xxxxx.localhost.deviceconnect.org|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  SystemEventsUnregister:
+    name: SystemEventsUnregister
+    procedure: system.delete
+    params:
+      interface:
+        type: string
+        const: true
+        value: events
+      sessionKey:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## System Events Unregister API\n\n| インターフェース名称                  | Version | 種別    |\n| :-------------------------- | :------ | :---- |\n| System Event Unregister API | 2.0.0   | 同期I/F |\n\n### 概要\n\n指定されたセッションキーに紐づくイベントを一挙に解除する。\n\n| HTTPメソッド | URI                   |\n| :------- | :-------------------- |\n| DELETE   | /gotapi/system/events |\n\n| 論理名     | 物理名        | データ型   | 省略  | 設定値         |\n| :------ | :--------- | :----- | :-- | :---------- |\n| セッションID | sessionKey | string | -   | イベントセッションID |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/system/events?sessionKey=xxx&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  ServiceInformation:
+    name: ServiceInformation
+    procedure: serviceinformation.get
+    params:
+    doc: "## Service Information API\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Service Information API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンまたは周辺機器についての情報を提供するAPI。\nサポートするプロファイル一覧、ネットワークへの接続状態を取得する。\n\n| HTTPメソッド | URI                        |\n| :------- | :------------------------- |\n| GET      | /gotapi/serviceinformation |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値          |\n| :----- | :-------- | :----- | :-- | :----------- |\n| サービスID | serviceId | string | -   | 取得対象スマートデバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>オブジェクト</td>\n    <td colspan=\"2\" text-align=\"center\">connect</td>\n    <td>object</td>\n    <td>-</td>\n    <td>デバイスプラグインの接続状態。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"4\"></td>\n    <td >wifi</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>WiFiの接続状態。 WiFiを提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >bluetooth</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>Bluetoothの接続状態。Bluetoothが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >nfc</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>NFCの接続状態。NFCが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >ble</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>BLEの接続状態。BLEが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>array</td>\n    <td>-</td>\n    <td>サポートしているプロファイル名の配列。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/serviceinformation?servieId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"connect\":{\n            \"wifi\":true\n        },\n        \"supports\":[\n            \"system\",\n            \"battery\",\n            \"vibration\"\n        ]\n    }\n"
+    docType: markdown
+  ServiceDiscovery:
+    name: ServiceDiscovery
+    procedure: servicediscovery.get
+    doc: "## Service Discovery API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Service Discovery API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイス検索機能を提供するAPI。\nDevice Connect Managerに接続されているスマートデバイス一覧を取得する。\n取得できる情報には、スマートデバイスへの接続するネットワーク、オンライン状態やデバイス固有のコンフィグ情報が格納されている。\n\n| HTTPメソッド | URI                      |\n| :------- | :----------------------- |\n| GET      | /gotapi/servicediscovery |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n\n  <tr>\n    <td>デバイス一覧</td>\n    <td colspan=\"2\" text-align=\"center\">services</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>デバイスデータ(object)の配列。</td>\n  </tr>\n  <tr>\n    <td>デバイスID</td>\n    <td rowspan=\"5\"></td>\n    <td >id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスを識別するID。</td>\n  </tr>\n  <tr>\n    <td>デバイス名</td>\n    <td >name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイス名。</td>\n  </tr>\n  <tr>\n    <td>デバイスタイプ</td>\n    <td >type</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスへの接続するネットワークを示す。<br>WiFi<br>BLE<br>NFC<br>Bluetooth</td>\n  </tr>\n  <tr>\n    <td>ネットワーク接続状態</td>\n    <td >online</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>デバイスのオンライン状態を示す<br>true: オンライン<br>false: オフライン</td>\n  </tr>\n  <tr>\n    <td>コンフィグ</td>\n    <td >config</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスに設定がある場合には、ここに文字列としてデータが格納されている。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/servicediscovery?accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"services\":[\n            {\n                \"id\":\"device1.localhost.deviceconnect.org\",\n                \"name\":\"SW2\",\n                \"type\":\"Bluetooth\",\n                \"online\":true,\n                \"config\":\"\"\n            },\n            {\n                \"id\":\"device2.localhost.deviceconnect.org\",\n                \"name\":\"Hue\",\n                \"type\":\"WiFi\",\n                \"online\":false,\n                \"config\":\"\"\n            }\n        ]\n    }\n"
+    docType: markdown
+  MediaPlayerMedia_PUT:
+    name: MediaPlayerMedia_PUT
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: media
+      mediaId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Media Player Media API PUT\n\n| インターフェース名称             | Version | 種別    |\n| :--------------------- | :------ | :---- |\n| Media Player Media API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）を変更する。\nメディア再生中にmediaIdを再指定した場合は、新たに指定されたメディアの再生が始まる事とする。\n\n| HTTPメソッド | URI                        |\n| :------- | :------------------------- |\n| PUT      | /gotapi/media_player/media |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値                                            |\n| :----- | :-------- | :----- | :-- | :--------------------------------------------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス                                       |\n| メディアID | mediaId   | string | -   | メディアを識別するID。メディアIDは同プロファイルのMediaList APIで取得する。 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/media\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&mediaId=12345&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerMedia_GET:
+    name: MediaPlayerMedia_GET
+    procedure: media_player.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: media
+      mediaId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Media Player Media API GET\n\n| インターフェース名称             | Version | 種別    |\n| :--------------------- | :------ | :---- |\n| Media Player Media API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の情報を取得する。\n\n| HTTPメソッド | URI                        |\n| :------- | :------------------------- |\n| GET      | /gotapi/media_player/media |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値                                            |\n| :----- | :-------- | :----- | :-- | :--------------------------------------------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス                                       |\n| メディアID | mediaId   | string | -   | メディアを識別するID。メディアIDは同プロファイルのMediaList APIで取得する。 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n\n  <tr>\n    <td>マイムタイプ</td>\n    <td colspan=\"2\" text-align=\"center\">mimeType</td>\n    <td>string</td>\n    <td>○</td>\n    <td>メディアのMIMEタイプ。</td>\n  </tr>\n  <tr>\n    <td>タイトル名</td>\n    <td colspan=\"2\" text-align=\"center\">title</td>\n    <td>string</td>\n    <td>○</td>\n    <td>楽曲名や動画名等。</td>\n  </tr>\n  <tr>\n    <td>タイプ名</td>\n    <td colspan=\"2\" text-align=\"center\">type</td>\n    <td>string</td>\n    <td>○</td>\n    <td>タイトルの種別。「Music」（楽曲名）、「Movie」（動画名）など。</td>\n  </tr>\n\n  <tr>\n    <td>言語</td>\n    <td colspan=\"2\" text-align=\"center\">language</td>\n    <td>string</td>\n    <td>○</td>\n    <td>言語。BCP47で定義されている文字列を設定する。(例)「ja」「en-us」</td>\n  </tr>\n  <tr>\n    <td>説明文</td>\n    <td colspan=\"2\" text-align=\"center\">description</td>\n    <td>string</td>\n    <td>○</td>\n    <td>内容についての説明。</td>\n  </tr>\n  <tr>\n    <td>画像URI</td>\n    <td colspan=\"2\" text-align=\"center\">imageUri</td>\n    <td>string</td>\n    <td>○</td>\n    <td>アルバムカバーや動画サムネイルなどの画像へのURI。</td>\n  </tr>\n  <tr>\n    <td>曲の長さ</td>\n    <td colspan=\"2\" text-align=\"center\">duration</td>\n    <td>number</td>\n    <td>-</td>\n    <td>秒単位。</td>\n  </tr>\n  <tr>\n    <td>制作者情報</td>\n    <td colspan=\"2\" text-align=\"center\">creators</td>\n    <td>object</td>\n    <td>○</td>\n    <td>製作者情報。</td>\n  </tr>\n  <tr>\n    <td>制作者名</td>\n    <td rowspan=\"2\"></td>\n    <td >creator</td>\n    <td>string</td>\n    <td>○</td>\n    <td>制作を行った個人や法人の名称（楽曲のアーティスト名、動画の制作監督名、配給会社名など）。</td>\n  </tr>\n  <tr>\n    <td>役割</td>\n    <td >role</td>\n    <td>string</td>\n    <td>○</td>\n    <td>制作者の役割。「Artist」アーティスト名。「Lyrics」作詞者名。「Composer」作曲者名。「Film distributer」映画配給会社名。※上記以外の文字列を自由に設定してもよい。※W3Cでは明確な定義が無い。</td>\n  </tr>\n  <tr>\n    <td>キーワード</td>\n    <td colspan=\"2\" text-align=\"center\">keywords</td>\n    <td>string[]</td>\n    <td>○</td>\n    <td>内容についての各種キーワードをstring配列で返す。</td>\n  </tr>\n  <tr>\n    <td>ジャンル</td>\n    <td colspan=\"2\" text-align=\"center\">genres</td>\n    <td>string[]</td>\n    <td>○</td>\n    <td>ジャンルをstring配列で返す。</td>\n  </tr>\n</table>\n\n※W3C参考資料には他にも多数のプロパティが定義されているが、ここでは一部を抜粋した。\t\t\t\t\t\n    (参考)メディアリソースのプロパティ一覧\t\t\t\t\t\n\t\\[http&#x3A;//www.w3.org/TR/2014/REC-mediaont-api-1.0-20140313/#Properties](http&#x3A;//www.w3.org/TR/2014/REC-mediaont-api-1.0-20140313/#Properties)\t\t\t\n※トラックについて\t\t\t\t\t\n    (参考1)トラックのイメージ図。\t\t\t\t\t\n\t\\[Media Capture and Streams - 4. Stream API - 4.1 Introduction](http&#x3A;//www.w3.org/TR/mediacapture-streams/#introduction)\t\t\t\t\n    (参考2)W3Cのトラック(MediaStreamTrack)の説明。\t\t\t\t\t\n\t\\[Media Capture and Streams - 4. Stream API - 4.3 MediaStreamTrack](http&#x3A;//www.w3.org/TR/mediacapture-streams/#mediastreamtrack)\t\t\t\t\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/media_player/media?serviceId=xxxxx.localhost.deviceconnect.org&mediaId=12345&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"mimeType\":\"audio/mpeg\",\n        \"title\" : \"Artificial Horizon\",\n        \"type\" : \"Album title\",\n        \"language\" : \"en-us\",\n        \"description\" : \"This is description.\",\n        \"imageUri\" : \"file:///path/to/albumArt.png\",\n        \"duration\":192,\n        \"creators\":\n        [\n          {\n            \"creator\" : \"William Shakespeare\",\n            \"role\" : \"artist\"\n          }\n        ],\n        \"keywords\": [ \"keyword1\", \"keyword2\", \"keyword3\" ],\n        \"genres\": [ \"sports\", \"j-pops\", \"rock\" ]\n    }\n"
+    docType: markdown
+  MediaPlayerMediaList:
+    name: MediaPlayerMediaList
+    procedure: media_player.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: media_list
+      mediaId:
+        type: string
+        const: false
+        value: ""
+        required: true
+      query:
+        type: string
+        const: false
+        value: ""
+        required: false
+      mimeType:
+        type: string
+        const: false
+        value: ""
+        required: false
+      order:
+        type: string
+        const: false
+        value: ""
+        required: false
+      offset:
+        type: number
+        const: false
+        value: ""
+        required: false
+      limit:
+        type: number
+        const: false
+        value: ""
+        required: false
+    doc: "## Media Player Media List API\n\n| インターフェース名称                 | Version | 種別    |\n| :------------------------- | :------ | :---- |\n| Media Player MediaList API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の一覧を取得する。\n\n| HTTPメソッド | URI                             |\n| :------- | :------------------------------ |\n| GET      | /gotapi/media_player/media_list |\n\n| 論理名              | 物理名       | データ型   | 省略  | 設定値                                                                                                             |                                                                                                                         |\n| :--------------- | :-------- | :----- | :-- | :-------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |\n| サービスID           | serviceId | string | -   | 取得対象デバイス                                                                                                        |                                                                                                                         |\n| メディアID           | mediaId   | string | -   | メディアを識別するID。メディアIDはFile Profileで取得する。                                                                           |                                                                                                                         |\n| 検索条件             | query     | string | ○   | 例) sound                                                                                                        | 検索する文字列。部分一致検索を行い、一致対象はレスポンスパラメータのタイトル名（title）、制作者名（creators/creator）。                                                  |\n| 検索するMIMEタイプ      | mimeType  | string | ○   | 例) video%2F                                                                                                     | 検索するメディアの種別（MIMEタイプ）。部分一致検索を行う。                                                                                         |\n| 検索結果の並び順         | order     | string | ○   | 例）duration,asc                                                                                                  | 検索結果の並び順。辞書順ソートの基準にするレスポンスパラメータの物理名と昇順・降順をカンマ区切りで指定する。物理名を最初に指定し、次に昇順はascを、降順はdescを指定する。省略時は、order=title,ascをしたのと同等となる。 |\n| 一覧の開始エントリ位置オフセット | offset    | number | ○   | 全検索結果エントリの内、取得する一覧の開始エントリの位置を指定する。省略時は全検索結果の先頭エントリからの取得となり、offset=0と同義。レスポンスパラメータの count と併用して、検索結果のページングを実現する。 |                                                                                                                         |\n| 一覧エントリ数の上限       | limit     | number | ○   | 取得する一覧のエントリ数の上限。省略もしくは0が指定された場合、全検索結果エントリを返却する。レスポンスパラメータの count と併用して、検索結果のページングを実現する。                         |                                                                                                                         |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"3\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"3\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>全検索結果の件数</td>\n    <td colspan=\"3\" text-align=\"center\">count</td>\n    <td>number</td>\n    <td>-</td>\n    <td>全検索結果の件数。リクエストパラメータの offset および limit と併用して、検索結果のページングを実現する。</td>\n  </tr>\n  <tr>\n    <td>検索にヒットしたメディアの情報</td>\n    <td colspan=\"3\" text-align=\"center\">media</td>\n    <td>object</td>\n    <td>-</td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>メディアID</td>\n    <td rowspan=\"13\"></td>\n    <td colspan=\"2\" text-align=\"center\">mediaId</td>\n    <td>string</td>\n    <td>-</td>\n    <td>メディアを識別するID。</td>\n  </tr>\n  <tr>\n    <td>マイムタイプ</td>\n    <td colspan=\"2\" text-align=\"center\">mimeType</td>\n    <td>string</td>\n    <td>○</td>\n    <td>メディアのMIMEタイプ。</td>\n  </tr>\n  <tr>\n    <td>タイトル名</td>\n    <td colspan=\"2\" text-align=\"center\">title</td>\n    <td>string</td>\n    <td>○</td>\n    <td>楽曲名や動画名等。</td>\n  </tr>\n  <tr>\n    <td>タイプ名</td>\n    <td colspan=\"2\" text-align=\"center\">type</td>\n    <td>string</td>\n    <td>○</td>\n    <td>タイトルの種別。「Music」（楽曲名）、「Movie」（動画名）など。</td>\n  </tr>\n\n  <tr>\n    <td>言語</td>\n    <td colspan=\"2\" text-align=\"center\">language</td>\n    <td>string</td>\n    <td>○</td>\n    <td>言語。BCP47で定義されている文字列を設定する。(例)「ja」「en-us」</td>\n  </tr>\n  <tr>\n    <td>説明文</td>\n    <td colspan=\"2\" text-align=\"center\">description</td>\n    <td>string</td>\n    <td>○</td>\n    <td>内容についての説明。</td>\n  </tr>\n  <tr>\n    <td>画像URI</td>\n    <td colspan=\"2\" text-align=\"center\">imageUri</td>\n    <td>string</td>\n    <td>○</td>\n    <td>アルバムカバーや動画サムネイルなどの画像へのURI。</td>\n  </tr>\n  <tr>\n    <td>曲の長さ</td>\n    <td colspan=\"2\" text-align=\"center\">duration</td>\n    <td>number</td>\n    <td>-</td>\n    <td>秒単位。</td>\n  </tr>\n  <tr>\n    <td>制作者情報</td>\n    <td colspan=\"2\" text-align=\"center\">creators</td>\n    <td>object</td>\n    <td>○</td>\n    <td>製作者情報。</td>\n  </tr>\n  <tr>\n    <td>制作者名</td>\n    <td rowspan=\"2\"></td>\n    <td >creator</td>\n    <td>string</td>\n    <td>○</td>\n    <td>制作を行った個人や法人の名称（楽曲のアーティスト名、動画の制作監督名、配給会社名など）。</td>\n  </tr>\n  <tr>\n    <td>役割</td>\n    <td >role</td>\n    <td>string</td>\n    <td>○</td>\n    <td>制作者の役割。「Artist」アーティスト名。「Lyrics」作詞者名。「Composer」作曲者名。「Film distributer」映画配給会社名。※上記以外の文字列を自由に設定してもよい。※W3Cでは明確な定義が無い。</td>\n  </tr>\n  <tr>\n    <td>キーワード</td>\n    <td colspan=\"2\" text-align=\"center\">keywords</td>\n    <td>string[]</td>\n    <td>○</td>\n    <td>内容についての各種キーワードをstring配列で返す。</td>\n  </tr>\n  <tr>\n    <td>ジャンル</td>\n    <td colspan=\"2\" text-align=\"center\">genres</td>\n    <td>string[]</td>\n    <td>○</td>\n    <td>ジャンルをstring配列で返す。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/media_player/media_llist?serviceId=xxxxx.localhost.deviceconnect.org&mimeType=audio％２Fmp3&limit=10&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"count”:2,\n        \"media\":\n        [\n          {\n            \"mimeType\":\"audio/mpeg\",\n            \"title\" : \"Artificial Horizon\",\n            \"type\" : \"Album title\",\n            \"language\" : \"en-us\",\n            \"description\" : \"This is description.\",\n            \"imageUri\" : \"file:///path/to/albumArt_1.png\",\n            \"duration\":192,\n            \"creators\":\n            [\n              {\n                \"creator\" : \"William Shakespeare\",\n                \"role\" : \"artist\"\n              }\n            ],\n            \"keywords\": [ \"keyword1\", \"keyword2\", \"keyword3\" ],\n            \"genres\": [ \"sports\", \"j-pops\", \"rock\" ]\n          },\n          {\n            \"mimeType\":\"audio/mp3\",\n            \"title\" : \"Natural Vertical\",\n            \"type\" : \"Album title\",\n            \"language\" : \"en-us\",\n            \"description\" : \"This is description.\",\n            \"imageUri\" : \"file:///path/to/albumArt_2.png”,\n            \"duration\":192,\n            \"creators\":\n            [\n              {\n                \"creator\" : \"Vilhelmina Gunslinger\",\n                \"role\" : \"artist\"\n              }\n            ],\n            \"keywords\": [ \"keyword1\", \"keyword2\", \"keyword3\" ],\n            \"genres\": [ \"sports\", \"world\", \"classical\" ]\n          }\n        ]\n    }\n"
+    docType: markdown
+  MediaPlayerStatus:
+    name: MediaPlayerStatus
+    procedure: media_player.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: play_status
+    doc: "## Media Player Status API\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Media Player Status API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の再生状態（音声・映像の再生・一時停止・ミュート）を取得する。\n再生中のメディアが無い場合はエラーを返却する。\n\n| HTTPメソッド | URI                              |\n| :------- | :------------------------------- |\n| GET      | /gotapi/media_player/play_status |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                                       |\n| :--- | :----- | :----- | :-- | :---------------------------------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答                        |\n| 再生状態 | status | string | -   | ・\"play\" 再生<br>・\"stop\" 停止<br>・\"pause\" 一時停止 |\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/media_play/play_status?serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"status\": \"play\"\n    }\n"
+    docType: markdown
+  MediaPlayerPlay:
+    name: MediaPlayerPlay
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: play
+    doc: "## Media Player Play API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Media Player Play API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の再生状態を再生中に変更する。\n再生中のメディアが無い場合はエラーを返却する。\n停止状態以外の状態で呼び出された場合はエラーを返却する。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| PUT      | /gotapi/media_player/play |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/play\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerStop:
+    name: MediaPlayerStop
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: stop
+    doc: "## Media Player Stop API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Media Player Stop API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の再生状態を停止に変更する。\n再生中のメディアが無い場合はエラーを返却する。\n再生中以外の状態で呼び出された場合はエラーを返却する。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| PUT      | /gotapi/media_player/stop |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/stop\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerPause:
+    name: MediaPlayerPause
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: pause
+    doc: "## Media Player Pause API\n\n| インターフェース名称             | Version | 種別    |\n| :--------------------- | :------ | :---- |\n| Media Player Pause API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の再生状態を一時停止に変更する。\n再生中のメディアが無い場合はエラーを返却する。\n再生中以外の状態で呼び出された場合はエラーを返却する。\n\n| HTTPメソッド | URI                        |\n| :------- | :------------------------- |\n| PUT      | /gotapi/media_player/pause |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/pause\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerResume:
+    name: MediaPlayerResume
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: resume
+    doc: "## Media Player Resume API\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Media Player Resume API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の再生状態を再生中に変更する。\n再生中のメディアが無い場合はエラーを返却する。\n一時停止以外の状態で呼び出された場合はエラーを返却する。\n\n| HTTPメソッド | URI                         |\n| :------- | :-------------------------- |\n| PUT      | /gotapi/media_player/resume |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/resume\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerSeek_PUT:
+    name: MediaPlayerSeek_PUT
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: seek
+      pos:
+        type: number
+        const: false
+        value: ""
+        required: true
+    doc: "## Media Player Seek API PUT\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Media Player Seek API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の再生位置を変更する。\n再生中のメディアが無い場合はエラーを返却する。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| PUT      | /gotapi/media_player/seek |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値                                                                                       |\n| :----- | :-------- | :----- | :-- | :---------------------------------------------------------------------------------------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス                                                                                  |\n| 再生位置   | pos       | number | -   | 秒単位。最大値はMedia API（GET）やMediaList APIで取得できるパラメータ duration に相当する。<br>範囲(0 ≤ pos ≤ duration) |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/seek\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerSeek_GET:
+    name: MediaPlayerSeek_GET
+    procedure: media_player.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: seek
+    doc: "## Media Player Seek API GET\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Media Player Seek API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの再生コンテンツ（再生対象の音楽、映像）の再生位置を取得する。\n再生中のメディアが無い場合はエラーを返却する。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| GET      | /gotapi/media_player/seek |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                                                                                       |\n| :--- | :----- | :----- | :-- | :---------------------------------------------------------------------------------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答                                                                        |\n| 再生位置 | pos    | number | -   | 秒単位。最大値はMedia API（GET）やMediaList APIで取得できるパラメータ duration に相当する。<br>範囲(0 ≤ pos ≤ duration) |\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/media_player/seek?serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"pos\": 180\n    }\n"
+    docType: markdown
+  MediaPlayerVolume_GET:
+    name: MediaPlayerVolume_GET
+    procedure: media_player.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: volume
+    doc: "## Media Player Volume API GET\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Media Player Volume API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスのメディアプレイヤーの再生音量を取得する。\nシステム全体の音量を取得したい場合はSettingsプロファイルのVolume Settings APIを用いる事。\n\n| HTTPメソッド | URI                         |\n| :------- | :-------------------------- |\n| GET      | /gotapi/media_player/volume |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| 論理名           | 物理名    | データ型   | 省略  | 設定値                                                      |\n| :------------ | :----- | :----- | :-- | :------------------------------------------------------- |\n| 処理結果          | result | number | -   | 0:正常応答<br>0以外:異常応答                                       |\n| 設定したいメディア再生音量 | volume | number | -   | メディアの再生音量を0から1の割合で表す。<br>範囲 (0.0 &lt;= voleme &lt;= 1.0) |\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/media_player/volume?serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"volume\" : 0.7\n    }\n"
+    docType: markdown
+  MediaPlayerVolume_PUT:
+    name: MediaPlayerVolume_PUT
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: volume
+      volume:
+        type: number
+        const: false
+        value: ""
+        required: true
+    doc: "## Media Player Volume API PUT\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Media Player Volume API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスのメディアプレイヤーの再生音量を変更する。\nシステム全体の音量を変更したい場合はSettingsプロファイルのVolume Settings APIを用いる事。\n\n| HTTPメソッド | URI                         |\n| :------- | :-------------------------- |\n| PUT      | /gotapi/media_player/volume |\n\n| 論理名           | 物理名       | データ型   | 省略  | 設定値                                                      |\n| :------------ | :-------- | :----- | :-- | :------------------------------------------------------- |\n| サービスID        | serviceId | string | -   | 取得対象デバイス                                                 |\n| 設定したいメディア再生音量 | volume    | number | -   | メディアの再生音量を0から1の割合で表す。<br>範囲 (0.0 &lt;= voleme &lt;= 1.0) |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/volume\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerMute_GET:
+    name: MediaPlayerMute_GET
+    procedure: media_player.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: mute
+    doc: "## Media Player Mute API GET\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Media Player Mute API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスのメディアプレイヤー再生音量のミュートを解除する。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| GET      | /gotapi/media_player/mute |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| 論理名    | 物理名    | データ型    | 省略  | 設定値                                              |\n| :----- | :----- | :------ | :-- | :----------------------------------------------- |\n| 処理結果   | result | number  | -   | 0:正常応答<br>0以外:異常応答                               |\n| ミュート状態 | mute   | boolean | -   | 再生音量のミュート状態を表す。<br>true: ミュート有り<br>false: ミュート無し |\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/media_player/mute?serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"mute\" : false\n    }\n"
+    docType: markdown
+  MediaPlayerMute_DELETE:
+    name: MediaPlayerMute_DELETE
+    procedure: media_player.delete
+    params:
+      interface:
+        type: string
+        const: true
+        value: mute
+    doc: "## Media Player Mute API DELETE\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Media Player Mute API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスのメディアプレイヤー再生音量のミュートを解除する。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| DELETE   | /gotapi/media_player/mute |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/media_player/mute?serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  MediaPlayerMute_PUT:
+    name: MediaPlayerMute_PUT
+    procedure: media_player.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: mute
+    doc: "## Media Player Mute API PUT\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Media Player Mute API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスのメディアプレイヤー再生音量のミュートを有効にする。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| PUT      | /gotapi/media_player/mute |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/media_player/mute\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=xxxxx.localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  Notification_POST:
+    name: Notification_POST
+    procedure: notification.post
+    params:
+      interface:
+        type: string
+        const: true
+        value: notify
+      type:
+        type: number
+        const: false
+        value: ""
+        required: true
+      dir:
+        type: string
+        const: false
+        value: ""
+        required: false
+      lang:
+        type: string
+        const: false
+        value: ""
+        required: false
+      body:
+        type: string
+        const: false
+        value: ""
+        required: false
+      tag:
+        type: string
+        const: false
+        value: ""
+        required: false
+      uri:
+        type: string
+        const: false
+        value: ""
+        required: false
+    doc: "## Notification API POST\n\n| インターフェース名称       | Version | 種別    |\n| :--------------- | :------ | :---- |\n| Notification API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスにノーティフィケーションの表示要求をする。\nノーティフィケーションの表示要求の到達成否を応答として返却し、ノーティフィケーションの表示完了を待って応答をするわけではない。\nノーティフィケーションの表示方法は表示要求を受けたスマートデバイスに依存する。\n\n| HTTPメソッド | URI                         |\n| :------- | :-------------------------- |\n| POST     | /gotapi/notification/notify |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値                                                          |\n| :----- | :-------- | :----- | :-- | :----------------------------------------------------------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス                                                     |\n| 通知タイプ  | type      | number | -   | 通知のタイプを識別する。<br>0: 音声通話着信<br>1: メール着信<br>2: SMS着信<br>3: イベント |\n| 向き     | dir       | string | ○   | メッセージの文字の向き。<br>auto: 自動<br>rtl: 右から左<br>ltr: 左から右           |\n| 言語     | lang      | string | ○   | メッセージの言語。 ref. BCP47                                         |\n| メッセージ  | body      | string | ○   | 通知メッセージ。                                                     |\n| タグ     | tag       | string | ○   | 任意タグ文字列 カンマ(,)区切りで任意個数指定。                                    |\n| アイコン   | uri       | string | ○   | アイコンファイルのURI。                                                |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名            | データ型   | 省略  | 設定値                |\n| :--- | :------------- | :----- | :-- | :----------------- |\n| 処理結果 | result         | number | -   | 0:正常応答<br>0以外:異常応答 |\n| 通知ID | notificationId | string | ○   | ユニークな文字列。          |\n\n### リクエストサンプル\n\n    POST  http://localhost:4035/gotapi/notification/notify\t\t\t\t\n\n|POSTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&type=0&dir=auto&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"notificationId\":\"nid001\"\n    }\n"
+    docType: markdown
+  Notification_DELETE:
+    name: Notification_DELETE
+    procedure: notification.delete
+    params:
+      interface:
+        type: string
+        const: true
+        value: notify
+      notificationId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Notification API DELETE\n\n| インターフェース名称       | Version | 種別    |\n| :--------------- | :------ | :---- |\n| Notification API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスにノーティフィケーションの消去要求をする。\nノーティフィケーションの消去要求の到達成否を応答として返却し、ノーティフィケーションの消去完了を待って応答をするわけではない。\n\n| HTTPメソッド | URI                         |\n| :------- | :-------------------------- |\n| DELETE   | /gotapi/notification/notify |\n\n| 論理名    | 物理名            | データ型   | 省略  | 設定値       |\n| :----- | :------------- | :----- | :-- | :-------- |\n| サービスID | serviceId      | string | -   | 取得対象デバイス  |\n| 通知ID   | notificationId | string | -   | ユニークな文字列。 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/notification/notify?serviceId=localhost.deviceconnect.org&notificationId=nid001&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  CanvasDrawImage:
+    name: CanvasDrawImage
+    procedure: canvas.post
+    params:
+      interface:
+        type: string
+        const: true
+        value: drawimage
+      mimeType:
+        type: string
+        const: false
+        value: ""
+        required: false
+      data:
+        type: array
+        const: false
+        value: ""
+        required: false
+      uri:
+        type: string
+        const: false
+        value: ""
+        required: false
+      x:
+        type: number
+        const: false
+        value: ""
+        required: false
+      y:
+        type: number
+        const: false
+        value: ""
+        required: false
+      mode:
+        type: string
+        const: false
+        value: ""
+        required: false
+    doc: "## Canvas Draw Image API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Canvas Draw Image API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスに画像を描画する。\n\n| HTTPメソッド | URI                      |\n| :------- | :----------------------- |\n| POST     | /gotapi/canvas/drawimage |\n\n| 論理名                   | 物理名       | データ型    | 省略  | 設定値                                                                                                                                                      |\n| :-------------------- | :-------- | :------ | :-- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| サービスID                | serviceId | string  | -   | 取得対象スマートデバイス                                                                                                                                             |\n| MIMEタイプ               | mimeType  | string  | ○   | 表示する画像のMimeType。                                                                                                                                         |\n| ファイルのbinary           | data      | byte\\[] | ○   | 表示する画像ファイルのbinary。uriと同時に省略することはできない。両方指定した場合の挙動は未定義。                                                                                                    |\n| ファイルのURI              | uri       | string  | ○   | 表示する画像ファイルのURI。dataと同時に省略することはできない。両方指定した場合の挙動は未定義。                                                                                                      |\n| デバイスが持つ空間の左上を原点としたx座標 | x         | int     | ○   | 0～デバイスの空間領域。等倍描画モードの場合のみ有効。                                                                                                                              |\n| デバイスが持つ空間の左上を原点としたy座標 | y         | int     | ○   | 0～デバイスの空間領域。等倍描画モードの場合のみ有効。                                                                                                                              |\n| 画像描画モード               | mode      | string  | ○   | (省略時)：等倍描画モード。座標(x, y)に画像の左上隅がくるように描画する。<br>scales：スケールモード。アスペクト比を保持して最大限に拡大して画面中央に描画する。x, y座標は無効。<br>fills：フィルモード。等倍の画像を並べて画面全体に敷き詰めるように描画する。x, y座標は無効。 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型 | 省略  | 設定値                |\n| :--- | :----- | :--- | :-- | :----------------- |\n| 処理結果 | result | int  | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    POST http://localhost:4035/gotapi/canvas/drawimage\n\n|Mutipartボディ|\n\\|:--\\|\n|Content-Type: multipart/form-data;<br>boundary=----WebKitFormBoundaryp7MA4YWxkTrZu0gW<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"accessToken\"<br>xxxxx<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"serviceId\"<br>localhost.dconnect.com<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"mimeType\"<br>image/png<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"data\"; filename=\"ic_launcher.png\"<br>Content-Type: image/png<br>＜binary省略＞<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"x\"<br>100<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"y\"<br>50----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"mode\"<br>scales<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\": 0\n    }\n"
+    docType: markdown

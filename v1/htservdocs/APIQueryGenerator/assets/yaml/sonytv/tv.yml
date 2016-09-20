@@ -1,0 +1,675 @@
+# デバイスの名前
+name: SonyTV
+# このデバイスにあるProcedure一覧
+prefix: com.sonycsl.kadecot.sonytv
+# このデバイスができる操作一覧
+rpc:
+  #--------------------------------
+  turnOff:
+    procedure: system
+    doc: |-
+      Turn off the power.
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPowerStatus
+      params:
+        type: array
+        const: false
+        value: [{"status":false}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  turnOn:
+    procedure: wol
+    doc: |-
+      Turn on the power.
+    params:
+  #--------------------------------
+  getPowerStatus:
+    procedure: system
+    doc: |-
+      Get the power status.
+    # パラメーター
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: getPowerStatus
+      params:
+        type: array
+        const: false
+        value: []
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  VolumeDown:
+    procedure: ircc
+    doc: |-
+      Turn down the volume of the TV.
+    params:
+      name:
+        type: string
+        const: true
+        value: VolumeDown
+  #--------------------------------
+  VolumeUp:
+    procedure: ircc
+    doc: |-
+      Turn up the volume of the TV.
+    params:
+      name:
+        type: string
+        const: true
+        value: VolumeUp
+  #--------------------------------
+  ChannelDown:
+    procedure: ircc
+    doc: |-
+      Back previous channel
+    params:
+      name:
+        type: string
+        const: true
+        value: ChannelDown
+  #--------------------------------
+  ChannelUp:
+    procedure: ircc
+    doc: |-
+      Go to next channel
+    params:
+      name:
+        type: string
+        const: true
+        value: ChannelUp
+  #--------------------------------
+  EPG:
+    procedure: ircc
+    doc: |-
+      Display a Electronic Program Guide.
+    params:
+      name:
+        type: string
+        const: true
+        value: EPG
+  #--------------------------------
+  Display:
+    procedure: ircc
+    doc: |-
+      Toggle TV information on display
+    params:
+      name:
+        type: string
+        const: true
+        value: Display
+  #--------------------------------
+  Confirm:
+    procedure: ircc
+    doc: |-
+      Input a Confirm.
+    params:
+      name:
+        type: string
+        const: true
+        value: Confirm
+  #--------------------------------
+  Return:
+    procedure: ircc
+    doc: |-
+      Input a Return.
+    params:
+      name:
+        type: string
+        const: true
+        value: Return
+  #--------------------------------
+  Option:
+    procedure: ircc
+    doc: |-
+      Input a Option.
+    params:
+      name:
+        type: string
+        const: true
+        value: Option
+  #--------------------------------
+  Home:
+    procedure: ircc
+    doc: |-
+      Input a Home
+    params:
+      name:
+        type: string
+        const: true
+        value: Home
+  #--------------------------------
+  Up:
+    procedure: ircc
+    doc: |-
+      Input a Up
+    params:
+      name:
+        type: string
+        const: true
+        value: Up
+  #--------------------------------
+  Down:
+    procedure: ircc
+    doc: |-
+      Input a Down
+    params:
+      name:
+        type: string
+        const: true
+        value: Down
+  #--------------------------------
+  Left:
+    procedure: ircc
+    doc: |-
+      Input a Left
+    params:
+      name:
+        type: string
+        const: true
+        value: Left
+  #--------------------------------
+  Right:
+    procedure: ircc
+    doc: |-
+      Input a Right
+    params:
+      name:
+        type: string
+        const: true
+        value: Right
+  #--------------------------------
+  Digital:
+    procedure: ircc
+    doc: |-
+      Input a Digital
+    params:
+      name:
+        type: string
+        const: true
+        value: Digital
+  #--------------------------------
+  BS:
+    procedure: ircc
+    doc: |-
+      Input a BS
+    params:
+      name:
+        type: string
+        const: true
+        value: BS
+  #--------------------------------
+  CS:
+    procedure: ircc
+    doc: |-
+      Input a CS
+    params:
+      name:
+        type: string
+        const: true
+        value: CS
+  #--------------------------------
+  Num1:
+    procedure: ircc
+    doc: |-
+      Input a Num1
+    params:
+      name:
+        type: string
+        const: true
+        value: Num1
+  #--------------------------------
+  Num2:
+    procedure: ircc
+    doc: |-
+      Input a Num2
+    params:
+      name:
+        type: string
+        const: true
+        value: Num2
+  #--------------------------------
+  Num3:
+    procedure: ircc
+    doc: |-
+      Input a Num3
+    params:
+      name:
+        type: string
+        const: true
+        value: Num3
+  #--------------------------------
+  Num4:
+    procedure: ircc
+    doc: |-
+      Input a Num4
+    params:
+      name:
+        type: string
+        const: true
+        value: Num4
+  #--------------------------------
+  Num5:
+    procedure: ircc
+    doc: |-
+      Input a Num5
+    params:
+      name:
+        type: string
+        const: true
+        value: Num5
+  #--------------------------------
+  Num6:
+    procedure: ircc
+    doc: |-
+      Input a Num6
+    params:
+      name:
+        type: string
+        const: true
+        value: Num6
+  #--------------------------------
+  Num7:
+    procedure: ircc
+    doc: |-
+      Input a Num7
+    params:
+      name:
+        type: string
+        const: true
+        value: Num7
+  #--------------------------------
+  Num8:
+    procedure: ircc
+    doc: |-
+      Input a Num8
+    params:
+      name:
+        type: string
+        const: true
+        value: Num8
+  #--------------------------------
+  Num9:
+    procedure: ircc
+    doc: |-
+      Input a Num9
+    params:
+      name:
+        type: string
+        const: true
+        value: Num9
+  #--------------------------------
+  Num10:
+    procedure: ircc
+    doc: |-
+      Input a Num10
+    params:
+      name:
+        type: string
+        const: true
+        value: Num10
+  #--------------------------------
+  Num11:
+    procedure: ircc
+    doc: |-
+      Input a Num11
+    params:
+      name:
+        type: string
+        const: true
+        value: Num11
+  #--------------------------------
+  Num12:
+    procedure: ircc
+    doc: |-
+      Input a Num12
+    params:
+      name:
+        type: string
+        const: true
+        value: Num12
+  #--------------------------------
+  HDMI1:
+    procedure: avContent
+    doc: |-
+      Change the input resorce to HDMI1
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPlayContent
+      params:
+        type: array
+        const: false
+        value: [{"uri":"extInput:hdmi?port=1"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  HDMI2:
+    procedure: avContent
+    doc: |-
+      Change the input resorce to HDMI2
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPlayContent
+      params:
+        type: array
+        const: false
+        value: [{"uri":"extInput:hdmi?port=2"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  HDMI3:
+    procedure: avContent
+    doc: |-
+      Change the input resorce to HDMI3
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPlayContent
+      params:
+        type: array
+        const: false
+        value: [{"uri":"extInput:hdmi?port=3"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  HDMI4:
+    procedure: avContent
+    doc: |-
+      Change the input resorce to HDMI4
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPlayContent
+      params:
+        type: array
+        const: false
+        value: [{"uri":"extInput:hdmi?port=4"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  VIDEO:
+    procedure: avContent
+    doc: |-
+      Change the input resorce to VIDEO
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPlayContent
+      params:
+        type: array
+        const: false
+        value: [{"uri":"extInput:composite?port=1"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  Component:
+    procedure: avContent
+    doc: |-
+      Change the input resorce to Component
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPlayContent
+      params:
+        type: array
+        const: false
+        value: [{"uri":"extInput:component?port=1"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  Blue:
+    procedure: ircc
+    doc: |-
+      Input a Blue
+    params:
+      name:
+        type: string
+        const: true
+        value: Blue
+  #--------------------------------
+  Red:
+    procedure: ircc
+    doc: |-
+      Input a Red
+    params:
+      name:
+        type: string
+        const: true
+        value: Red
+  #--------------------------------
+  Green:
+    procedure: ircc
+    doc: |-
+      Input a Green
+    params:
+      name:
+        type: string
+        const: true
+        value: Green
+  #--------------------------------
+  Yellow:
+    procedure: ircc
+    doc: |-
+      Input a Yellow
+    params:
+      name:
+        type: string
+        const: true
+        value: Yellow
+  #--------------------------------
+  ShowWebPage:
+    procedure: browser
+    doc: |-
+      Open web page on TV
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setTextUrl
+      params:
+        type: array
+        const: false
+        value: [{"url":"https://example.com"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  SetVolumeImmediatly:
+    procedure: audio
+    doc: |-
+      Change the volume to immediate value.
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setAudioVolume
+      params:
+        type: array
+        const: false
+        value: [{"target":"speaker","volume":"volumevalue"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  getApplicationList:
+    procedure: appControl
+    doc: |-
+      Get application list.
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: getApplicationList
+      params:
+        type: array
+        const: false
+        value: []
+      version:
+        type: number
+        const: false
+        procedure: appControl
+        value: 1.0
+  #--------------------------------
+  setAppActive:
+    procedure: appControl
+    doc: |-
+      Set a application active.
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setActiveApp
+      params:
+        type: array
+        const: false
+        value: [{"url":"localapp://biv/hoge"}]
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  getVolumeInformation:
+    procedure: audio
+    doc: |-
+      Get the volume information.
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: getVolumeInformation
+      params:
+        type: array
+        const: false
+        value: []
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  getPlayContentInfo:
+    procedure: avContent
+    doc: |-
+      Get what content play.
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: setPlayContentInfo
+      params:
+        type: array
+        const: false
+        value: []
+      version:
+        type: number
+        const: false
+        value: 1.0
+  #--------------------------------
+  getCurrentTime:
+    procedure: system
+    doc: |-
+      Get current time.
+    # パラメーター
+    params:
+      id:
+        type: number
+        const: false
+        value: 1
+      method:
+        type: string
+        const: true
+        value: getCurrentTime
+      params:
+        type: array
+        const: true
+        value: []
+      version:
+        type: number
+        const: false
+        value: 1.0

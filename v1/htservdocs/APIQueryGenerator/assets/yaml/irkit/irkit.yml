@@ -1,0 +1,41 @@
+# デバイスの名前
+name: irkit
+prefix: com.sonycsl.kadecot.irkit
+rpc:
+  # 操作の名前
+  getMessages:
+    # この操作が行えるProcedures
+    procedure: getMessages
+    # ドキュメント
+    doc: |-
+      Latest input message of IR Kit.
+      If this is called, the message is deleted from IR Kit.
+      http://app.kadecot.net/docs/ProcTopic/IRKit.pdf
+    # パラメーター
+    params:
+  postMessages:
+    procedure: postMessages
+    doc: |-
+      An object, which is obtained from a procedure "getMessages", composed by following pairs .
+      - "format": "raw" only (string).
+      - "freq": Sub-carrier frequency of the infrared signal [kHz]. 38 or 40 only (int)
+      - "data": Infrared signal data (Array of integer)
+      http://app.kadecot.net/docs/ProcTopic/IRKit.pdf
+    # パラメーター
+    params:
+      # パラメータの名前
+      format:
+        # 種類（string/number/array/object）
+        type: string
+        # 固定値かどうか
+        const: true
+        # 初期値
+        value: raw
+      freq:
+        type: number
+        const: false
+        value: 38
+      data:
+        type: array
+        const: false
+        value: []

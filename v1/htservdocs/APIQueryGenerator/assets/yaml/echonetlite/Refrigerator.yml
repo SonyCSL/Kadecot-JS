@@ -1,0 +1,1649 @@
+name: Refrigerator
+prefix: com.sonycsl.kadecot.echonetlite
+rpc:
+  OperationStatusGet:
+    procedure: get
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+  OperationStatusSet:
+    procedure: set
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  InstallationLocationGet:
+    procedure: get
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+  InstallationLocationSet:
+    procedure: set
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  StandardVersionInformationGet:
+    procedure: get
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+  StandardVersionInformationSet:
+    procedure: set
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  IdentificationNumberGet:
+    procedure: get
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+  IdentificationNumberSet:
+    procedure: set
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredInstantaneousPowerConsumptionGet:
+    procedure: get
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+  MeasuredInstantaneousPowerConsumptionSet:
+    procedure: set
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredCumulativePowerConsumptionGet:
+    procedure: get
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+  MeasuredCumulativePowerConsumptionSet:
+    procedure: set
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  ManufacturersFaultCodeGet:
+    procedure: get
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+  ManufacturersFaultCodeSet:
+    procedure: set
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  CurrentLimitSettingGet:
+    procedure: get
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+  CurrentLimitSettingSet:
+    procedure: set
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultStatusGet:
+    procedure: get
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+  FaultStatusSet:
+    procedure: set
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultDescriptionGet:
+    procedure: get
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+  FaultDescriptionSet:
+    procedure: set
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  ManufacturerCodeGet:
+    procedure: get
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+  ManufacturerCodeSet:
+    procedure: set
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeGet:
+    procedure: get
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeSet:
+    procedure: set
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ProductCodeGet:
+    procedure: get
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+  ProductCodeSet:
+    procedure: set
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionNumberGet:
+    procedure: get
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+  ProductionNumberSet:
+    procedure: set
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionDateGet:
+    procedure: get
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+  ProductionDateSet:
+    procedure: set
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerSavingOperationSettingGet:
+    procedure: get
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+  PowerSavingOperationSettingSet:
+    procedure: set
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  PositionInformationGet:
+    procedure: get
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+  PositionInformationSet:
+    procedure: set
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  CurrentTimeSettingGet:
+    procedure: get
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+  CurrentTimeSettingSet:
+    procedure: set
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CurrentDateSettingGet:
+    procedure: get
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+  CurrentDateSettingSet:
+    procedure: set
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerLimitSettingGet:
+    procedure: get
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+  PowerLimitSettingSet:
+    procedure: set
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CumulativeOperatingTimeGet:
+    procedure: get
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+  CumulativeOperatingTimeSet:
+    procedure: set
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  StatusChangeAnnouncementPropertyMapGet:
+    procedure: get
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+  StatusChangeAnnouncementPropertyMapSet:
+    procedure: set
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  SetPropertyMapGet:
+    procedure: get
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+  SetPropertyMapSet:
+    procedure: set
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GetPropertyMapGet:
+    procedure: get
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+  GetPropertyMapSet:
+    procedure: set
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  DoorOpenCloseStatusGet:
+    procedure: get
+    epc: 176
+    size: '1'
+    announce: undefined
+    doc: "Door open/close status\n\nDoor open = 0x41, Door close = 0x42\n\nName : Door open/close status\nEPC : 0xB0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorOpenCloseStatus
+  DoorOpenCloseStatusSet:
+    procedure: set
+    epc: 176
+    size: '1'
+    announce: undefined
+    doc: "Door open/close status\n\nDoor open = 0x41, Door close = 0x42\n\nName : Door open/close status\nEPC : 0xB0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorOpenCloseStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  DoorOpenWarningGet:
+    procedure: get
+    epc: 177
+    size: '1'
+    announce: undefined
+    doc: "Door open warning status\n\nDoor open warning found = 0x41 Door open warning not found = 0x42\n\nName : Door open warning\nEPC : 0xB1\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorOpenWarning
+  DoorOpenWarningSet:
+    procedure: set
+    epc: 177
+    size: '1'
+    announce: undefined
+    doc: "Door open warning status\n\nDoor open warning found = 0x41 Door open warning not found = 0x42\n\nName : Door open warning\nEPC : 0xB1\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorOpenWarning
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  RefrigeratorCompartmentDoorStatusGet:
+    procedure: get
+    epc: 178
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the refrigerator compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Refrigerator compartment door status\nEPC : 0xB2\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentDoorStatus
+  RefrigeratorCompartmentDoorStatusSet:
+    procedure: set
+    epc: 178
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the refrigerator compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Refrigerator compartment door status\nEPC : 0xB2\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentDoorStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FreezerCompartmentDoorStatusGet:
+    procedure: get
+    epc: 179
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the freezer compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Freezer compartment door status\nEPC : 0xB3\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FreezerCompartmentDoorStatus
+  FreezerCompartmentDoorStatusSet:
+    procedure: set
+    epc: 179
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the freezer compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Freezer compartment door status\nEPC : 0xB3\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FreezerCompartmentDoorStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  IceCompartmentDoorStatusGet:
+    procedure: get
+    epc: 180
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the ice compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Ice compartment door status\nEPC : 0xB4\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IceCompartmentDoorStatus
+  IceCompartmentDoorStatusSet:
+    procedure: set
+    epc: 180
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the ice compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Ice compartment door status\nEPC : 0xB4\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IceCompartmentDoorStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  VegetableCompartmentDoorStatusGet:
+    procedure: get
+    epc: 181
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the vegetable compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Vegetable compartment door status\nEPC : 0xB5\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentDoorStatus
+  VegetableCompartmentDoorStatusSet:
+    procedure: set
+    epc: 181
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the vegetable compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Vegetable compartment door status\nEPC : 0xB5\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentDoorStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MultiRefrigeraTingModeCompartmentDoorGet:
+    procedure: get
+    epc: 182
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the multi-refrigerating mode compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Multi-refrigera- ting mode compartment door\nEPC : 0xB6\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiRefrigeraTingModeCompartmentDoor
+  MultiRefrigeraTingModeCompartmentDoorSet:
+    procedure: set
+    epc: 182
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status (i.e. open or closed) of the multi-refrigerating mode compartment door.\n\nOpen = 0x41, closed = 0x42\n\nName : Multi-refrigera- ting mode compartment door\nEPC : 0xB6\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiRefrigeraTingModeCompartmentDoor
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MaximumAllowableTemperatureSettingLevelGet:
+    procedure: get
+    epc: 224
+    size: '8'
+    announce: undefined
+    doc: "Used to acquire the maximum allowable temperature setting levels for the individual compartments of the refrigerator.\n\nFirst byte: Refrigerator compartment Second byte: Freezer compartment Third byte:subzero-fresh compartment Fourth byte: Vegetable compartment Fifth byte: Multi-refrigerating mode compartment Sixth to eighth bytes: Reserved for future use. 0x01 to 0xFF (Level 1 to 255) 0x00 = no compartment\n\nName : Maximum allowable temperature setting level\nEPC : 0xE0\nData Type : unsigned char x 8\nData Size(Byte) : 8 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MaximumAllowableTemperatureSettingLevel
+  MaximumAllowableTemperatureSettingLevelSet:
+    procedure: set
+    epc: 224
+    size: '8'
+    announce: undefined
+    doc: "Used to acquire the maximum allowable temperature setting levels for the individual compartments of the refrigerator.\n\nFirst byte: Refrigerator compartment Second byte: Freezer compartment Third byte:subzero-fresh compartment Fourth byte: Vegetable compartment Fifth byte: Multi-refrigerating mode compartment Sixth to eighth bytes: Reserved for future use. 0x01 to 0xFF (Level 1 to 255) 0x00 = no compartment\n\nName : Maximum allowable temperature setting level\nEPC : 0xE0\nData Type : unsigned char x 8\nData Size(Byte) : 8 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MaximumAllowableTemperatureSettingLevel
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  RefrigeratorCompartmentTemperatureSettingGet:
+    procedure: get
+    epc: 226
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the refrigerator compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Refrigerator compartment temperature setting\nEPC : 0xE2\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentTemperatureSetting
+  RefrigeratorCompartmentTemperatureSettingSet:
+    procedure: set
+    epc: 226
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the refrigerator compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Refrigerator compartment temperature setting\nEPC : 0xE2\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentTemperatureSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FreezerCompartmentTemperatureSettingGet:
+    procedure: get
+    epc: 227
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the freezer compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Freezer compartment temperature setting\nEPC : 0xE3\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FreezerCompartmentTemperatureSetting
+  FreezerCompartmentTemperatureSettingSet:
+    procedure: set
+    epc: 227
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the freezer compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Freezer compartment temperature setting\nEPC : 0xE3\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FreezerCompartmentTemperatureSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  IceTemperatureSettingGet:
+    procedure: get
+    epc: 228
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the ice compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Ice temperature setting\nEPC : 0xE4\nData Type : signed char\nData Size(Byte) : 1 bytes\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IceTemperatureSetting
+  IceTemperatureSettingSet:
+    procedure: set
+    epc: 228
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the ice compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Ice temperature setting\nEPC : 0xE4\nData Type : signed char\nData Size(Byte) : 1 bytes\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IceTemperatureSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  VegetableCompartmentTemperatureSettingGet:
+    procedure: get
+    epc: 229
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the vegetable compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Vegetable compartment temperature setting\nEPC : 0xE5\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentTemperatureSetting
+  VegetableCompartmentTemperatureSettingSet:
+    procedure: set
+    epc: 229
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the vegetable compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Vegetable compartment temperature setting\nEPC : 0xE5\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentTemperatureSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MultiRefrigeraTingModeCompartmentTemperatureSettingGet:
+    procedure: get
+    epc: 230
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the multi-refrigerating mode compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Multi-refrigera- ting mode compartment temperature setting\nEPC : 0xE6\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiRefrigeraTingModeCompartmentTemperatureSetting
+  MultiRefrigeraTingModeCompartmentTemperatureSettingSet:
+    procedure: set
+    epc: 230
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the multi-refrigerating mode compartment temperature in ��C, and to acquire the current setting.\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Multi-refrigera- ting mode compartment temperature setting\nEPC : 0xE6\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiRefrigeraTingModeCompartmentTemperatureSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  RefrigeratorCompartmentTemperatureLevelSettingGet:
+    procedure: get
+    epc: 233
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the refrigerator compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Refrigerator compartment temperature level setting\nEPC : 0xE9\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentTemperatureLevelSetting
+  RefrigeratorCompartmentTemperatureLevelSettingSet:
+    procedure: set
+    epc: 233
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the refrigerator compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Refrigerator compartment temperature level setting\nEPC : 0xE9\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentTemperatureLevelSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FreezerCompartmentTemperatureLevelSettingGet:
+    procedure: get
+    epc: 234
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the freezer compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Freezer compartment temperature level setting\nEPC : 0xEA\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FreezerCompartmentTemperatureLevelSetting
+  FreezerCompartmentTemperatureLevelSettingSet:
+    procedure: set
+    epc: 234
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the freezer compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Freezer compartment temperature level setting\nEPC : 0xEA\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FreezerCompartmentTemperatureLevelSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  IceCompartmentTemperatureLevelSettingGet:
+    procedure: get
+    epc: 235
+    size: '1'
+    announce: undefined
+    doc: "Used to specify ice compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : ice compartment temperature level setting\nEPC : 0xEB\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IceCompartmentTemperatureLevelSetting
+  IceCompartmentTemperatureLevelSettingSet:
+    procedure: set
+    epc: 235
+    size: '1'
+    announce: undefined
+    doc: "Used to specify ice compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : ice compartment temperature level setting\nEPC : 0xEB\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IceCompartmentTemperatureLevelSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  VegetableCompartmentTemperatureLevelSettingGet:
+    procedure: get
+    epc: 236
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the vegetable compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Vegetable compartment temperature level setting\nEPC : 0xEC\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentTemperatureLevelSetting
+  VegetableCompartmentTemperatureLevelSettingSet:
+    procedure: set
+    epc: 236
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the vegetable compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Vegetable compartment temperature level setting\nEPC : 0xEC\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentTemperatureLevelSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MultiRefrigeraTingModeCompartmentTemperatureLevelSettingGet:
+    procedure: get
+    epc: 237
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the multi-refrigerating mode compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Multi-refrigera- ting mode compartment temperature level setting\nEPC : 0xED\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiRefrigeraTingModeCompartmentTemperatureLevelSetting
+  MultiRefrigeraTingModeCompartmentTemperatureLevelSettingSet:
+    procedure: set
+    epc: 237
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the multi-refrigerating mode compartment temperature by selecting a level from among the predefined levels, and to acquire the current setting.\n\n0x01 to maximum allowable temperature setting level (highest to lowest temperature)\n\nName : Multi-refrigera- ting mode compartment temperature level setting\nEPC : 0xED\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiRefrigeraTingModeCompartmentTemperatureLevelSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredRefrigeratorCompartmentTemperatureGet:
+    procedure: get
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured refrigerator compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured refrigerator compartment temperature\nEPC : 0xD1\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredRefrigeratorCompartmentTemperature
+  MeasuredRefrigeratorCompartmentTemperatureSet:
+    procedure: set
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured refrigerator compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured refrigerator compartment temperature\nEPC : 0xD1\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredRefrigeratorCompartmentTemperature
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredFreezerCompartmentTemperatureGet:
+    procedure: get
+    epc: 210
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured freezer compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured freezer compartment temperature\nEPC : 0xD2\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredFreezerCompartmentTemperature
+  MeasuredFreezerCompartmentTemperatureSet:
+    procedure: set
+    epc: 210
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured freezer compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured freezer compartment temperature\nEPC : 0xD2\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredFreezerCompartmentTemperature
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredSubzeroFreshCompartmentTemperatureGet:
+    procedure: get
+    epc: 211
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured meat and fish compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured subzero-fresh compartment temperature\nEPC : 0xD3\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredSubzeroFreshCompartmentTemperature
+  MeasuredSubzeroFreshCompartmentTemperatureSet:
+    procedure: set
+    epc: 211
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured meat and fish compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured subzero-fresh compartment temperature\nEPC : 0xD3\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredSubzeroFreshCompartmentTemperature
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredVegetableCompartmentTemperatureGet:
+    procedure: get
+    epc: 212
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured vegetable compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured vegetable compartment temperature\nEPC : 0xD4\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredVegetableCompartmentTemperature
+  MeasuredVegetableCompartmentTemperatureSet:
+    procedure: set
+    epc: 212
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured vegetable compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured vegetable compartment temperature\nEPC : 0xD4\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredVegetableCompartmentTemperature
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredMultiRefrigeratinGModeCompartmentTemperatureGet:
+    procedure: get
+    epc: 213
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured multi-refrigerating mode compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured multi-refrigeratin g mode compartment temperature\nEPC : 0xD5\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredMultiRefrigeratinGModeCompartmentTemperature
+  MeasuredMultiRefrigeratinGModeCompartmentTemperatureSet:
+    procedure: set
+    epc: 213
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the measured multi-refrigerating mode compartment temperature (��C).\n\n0x81 to 0x7E (-127 to 126��C)\n\nName : Measured multi-refrigeratin g mode compartment temperature\nEPC : 0xD5\nData Type : signed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredMultiRefrigeratinGModeCompartmentTemperature
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  CompressorRotationSpeedGet:
+    procedure: get
+    epc: 216
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the rotation speed of the compressor. The rotation speed is expressed in terms of a level.\n\nFirst byte: Maximum rotation speed L (0x01 to 0xFF (1 to 255)) Second byte: Rotation speed of the actual compressor: 0x00 to L (zero speed to highest speed)\n\nName : Compressor rotation speed\nEPC : 0xD8\nData Type : unsigned char\nData Size(Byte) : 2 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CompressorRotationSpeed
+  CompressorRotationSpeedSet:
+    procedure: set
+    epc: 216
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the rotation speed of the compressor. The rotation speed is expressed in terms of a level.\n\nFirst byte: Maximum rotation speed L (0x01 to 0xFF (1 to 255)) Second byte: Rotation speed of the actual compressor: 0x00 to L (zero speed to highest speed)\n\nName : Compressor rotation speed\nEPC : 0xD8\nData Type : unsigned char\nData Size(Byte) : 2 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CompressorRotationSpeed
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredElectricCurrentConsumptionGet:
+    procedure: get
+    epc: 218
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the measured electric current consumption.\n\n0x0000 to 0xFFFD (0 to 6553.3A)\n\nName : Measured electric current consumption\nEPC : 0xDA\nData Type : unsigned char\nData Size(Byte) : 2 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredElectricCurrentConsumption
+  MeasuredElectricCurrentConsumptionSet:
+    procedure: set
+    epc: 218
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the measured electric current consumption.\n\n0x0000 to 0xFFFD (0 to 6553.3A)\n\nName : Measured electric current consumption\nEPC : 0xDA\nData Type : unsigned char\nData Size(Byte) : 2 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredElectricCurrentConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  RatedPowerConsumptionGet:
+    procedure: get
+    epc: 220
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the rated power consumption.\n\n0x0000 to 0xFFFD (0 to 65533W)\n\nName : Rated power consumption\nEPC : 0xDC\nData Type : unsigned char\nData Size(Byte) : 2 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RatedPowerConsumption
+  RatedPowerConsumptionSet:
+    procedure: set
+    epc: 220
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the rated power consumption.\n\n0x0000 to 0xFFFD (0 to 65533W)\n\nName : Rated power consumption\nEPC : 0xDC\nData Type : unsigned char\nData Size(Byte) : 2 bytes\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RatedPowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  QuickFreezeFunctionSettingGet:
+    procedure: get
+    epc: 160
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the �gQuick freeze�h function of the refrigerator, and to acquire the current setting.\n\n�gNormal operation�h mode: 0x41 �gQuick freeze�h mode: 0x42 �gStandby for fast freezing�h mode: 0x43\n\nName : Quick freeze function setting\nEPC : 0xA0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: QuickFreezeFunctionSetting
+  QuickFreezeFunctionSettingSet:
+    procedure: set
+    epc: 160
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the �gQuick freeze�h function of the refrigerator, and to acquire the current setting.\n\n�gNormal operation�h mode: 0x41 �gQuick freeze�h mode: 0x42 �gStandby for fast freezing�h mode: 0x43\n\nName : Quick freeze function setting\nEPC : 0xA0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: QuickFreezeFunctionSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  QuickRefrigerationFunctionSettingGet:
+    procedure: get
+    epc: 161
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the �gquick refrigeration�h function of the refrigerator, and to acquire the current setting.\n\n�gNormal operation�h mode: 0x41 �gQuick refrigeration�h mode: 0x42 �gStandby for quick refrigeration�h mode: 0x43\n\nName : Quick refrigeration function setting\nEPC : 0xA1\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: QuickRefrigerationFunctionSetting
+  QuickRefrigerationFunctionSettingSet:
+    procedure: set
+    epc: 161
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the �gquick refrigeration�h function of the refrigerator, and to acquire the current setting.\n\n�gNormal operation�h mode: 0x41 �gQuick refrigeration�h mode: 0x42 �gStandby for quick refrigeration�h mode: 0x43\n\nName : Quick refrigeration function setting\nEPC : 0xA1\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: QuickRefrigerationFunctionSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  IcemakerSettingGet:
+    procedure: get
+    epc: 164
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to enable the automatic icemaker of the refrigerator, and to acquire the current setting.\n\n�gEnable icemaker�h option: 0x41 �gDisable icemaker�h option: 0x42 �gTemporarily disable icemaker�h option: 0x43\n\nName : Icemaker setting\nEPC : 0xA4\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IcemakerSetting
+  IcemakerSettingSet:
+    procedure: set
+    epc: 164
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to enable the automatic icemaker of the refrigerator, and to acquire the current setting.\n\n�gEnable icemaker�h option: 0x41 �gDisable icemaker�h option: 0x42 �gTemporarily disable icemaker�h option: 0x43\n\nName : Icemaker setting\nEPC : 0xA4\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IcemakerSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  IcemakerOperationStatusGet:
+    procedure: get
+    epc: 165
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status of the automatic icemaker of the refrigerator.\n\n�gIce-making in progress�h state: 0x41 �gIce-making stopped�h state: 0x42\n\nName : Icemaker operation status\nEPC : 0xA5\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IcemakerOperationStatus
+  IcemakerOperationStatusSet:
+    procedure: set
+    epc: 165
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status of the automatic icemaker of the refrigerator.\n\n�gIce-making in progress�h state: 0x41 �gIce-making stopped�h state: 0x42\n\nName : Icemaker operation status\nEPC : 0xA5\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IcemakerOperationStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  IcemakerTankStatusGet:
+    procedure: get
+    epc: 166
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status of the tank of the automatic icemaker of the refrigerator in terms of whether it contains water or not.\n\nIcemaker tank contains water: 0x41 There is no water left in the icemaker tank or the icemaker tank has not been positioned correctly in the refrigerator: 0x42\n\nName : Icemaker tank status\nEPC : 0xA6\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IcemakerTankStatus
+  IcemakerTankStatusSet:
+    procedure: set
+    epc: 166
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status of the tank of the automatic icemaker of the refrigerator in terms of whether it contains water or not.\n\nIcemaker tank contains water: 0x41 There is no water left in the icemaker tank or the icemaker tank has not been positioned correctly in the refrigerator: 0x42\n\nName : Icemaker tank status\nEPC : 0xA6\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IcemakerTankStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  RefrigeratorCompartmentHumidificationFunctionSettingGet:
+    procedure: get
+    epc: 168
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the refrigerator compartment humidification function, and to acquire the current setting.\n\nON = 0x41 OFF = 0x42\n\nName : Refrigerator compartment humidification function setting\nEPC : 0xA8\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentHumidificationFunctionSetting
+  RefrigeratorCompartmentHumidificationFunctionSettingSet:
+    procedure: set
+    epc: 168
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the refrigerator compartment humidification function, and to acquire the current setting.\n\nON = 0x41 OFF = 0x42\n\nName : Refrigerator compartment humidification function setting\nEPC : 0xA8\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RefrigeratorCompartmentHumidificationFunctionSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  VegetableCompartmentHumidificationFunctionSettingGet:
+    procedure: get
+    epc: 169
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the vegetable compartment humidification function, and to acquire the current setting.\n\nON = 0x41 OFF = 0x42\n\nName : Vegetable compartment humidification function setting\nEPC : 0xA9\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentHumidificationFunctionSetting
+  VegetableCompartmentHumidificationFunctionSettingSet:
+    procedure: set
+    epc: 169
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the vegetable compartment humidification function, and to acquire the current setting.\n\nON = 0x41 OFF = 0x42\n\nName : Vegetable compartment humidification function setting\nEPC : 0xA9\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VegetableCompartmentHumidificationFunctionSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  DeodorizationFunctionSettingGet:
+    procedure: get
+    epc: 173
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the deodorization function of the refrigerator, and to acquire the current setting.\n\nON = 0x41 OFF = 0x42\n\nName : Deodorization function setting\nEPC : 0xAD\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DeodorizationFunctionSetting
+  DeodorizationFunctionSettingSet:
+    procedure: set
+    epc: 173
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the deodorization function of the refrigerator, and to acquire the current setting.\n\nON = 0x41 OFF = 0x42\n\nName : Deodorization function setting\nEPC : 0xAD\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DeodorizationFunctionSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+

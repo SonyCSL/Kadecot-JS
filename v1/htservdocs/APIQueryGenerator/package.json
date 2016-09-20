@@ -1,0 +1,94 @@
+{
+  "name": "API-query-generator",
+  "version": "0.0.1",
+  "author": "3846masa <3846masahiro+git@gmail.com>",
+  "browser": {
+    "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js",
+    "select2": "./node_modules/select2/select2.js"
+  },
+  "browserify": {
+    "transform": [
+      "vueify",
+      "browserify-shim",
+      "babelify"
+    ]
+  },
+  "browserify-shim": {
+    "bootstrap": {
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "select2": {
+      "depends": [
+        "jquery:jQuery"
+      ]
+    }
+  },
+  "dependencies": {
+    "axios": "^0.9.1",
+    "bootstrap": "^3.3.6",
+    "clipboard": "^1.5.10",
+    "escape-html": "^1.0.3",
+    "flat-ui": "git+https://github.com/designmodo/Flat-UI.git#2.3.0",
+    "font-awesome": "4.6.3",
+    "github-markdown-css": "2.3.0",
+    "jquery": "^2.2.3",
+    "json5": "^0.5.0",
+    "jsonp": "^0.2.0",
+    "marked": "0.3.5",
+    "normalize.css": "^4.0.0",
+    "pify": "^2.3.0",
+    "postcss-cssnext": "^2.5.2",
+    "select2": "^3.4.5",
+    "siimple": "^1.3.1",
+    "validator": "^5.2.0",
+    "vue": "^1.0.17",
+    "vue-validator": "^2.0.0",
+    "vuex": "^0.6.2",
+    "yamljs": "^0.2.7"
+  },
+  "devDependencies": {
+    "babel-core": "^6.6.5",
+    "babel-eslint": "^6.0.2",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-syntax-async-functions": "^6.5.0",
+    "babel-plugin-transform-async-to-generator": "^6.5.0",
+    "babel-plugin-transform-runtime": "^6.6.0",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-runtime": "6.9.0",
+    "babelify": "^7.2.0",
+    "browser-sync": "^2.11.2",
+    "browserify": "^13.0.0",
+    "browserify-shim": "^3.8.12",
+    "eslint": "^2.7.0",
+    "eslint-plugin-html": "^1.4.0",
+    "fixpack": "^2.3.0",
+    "jade": "^1.11.0",
+    "licensify": "^3.0.1",
+    "npm-run-all": "^1.5.3",
+    "postcss-cssnext": "^2.5.2",
+    "postcss-import": "^8.1.0",
+    "postcss-reporter": "1.3.3",
+    "postcss-url": "^5.1.1",
+    "uglify-js": "^2.6.2",
+    "vue-hot-reload-api": "^1.3.2",
+    "vueify": "^8.3.5",
+    "vueify-insert-css": "^1.0.0",
+    "watchify": "^3.7.0"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "npm-run-all build:browselify build:uglify",
+    "build:browselify": "browserify -v -p licensify -e src/main.js -o dist/build.huge.js",
+    "build:uglify": "cat dist/build.huge.js | uglifyjs --comments all -c warnings=false -m > dist/build.js",
+    "fixpack": "fixpack",
+    "serve": "browser-sync start --port 8000 --host 0.0.0.0 --server --files \"index.html, dist/**\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npm-run-all -p watch:*",
+    "watch:browselify": "watchify -vd -e src/main.js -o dist/build.js",
+    "watch:serve": "npm run serve"
+  }
+}

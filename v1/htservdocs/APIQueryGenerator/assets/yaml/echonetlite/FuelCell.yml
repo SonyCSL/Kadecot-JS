@@ -1,0 +1,1437 @@
+name: FuelCell
+prefix: com.sonycsl.kadecot.echonetlite
+rpc:
+  OperationStatusGet:
+    procedure: get
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+  OperationStatusSet:
+    procedure: set
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  InstallationLocationGet:
+    procedure: get
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+  InstallationLocationSet:
+    procedure: set
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  StandardVersionInformationGet:
+    procedure: get
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+  StandardVersionInformationSet:
+    procedure: set
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  IdentificationNumberGet:
+    procedure: get
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+  IdentificationNumberSet:
+    procedure: set
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredInstantaneousPowerConsumptionGet:
+    procedure: get
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+  MeasuredInstantaneousPowerConsumptionSet:
+    procedure: set
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredCumulativePowerConsumptionGet:
+    procedure: get
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+  MeasuredCumulativePowerConsumptionSet:
+    procedure: set
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  ManufacturersFaultCodeGet:
+    procedure: get
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+  ManufacturersFaultCodeSet:
+    procedure: set
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  CurrentLimitSettingGet:
+    procedure: get
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+  CurrentLimitSettingSet:
+    procedure: set
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultStatusGet:
+    procedure: get
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+  FaultStatusSet:
+    procedure: set
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultDescriptionGet:
+    procedure: get
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+  FaultDescriptionSet:
+    procedure: set
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  ManufacturerCodeGet:
+    procedure: get
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+  ManufacturerCodeSet:
+    procedure: set
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeGet:
+    procedure: get
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeSet:
+    procedure: set
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ProductCodeGet:
+    procedure: get
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+  ProductCodeSet:
+    procedure: set
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionNumberGet:
+    procedure: get
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+  ProductionNumberSet:
+    procedure: set
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionDateGet:
+    procedure: get
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+  ProductionDateSet:
+    procedure: set
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerSavingOperationSettingGet:
+    procedure: get
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+  PowerSavingOperationSettingSet:
+    procedure: set
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  PositionInformationGet:
+    procedure: get
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+  PositionInformationSet:
+    procedure: set
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  CurrentTimeSettingGet:
+    procedure: get
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+  CurrentTimeSettingSet:
+    procedure: set
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CurrentDateSettingGet:
+    procedure: get
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+  CurrentDateSettingSet:
+    procedure: set
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerLimitSettingGet:
+    procedure: get
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+  PowerLimitSettingSet:
+    procedure: set
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CumulativeOperatingTimeGet:
+    procedure: get
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+  CumulativeOperatingTimeSet:
+    procedure: set
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  StatusChangeAnnouncementPropertyMapGet:
+    procedure: get
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+  StatusChangeAnnouncementPropertyMapSet:
+    procedure: set
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  SetPropertyMapGet:
+    procedure: get
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+  SetPropertyMapSet:
+    procedure: set
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GetPropertyMapGet:
+    procedure: get
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+  GetPropertyMapSet:
+    procedure: set
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  AutomaticSettingOfHeatedWaterTemperatureGet:
+    procedure: get
+    epc: 177
+    size: '1'
+    announce: undefined
+    doc: "AUTO/Non-AUTO\n\nAUTO  0x41 CNon-AUTO  0x42\n\nName : Automatic setting of heated water temperature\nEPC : 0xB1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: AutomaticSettingOfHeatedWaterTemperature
+  AutomaticSettingOfHeatedWaterTemperatureSet:
+    procedure: set
+    epc: 177
+    size: '1'
+    announce: undefined
+    doc: "AUTO/Non-AUTO\n\nAUTO  0x41 CNon-AUTO  0x42\n\nName : Automatic setting of heated water temperature\nEPC : 0xB1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: AutomaticSettingOfHeatedWaterTemperature
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  HeatingStatusGet:
+    procedure: get
+    epc: 178
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the water is being heated.\n\nBeing heated  0x41 C Not being heated  0x42\n\nName : Heating status\nEPC : 0xB2\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatingStatus
+  HeatingStatusSet:
+    procedure: set
+    epc: 178
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the water is being heated.\n\nBeing heated  0x41 C Not being heated  0x42\n\nName : Heating status\nEPC : 0xB2\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatingStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  HeatedWaterTemperatureSettingGet:
+    procedure: get
+    epc: 179
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the heated water temperature setting in   .\n\n0x00-0x64 (0-100  )\n\nName : Heated water temperature setting\nEPC : 0xB3\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatedWaterTemperatureSetting
+  HeatedWaterTemperatureSettingSet:
+    procedure: set
+    epc: 179
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the heated water temperature setting in   .\n\n0x00-0x64 (0-100  )\n\nName : Heated water temperature setting\nEPC : 0xB3\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatedWaterTemperatureSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredTemperatureOfWaterInWaterHeaterGet:
+    procedure: get
+    epc: 193
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current temperature of the water in the water heater in    .\n\n0x00-0x64 i0-100   j\n\nName : Measured temperature of water in water heater\nEPC : 0xC1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredTemperatureOfWaterInWaterHeater
+  MeasuredTemperatureOfWaterInWaterHeaterSet:
+    procedure: set
+    epc: 193
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current temperature of the water in the water heater in    .\n\n0x00-0x64 i0-100   j\n\nName : Measured temperature of water in water heater\nEPC : 0xC1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredTemperatureOfWaterInWaterHeater
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  RatedPowerGenerationOutputGet:
+    procedure: get
+    epc: 194
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the rated power generation output in watts.\n\n0x0000-0xFFFD  i0-65533W j\n\nName : Rated power generation output\nEPC : 0xC2\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RatedPowerGenerationOutput
+  RatedPowerGenerationOutputSet:
+    procedure: set
+    epc: 194
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the rated power generation output in watts.\n\n0x0000-0xFFFD  i0-65533W j\n\nName : Rated power generation output\nEPC : 0xC2\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RatedPowerGenerationOutput
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  HeatingValueOfHotWaterStorageTankGet:
+    procedure: get
+    epc: 195
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the heating value of the hot water storage tank in MJ.\n\n0x0000-0xFFFD  i0-65533MJ j\n\nName : Heating value of hot water storage tank\nEPC : 0xC3\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatingValueOfHotWaterStorageTank
+  HeatingValueOfHotWaterStorageTankSet:
+    procedure: set
+    epc: 195
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the heating value of the hot water storage tank in MJ.\n\n0x0000-0xFFFD  i0-65533MJ j\n\nName : Heating value of hot water storage tank\nEPC : 0xC3\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatingValueOfHotWaterStorageTank
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredInstantaneousPowerGenerationOutputGet:
+    procedure: get
+    epc: 196
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power generation output in watts.\n\n0x0000-0xFFFD  i0-65533W j\n\nName : Measured instantaneous power generation output\nEPC : 0xC4\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerGenerationOutput
+  MeasuredInstantaneousPowerGenerationOutputSet:
+    procedure: set
+    epc: 196
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power generation output in watts.\n\n0x0000-0xFFFD  i0-65533W j\n\nName : Measured instantaneous power generation output\nEPC : 0xC4\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerGenerationOutput
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredCumulativePowerGenerationOutputGet:
+    procedure: get
+    epc: 197
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power generation output in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF  i0-999,999.999kWh j\n\nName : Measured cumulative power generation output\nEPC : 0xC5\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerGenerationOutput
+  MeasuredCumulativePowerGenerationOutputSet:
+    procedure: set
+    epc: 197
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power generation output in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF  i0-999,999.999kWh j\n\nName : Measured cumulative power generation output\nEPC : 0xC5\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerGenerationOutput
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  CumulativePowerGenerationOutputResetSettingGet:
+    procedure: get
+    epc: 198
+    size: '1'
+    announce: undefined
+    doc: "Resets the cumulative power generation output by writing 0x00.\n\nReset  0x00\n\nName : Cumulative power generation output reset setting\nEPC : 0xC6\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : undefined"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativePowerGenerationOutputResetSetting
+  CumulativePowerGenerationOutputResetSettingSet:
+    procedure: set
+    epc: 198
+    size: '1'
+    announce: undefined
+    doc: "Resets the cumulative power generation output by writing 0x00.\n\nReset  0x00\n\nName : Cumulative power generation output reset setting\nEPC : 0xC6\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : undefined"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativePowerGenerationOutputResetSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredInstantaneousGasConsumptionGet:
+    procedure: get
+    epc: 199
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous gas consumption in increments of 0.001m3.\n\n0x0-0xFFFD  i0-65.533m3 j\n\nName : Measured instantaneous gas consumption\nEPC : 0xC7\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousGasConsumption
+  MeasuredInstantaneousGasConsumptionSet:
+    procedure: set
+    epc: 199
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous gas consumption in increments of 0.001m3.\n\n0x0-0xFFFD  i0-65.533m3 j\n\nName : Measured instantaneous gas consumption\nEPC : 0xC7\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousGasConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredCumulativeGasConsumptionGet:
+    procedure: get
+    epc: 200
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative gas consumption in increments of 0.001m3.\n\n0x0-0x3B9AC9FF  i0-999,999.999m3 j\n\nName : Measured cumulative gas consumption\nEPC : 0xC8\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativeGasConsumption
+  MeasuredCumulativeGasConsumptionSet:
+    procedure: set
+    epc: 200
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative gas consumption in increments of 0.001m3.\n\n0x0-0x3B9AC9FF  i0-999,999.999m3 j\n\nName : Measured cumulative gas consumption\nEPC : 0xC8\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativeGasConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  CumulativeGasConsumptionResetSettingGet:
+    procedure: get
+    epc: 201
+    size: '1'
+    announce: undefined
+    doc: "Resets the cumulative gas consumption by writing 0x00.\n\nReset  0x00\n\nName : Cumulative gas consumption reset setting\nEPC : 0xC9\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : undefined"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeGasConsumptionResetSetting
+  CumulativeGasConsumptionResetSettingSet:
+    procedure: set
+    epc: 201
+    size: '1'
+    announce: undefined
+    doc: "Resets the cumulative gas consumption by writing 0x00.\n\nReset  0x00\n\nName : Cumulative gas consumption reset setting\nEPC : 0xC9\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : undefined"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeGasConsumptionResetSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  PowerGenerationSettingGet:
+    procedure: get
+    epc: 202
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status of power generation.\n\nPower generation ON=0x41 C Power generation OFF  0x42\n\nName : Power generation setting\nEPC : 0xCA\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerGenerationSetting
+  PowerGenerationSettingSet:
+    procedure: set
+    epc: 202
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status of power generation.\n\nPower generation ON=0x41 C Power generation OFF  0x42\n\nName : Power generation setting\nEPC : 0xCA\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerGenerationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  BathWaterReheatingGet:
+    procedure: get
+    epc: 228
+    size: '1'
+    announce: undefined
+    doc: "Reheating ON/OFF\n\nReheating ON =0x41 C Reheating OFF  0x42\n\nName : Bath water reheating\nEPC : 0xE4\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterReheating
+  BathWaterReheatingSet:
+    procedure: set
+    epc: 228
+    size: '1'
+    announce: undefined
+    doc: "Reheating ON/OFF\n\nReheating ON =0x41 C Reheating OFF  0x42\n\nName : Bath water reheating\nEPC : 0xE4\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterReheating
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GtemperatureOfSuppliedWaterHSettingGet:
+    procedure: get
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the temperature setting for the supplied water in   C. 0x00-0x64 i0-100   j\n\n\n\nName :  gTemperature of supplied water h setting\nEPC : 0xD1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GtemperatureOfSuppliedWaterHSetting
+  GtemperatureOfSuppliedWaterHSettingSet:
+    procedure: set
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the temperature setting for the supplied water in   C. 0x00-0x64 i0-100   j\n\n\n\nName :  gTemperature of supplied water h setting\nEPC : 0xD1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GtemperatureOfSuppliedWaterHSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  BathWaterTemperatureSettingGet:
+    procedure: get
+    epc: 211
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the temperature setting for the bath water in    .\n\n0x00-0x64 i0-100   j\n\nName : Bath water temperature setting\nEPC : 0xD3\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterTemperatureSetting
+  BathWaterTemperatureSettingSet:
+    procedure: set
+    epc: 211
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the temperature setting for the bath water in    .\n\n0x00-0x64 i0-100   j\n\nName : Bath water temperature setting\nEPC : 0xD3\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterTemperatureSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  HeatedBathWaterAmountSettingGet:
+    procedure: get
+    epc: 224
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the setting for the amount of the heated bath water in terms of percentage.\n\n0x00-0x64 (0-100  )\n\nName : Heated bath water amount setting\nEPC : 0xE0\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatedBathWaterAmountSetting
+  HeatedBathWaterAmountSettingSet:
+    procedure: set
+    epc: 224
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the setting for the amount of the heated bath water in terms of percentage.\n\n0x00-0x64 (0-100  )\n\nName : Heated bath water amount setting\nEPC : 0xE0\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HeatedBathWaterAmountSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredRemainingHotWaterAmountGet:
+    procedure: get
+    epc: 225
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the measured amount of the remaining hot water in liters.\n\n0x0000-0xFFFD i0-65533 liters j\n\nName : Measured remaining hot water amount\nEPC : 0xE1\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredRemainingHotWaterAmount
+  MeasuredRemainingHotWaterAmountSet:
+    procedure: set
+    epc: 225
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the measured amount of the remaining hot water in liters.\n\n0x0000-0xFFFD i0-65533 liters j\n\nName : Measured remaining hot water amount\nEPC : 0xE1\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredRemainingHotWaterAmount
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  TankCapacityGet:
+    procedure: get
+    epc: 226
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the tank capacity in liters.\n\n0x0000-0xFFFD i0-65533 liters j\n\nName : Tank capacity\nEPC : 0xE2\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: TankCapacity
+  TankCapacitySet:
+    procedure: set
+    epc: 226
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the tank capacity in liters.\n\n0x0000-0xFFFD i0-65533 liters j\n\nName : Tank capacity\nEPC : 0xE2\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: TankCapacity
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  GautomaticBathWaterHeatingModeHSettingGet:
+    procedure: get
+    epc: 227
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status of the automatic bath water heating mode.\n\nAutomatic mode ON  0x41 C Automatic mode OFF  0x42\n\nName :  gAutomatic bath water heating mode h setting\nEPC : 0xE3\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GautomaticBathWaterHeatingModeHSetting
+  GautomaticBathWaterHeatingModeHSettingSet:
+    procedure: set
+    epc: 227
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status of the automatic bath water heating mode.\n\nAutomatic mode ON  0x41 C Automatic mode OFF  0x42\n\nName :  gAutomatic bath water heating mode h setting\nEPC : 0xE3\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GautomaticBathWaterHeatingModeHSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GbathWaterAdditionFunctionHSettingGet:
+    procedure: get
+    epc: 229
+    size: '1'
+    announce: undefined
+    doc: "Addition function ON/OFF\n\nAddition function ON  0x41 C Addition function OFF  0x42\n\nName :  gBath water addition function h setting\nEPC : 0xE5\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GbathWaterAdditionFunctionHSetting
+  GbathWaterAdditionFunctionHSettingSet:
+    procedure: set
+    epc: 229
+    size: '1'
+    announce: undefined
+    doc: "Addition function ON/OFF\n\nAddition function ON  0x41 C Addition function OFF  0x42\n\nName :  gBath water addition function h setting\nEPC : 0xE5\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GbathWaterAdditionFunctionHSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GslightBathWaterTemperatureLoweringHFunctionSettingGet:
+    procedure: get
+    epc: 230
+    size: '1'
+    announce: undefined
+    doc: "gSlight bath water temperature lowering h function ON/OFF\n\n gSlight bath water temperature lowering h function ON   0x41 C hSlight bath water temperature lowering h function OFF  0x42\n\nName :  gSlight bath water temperature lowering h function setting\nEPC : 0xE6\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GslightBathWaterTemperatureLoweringHFunctionSetting
+  GslightBathWaterTemperatureLoweringHFunctionSettingSet:
+    procedure: set
+    epc: 230
+    size: '1'
+    announce: undefined
+    doc: "gSlight bath water temperature lowering h function ON/OFF\n\n gSlight bath water temperature lowering h function ON   0x41 C hSlight bath water temperature lowering h function OFF  0x42\n\nName :  gSlight bath water temperature lowering h function setting\nEPC : 0xE6\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GslightBathWaterTemperatureLoweringHFunctionSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  BathWaterAmountSetting2Get:
+    procedure: get
+    epc: 232
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the amount of the bath water using an 8-level scale.\n\n0x31-38\n\nName : Bath water amount setting 2\nEPC : 0xE8\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterAmountSetting2
+  BathWaterAmountSetting2Set:
+    procedure: set
+    epc: 232
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the amount of the bath water using an 8-level scale.\n\n0x31-38\n\nName : Bath water amount setting 2\nEPC : 0xE8\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterAmountSetting2
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  BathWaterAmountSetting3Get:
+    procedure: get
+    epc: 238
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the amount of the bath water in liters.\n\n0x0000-0xFFFD i0-65533 liters j\n\nName : Bath water amount setting 3\nEPC : 0xEE\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterAmountSetting3
+  BathWaterAmountSetting3Set:
+    procedure: set
+    epc: 238
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the amount of the bath water in liters.\n\n0x0000-0xFFFD i0-65533 liters j\n\nName : Bath water amount setting 3\nEPC : 0xEE\nData Type : unsigned short\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathWaterAmountSetting3
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  OnTimerReservationSettingGet:
+    procedure: get
+    epc: 144
+    size: '1'
+    announce: undefined
+    doc: "Reservation ON/OFF\n\nReservation ON  0x41, Reservation OFF  0x42\n\nName : ON timer reservation setting\nEPC : 0x90\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerReservationSetting
+  OnTimerReservationSettingSet:
+    procedure: set
+    epc: 144
+    size: '1'
+    announce: undefined
+    doc: "Reservation ON/OFF\n\nReservation ON  0x41, Reservation OFF  0x42\n\nName : ON timer reservation setting\nEPC : 0x90\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerReservationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  OnTimerSettingGet:
+    procedure: get
+    epc: 145
+    size: '2'
+    announce: undefined
+    doc: "Time    HH:MM\n\n0-0x17: 0-0x3B (=0-23):(=0-59 j\n\nName : ON timer setting\nEPC : 0x91\nData Type : unsigned char  ~2\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerSetting
+  OnTimerSettingSet:
+    procedure: set
+    epc: 145
+    size: '2'
+    announce: undefined
+    doc: "Time    HH:MM\n\n0-0x17: 0-0x3B (=0-23):(=0-59 j\n\nName : ON timer setting\nEPC : 0x91\nData Type : unsigned char  ~2\nData Size(Byte) : 2 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+

@@ -1,0 +1,13 @@
+name: Android
+prefix: android
+rpc:
+  speakText:
+    name: speakText
+    procedure: speakText
+    params:
+      text:
+        type: string
+        const: false
+        value: こんにちは
+    doc: |-
+      Speak text via Android.

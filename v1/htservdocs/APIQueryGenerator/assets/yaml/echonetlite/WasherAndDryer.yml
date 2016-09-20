@@ -1,0 +1,1638 @@
+name: WasherAndDryer
+prefix: com.sonycsl.kadecot.echonetlite
+rpc:
+  OperationStatusGet:
+    procedure: get
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+  OperationStatusSet:
+    procedure: set
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  InstallationLocationGet:
+    procedure: get
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+  InstallationLocationSet:
+    procedure: set
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  StandardVersionInformationGet:
+    procedure: get
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+  StandardVersionInformationSet:
+    procedure: set
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  IdentificationNumberGet:
+    procedure: get
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+  IdentificationNumberSet:
+    procedure: set
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredInstantaneousPowerConsumptionGet:
+    procedure: get
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+  MeasuredInstantaneousPowerConsumptionSet:
+    procedure: set
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredCumulativePowerConsumptionGet:
+    procedure: get
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+  MeasuredCumulativePowerConsumptionSet:
+    procedure: set
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  ManufacturersFaultCodeGet:
+    procedure: get
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+  ManufacturersFaultCodeSet:
+    procedure: set
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  CurrentLimitSettingGet:
+    procedure: get
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+  CurrentLimitSettingSet:
+    procedure: set
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultStatusGet:
+    procedure: get
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+  FaultStatusSet:
+    procedure: set
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultDescriptionGet:
+    procedure: get
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+  FaultDescriptionSet:
+    procedure: set
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  ManufacturerCodeGet:
+    procedure: get
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+  ManufacturerCodeSet:
+    procedure: set
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeGet:
+    procedure: get
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeSet:
+    procedure: set
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ProductCodeGet:
+    procedure: get
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+  ProductCodeSet:
+    procedure: set
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionNumberGet:
+    procedure: get
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+  ProductionNumberSet:
+    procedure: set
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionDateGet:
+    procedure: get
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+  ProductionDateSet:
+    procedure: set
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerSavingOperationSettingGet:
+    procedure: get
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+  PowerSavingOperationSettingSet:
+    procedure: set
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  PositionInformationGet:
+    procedure: get
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+  PositionInformationSet:
+    procedure: set
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  CurrentTimeSettingGet:
+    procedure: get
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+  CurrentTimeSettingSet:
+    procedure: set
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CurrentDateSettingGet:
+    procedure: get
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+  CurrentDateSettingSet:
+    procedure: set
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerLimitSettingGet:
+    procedure: get
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+  PowerLimitSettingSet:
+    procedure: set
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CumulativeOperatingTimeGet:
+    procedure: get
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+  CumulativeOperatingTimeSet:
+    procedure: set
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  StatusChangeAnnouncementPropertyMapGet:
+    procedure: get
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+  StatusChangeAnnouncementPropertyMapSet:
+    procedure: set
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  SetPropertyMapGet:
+    procedure: get
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+  SetPropertyMapSet:
+    procedure: set
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GetPropertyMapGet:
+    procedure: get
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+  GetPropertyMapSet:
+    procedure: set
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  DoorCoverOpenCloseStatusGet:
+    procedure: get
+    epc: 176
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status of the door/cover (i.e. open or closed).\n\nDoor/cover open = 0x41 Door/cover closed = 0x42\n\nName : Door/cover open/close status\nEPC : 0xB0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorCoverOpenCloseStatus
+  DoorCoverOpenCloseStatusSet:
+    procedure: set
+    epc: 176
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the status of the door/cover (i.e. open or closed).\n\nDoor/cover open = 0x41 Door/cover closed = 0x42\n\nName : Door/cover open/close status\nEPC : 0xB0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorCoverOpenCloseStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WasherAndDryerSettingGet:
+    procedure: get
+    epc: 178
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether to start or stop the washing, drying or washing and drying cycle, and to acquire the current status.\n\nStart/restart(ed) or in progress = 0x41 Suspend(ed) = 0x42 Stop(ped) = 0x43\n\nName : Washer and dryer setting\nEPC : 0xB2\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerSetting
+  WasherAndDryerSettingSet:
+    procedure: set
+    epc: 178
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether to start or stop the washing, drying or washing and drying cycle, and to acquire the current status.\n\nStart/restart(ed) or in progress = 0x41 Suspend(ed) = 0x42 Stop(ped) = 0x43\n\nName : Washer and dryer setting\nEPC : 0xB2\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WasherAndDryerCycleSetting1Note1Get:
+    procedure: get
+    epc: 208
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the washer and dryer cycle option(s) to use in the  gwashing and drying, h  gwashing h or  gdrying h mode and to acquire the current setting(s). The value ranges shall be as follows: Washing and drying couse: 0x21 to 0x3F Washing and drying cource maker original code: 0x40 to 0x4F Washing cource: 0x61 to 0x7F Washing cource maker original code: 0x80 to 0x8F Drying cource: 0xA1 to 0xBF Drying cource maker original code: 0xC0 to 0xDF\n\n Standard = 0x21, silent = 0x22, heavily soiled clothes = 0x23, hard-to-remove stains = 0x24, presoaking = 0x25, blankets = 0x26, soft = 0x27, dry = 0x28, clean rinsing = 0x29, ironing/business shirts = 0x2A, hang drying = 0x2B, thick clothes = 0x2C, disinfection = 0x2D, oil stains = 0x2E, memory = 0x2F, detergent saving = 0x30, lightly soiled clothes = 0x31, quick wash of small amount of laundry = 0x32 Washing cource / maker original cource = 0x40 to 0x4F  Standard = 0x61, silent = 0x62, heavily soiled clothes = 0x63, hard-to-remove stains = 0x64, presoaking = 0x65, blankets = 0x66, soft = 0x67, dry = 0x68, clean rinsing = 0x69, disinfection = 0x6A, oil stains = 0x6B, memory = 0x6C, detergent saving = 0x6D, lightly soiled clothes = 0x6E, quick wash of small amount of laundry = 0x6F, tank cleaning = 0x7F Washing cource / maker original cource = 0x80 to 0x8F  Standard = 0xA1, blankets = 0xA2, soft = 0xA3, dry = 0xA4, ironing/business shirts = 0xA5, hang drying = 0xA6, thick clothes = 0xA7, disinfection = 0xA8, shrinkage minimization = 0xA9, finishing = 0xAA, stationary drying = 0xAB, user definition of drying time = 0xAC, garment warming = 0xAD, tank drying = 0xBF Drying cource / maker original cource = 0xC0 to 0xCF\n\nName : Washer and dryer cycle setting 1 (Note 1)\nEPC : 0xD0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleSetting1Note1
+  WasherAndDryerCycleSetting1Note1Set:
+    procedure: set
+    epc: 208
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the washer and dryer cycle option(s) to use in the  gwashing and drying, h  gwashing h or  gdrying h mode and to acquire the current setting(s). The value ranges shall be as follows: Washing and drying couse: 0x21 to 0x3F Washing and drying cource maker original code: 0x40 to 0x4F Washing cource: 0x61 to 0x7F Washing cource maker original code: 0x80 to 0x8F Drying cource: 0xA1 to 0xBF Drying cource maker original code: 0xC0 to 0xDF\n\n Standard = 0x21, silent = 0x22, heavily soiled clothes = 0x23, hard-to-remove stains = 0x24, presoaking = 0x25, blankets = 0x26, soft = 0x27, dry = 0x28, clean rinsing = 0x29, ironing/business shirts = 0x2A, hang drying = 0x2B, thick clothes = 0x2C, disinfection = 0x2D, oil stains = 0x2E, memory = 0x2F, detergent saving = 0x30, lightly soiled clothes = 0x31, quick wash of small amount of laundry = 0x32 Washing cource / maker original cource = 0x40 to 0x4F  Standard = 0x61, silent = 0x62, heavily soiled clothes = 0x63, hard-to-remove stains = 0x64, presoaking = 0x65, blankets = 0x66, soft = 0x67, dry = 0x68, clean rinsing = 0x69, disinfection = 0x6A, oil stains = 0x6B, memory = 0x6C, detergent saving = 0x6D, lightly soiled clothes = 0x6E, quick wash of small amount of laundry = 0x6F, tank cleaning = 0x7F Washing cource / maker original cource = 0x80 to 0x8F  Standard = 0xA1, blankets = 0xA2, soft = 0xA3, dry = 0xA4, ironing/business shirts = 0xA5, hang drying = 0xA6, thick clothes = 0xA7, disinfection = 0xA8, shrinkage minimization = 0xA9, finishing = 0xAA, stationary drying = 0xAB, user definition of drying time = 0xAC, garment warming = 0xAD, tank drying = 0xBF Drying cource / maker original cource = 0xC0 to 0xCF\n\nName : Washer and dryer cycle setting 1 (Note 1)\nEPC : 0xD0\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleSetting1Note1
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WasherAndDryerCycleSetting2Note1Get:
+    procedure: get
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the washer and dryer cycle option(s) to use in the  gwashing and drying h mode, and to acquire the current setting(s). The drying option(s) to use shall be specified with the  gdrying cycle setting h property (EPC = 0xD2). Maker original code = 0xE0 to 0xEF\n\nNo washing = 0x20, standard = 0x21, silent = 0x22, heavily soiled clothes = 0x23, hard-to-remove stains = 0x24, presoaking = 0x25, blankets = 0x26, soft = 0x27, dry = 0x28, clean rinsing = 0x29, disinfection = 0x2D, oil stains = 0x2E, memory = 0x2F, detergent saving = 0x30, lightly soiled clothes = 0x31, quick wash of small amount of laundry = 0x32, tank cleaning = 0x3F Maker original cource = 0xE0 to 0xEF\n\nName : Washer and dryer cycle setting 2 (Note 1)\nEPC : 0xD1\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleSetting2Note1
+  WasherAndDryerCycleSetting2Note1Set:
+    procedure: set
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the washer and dryer cycle option(s) to use in the  gwashing and drying h mode, and to acquire the current setting(s). The drying option(s) to use shall be specified with the  gdrying cycle setting h property (EPC = 0xD2). Maker original code = 0xE0 to 0xEF\n\nNo washing = 0x20, standard = 0x21, silent = 0x22, heavily soiled clothes = 0x23, hard-to-remove stains = 0x24, presoaking = 0x25, blankets = 0x26, soft = 0x27, dry = 0x28, clean rinsing = 0x29, disinfection = 0x2D, oil stains = 0x2E, memory = 0x2F, detergent saving = 0x30, lightly soiled clothes = 0x31, quick wash of small amount of laundry = 0x32, tank cleaning = 0x3F Maker original cource = 0xE0 to 0xEF\n\nName : Washer and dryer cycle setting 2 (Note 1)\nEPC : 0xD1\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleSetting2Note1
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  DryingCycleSettingNote1Get:
+    procedure: get
+    epc: 210
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the drying cycle option(s) to use, and to acquire the current setting. For the  gwashing and drying h mode, the  gwasher and dryer cycle setting 2 h property (EPC = 0xD1) shall be used. Maker original code = 0xE0 to 0xEF\n\nNo drying = 0xA0, standard = 0xA1, blankets = 0xA2, soft = 0xA3, dry = 0xA4, ironing/business shirts = 0xA5, hang drying = 0xA6, thick clothes = 0xA7, disinfection = 0xA8, shrinkage minimization = 0xA9, finishing = 0xAA, stationary drying = 0xAB, user definition of drying time = 0xAC, garment warming = 0xAD, heater current limit = 0xAE, tank drying = 0xBF Maker original cource = 0xE0 to 0xEF\n\nName : Drying cycle setting (Note1)\nEPC : 0xD2\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DryingCycleSettingNote1
+  DryingCycleSettingNote1Set:
+    procedure: set
+    epc: 210
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the drying cycle option(s) to use, and to acquire the current setting. For the  gwashing and drying h mode, the  gwasher and dryer cycle setting 2 h property (EPC = 0xD1) shall be used. Maker original code = 0xE0 to 0xEF\n\nNo drying = 0xA0, standard = 0xA1, blankets = 0xA2, soft = 0xA3, dry = 0xA4, ironing/business shirts = 0xA5, hang drying = 0xA6, thick clothes = 0xA7, disinfection = 0xA8, shrinkage minimization = 0xA9, finishing = 0xAA, stationary drying = 0xAB, user definition of drying time = 0xAC, garment warming = 0xAD, heater current limit = 0xAE, tank drying = 0xBF Maker original cource = 0xE0 to 0xEF\n\nName : Drying cycle setting (Note1)\nEPC : 0xD2\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DryingCycleSettingNote1
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WasherAndDryerCycleOptionList1Get:
+    procedure: get
+    epc: 211
+    size: '12'
+    announce: undefined
+    doc: "Used to acquire a bitmap list of the washer and dryer cycle options that can be specified with the  gwasher and dryer cycle setting 1 h property.\n\nWhen the value contained in the bit for the desired washer and dryer cycle option is  g1 h, the option can be specified. When the value contained in the bit for the desired washer and dryer cycle option is  g0 h, the option cannot be specified. For the requirement as to which bit must be used for which option, refer to the detailed explanation.\n\nName : Washer and dryer cycle option list 1\nEPC : 0xD3\nData Type : unsign ed char  ~12,\nData Size(Byte) : 12 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleOptionList1
+  WasherAndDryerCycleOptionList1Set:
+    procedure: set
+    epc: 211
+    size: '12'
+    announce: undefined
+    doc: "Used to acquire a bitmap list of the washer and dryer cycle options that can be specified with the  gwasher and dryer cycle setting 1 h property.\n\nWhen the value contained in the bit for the desired washer and dryer cycle option is  g1 h, the option can be specified. When the value contained in the bit for the desired washer and dryer cycle option is  g0 h, the option cannot be specified. For the requirement as to which bit must be used for which option, refer to the detailed explanation.\n\nName : Washer and dryer cycle option list 1\nEPC : 0xD3\nData Type : unsign ed char  ~12,\nData Size(Byte) : 12 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleOptionList1
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  WasherAndDryerCycleOptionList2Get:
+    procedure: get
+    epc: 212
+    size: '4'
+    announce: undefined
+    doc: "Used to acquire a bitmap list of the washer and dryer cycle options that can be specified with the  gwasher and dryer cycle setting 2 h property.\n\nWhen the value contained in the bit for the desired washer and dryer cycle option is  g1 h, the option can be specified. When the value contained in the bit for the desired washer and dryer cycle option is  g0 h, the option cannot be specified. For the requirement as to which bit must be used for which option, refer to the detailed explanation.\n\nName : Washer and dryer cycle option list 2\nEPC : 0xD4\nData Type : unsign ed char  ~4,\nData Size(Byte) : 4 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleOptionList2
+  WasherAndDryerCycleOptionList2Set:
+    procedure: set
+    epc: 212
+    size: '4'
+    announce: undefined
+    doc: "Used to acquire a bitmap list of the washer and dryer cycle options that can be specified with the  gwasher and dryer cycle setting 2 h property.\n\nWhen the value contained in the bit for the desired washer and dryer cycle option is  g1 h, the option can be specified. When the value contained in the bit for the desired washer and dryer cycle option is  g0 h, the option cannot be specified. For the requirement as to which bit must be used for which option, refer to the detailed explanation.\n\nName : Washer and dryer cycle option list 2\nEPC : 0xD4\nData Type : unsign ed char  ~4,\nData Size(Byte) : 4 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleOptionList2
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  WasherAndDryerCycleOptionList3Get:
+    procedure: get
+    epc: 213
+    size: '4'
+    announce: undefined
+    doc: "Used to acquire a bitmap list of the drying cycle options that can be specified with the  gdrying cycle setting h property.\n\nWhen the value contained in the bit for the desired drying cycle option is  g1 h, the option can be specified. When the value contained in the bit for the desired drying cycle option is  g0 h, the option cannot be specified. For the requirement as to which bit must be used for which option, refer to the detailed explanation.\n\nName : Washer and dryer cycle option list 3\nEPC : 0xD5\nData Type : unsign ed char  ~4,\nData Size(Byte) : 4 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleOptionList3
+  WasherAndDryerCycleOptionList3Set:
+    procedure: set
+    epc: 213
+    size: '4'
+    announce: undefined
+    doc: "Used to acquire a bitmap list of the drying cycle options that can be specified with the  gdrying cycle setting h property.\n\nWhen the value contained in the bit for the desired drying cycle option is  g1 h, the option can be specified. When the value contained in the bit for the desired drying cycle option is  g0 h, the option cannot be specified. For the requirement as to which bit must be used for which option, refer to the detailed explanation.\n\nName : Washer and dryer cycle option list 3\nEPC : 0xD5\nData Type : unsign ed char  ~4,\nData Size(Byte) : 4 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycleOptionList3
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  WaterFlowRateSettingGet:
+    procedure: get
+    epc: 214
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the water flow rate by selecting a level from among the predefined levels and to acquire the current setting.\n\n 0x31 to 0x40 (16 levels) * 0x31 and 0x40 shall be used for the lowest and highest flow rates, respectively.  - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xA7: Levels 1 to 8 - Relative setting in the negative direction 0xC0 to 0xC7: Levels 1 to 8\n\nName : Water flow rate setting\nEPC : 0xD6\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WaterFlowRateSetting
+  WaterFlowRateSettingSet:
+    procedure: set
+    epc: 214
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the water flow rate by selecting a level from among the predefined levels and to acquire the current setting.\n\n 0x31 to 0x40 (16 levels) * 0x31 and 0x40 shall be used for the lowest and highest flow rates, respectively.  - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xA7: Levels 1 to 8 - Relative setting in the negative direction 0xC0 to 0xC7: Levels 1 to 8\n\nName : Water flow rate setting\nEPC : 0xD6\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WaterFlowRateSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GrotationSpeedForSpinDryingHSettingGet:
+    procedure: get
+    epc: 215
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the rotation speed for spin drying in r/min. and to acquire the current setting.\n\n - 0x0000 to 0x0FFF (0 to 4095 r/min.)  - Automatic setting 0xFFFF - Relative setting in the positive direction 0xA000 to 0xA7FF (1 to 2048 r/min.) - Relative setting in the negative direction 0xC000 to 0xC7FF (1 to 2048r/min.)\n\nName :  gRotation speed for spin drying h setting\nEPC : 0xD7\nData Type : unsign ed short\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GrotationSpeedForSpinDryingHSetting
+  GrotationSpeedForSpinDryingHSettingSet:
+    procedure: set
+    epc: 215
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the rotation speed for spin drying in r/min. and to acquire the current setting.\n\n - 0x0000 to 0x0FFF (0 to 4095 r/min.)  - Automatic setting 0xFFFF - Relative setting in the positive direction 0xA000 to 0xA7FF (1 to 2048 r/min.) - Relative setting in the negative direction 0xC000 to 0xC7FF (1 to 2048r/min.)\n\nName :  gRotation speed for spin drying h setting\nEPC : 0xD7\nData Type : unsign ed short\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GrotationSpeedForSpinDryingHSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  GdegreeOfDryingHSettingGet:
+    procedure: get
+    epc: 216
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the degree of drying to achieve by selecting a level from among the 16 predefined levels and to acquire the current setting.\n\n - 0x31 to 0x40 (16 levels) * 0x31 and 0x40 shall be used for the lowest and highest levels, respectively.  - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xA7: Levels 1 to 8 - Relative setting in the negative direction 0xC0 to 0xC7: Levels 1 to 8\n\nName :  gDegree of drying h setting\nEPC : 0xD8\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GdegreeOfDryingHSetting
+  GdegreeOfDryingHSettingSet:
+    procedure: set
+    epc: 216
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the degree of drying to achieve by selecting a level from among the 16 predefined levels and to acquire the current setting.\n\n - 0x31 to 0x40 (16 levels) * 0x31 and 0x40 shall be used for the lowest and highest levels, respectively.  - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xA7: Levels 1 to 8 - Relative setting in the negative direction 0xC0 to 0xC7: Levels 1 to 8\n\nName :  gDegree of drying h setting\nEPC : 0xD8\nData Type : unsign ed char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GdegreeOfDryingHSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  RemainingWashingTimeGet:
+    procedure: get
+    epc: 219
+    size: '2'
+    announce: undefined
+    doc: "Acquires the remaining washing time in .the . gHH:MM h .format.\n\n0-0xFE F0-0x3B (=0-254) hours F(=0-59) minutes Remaining time unknown=0xFF F 0xFF\n\nName : Remaining washing time\nEPC : 0xDB\nData Type : unsigne d char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RemainingWashingTime
+  RemainingWashingTimeSet:
+    procedure: set
+    epc: 219
+    size: '2'
+    announce: undefined
+    doc: "Acquires the remaining washing time in .the . gHH:MM h .format.\n\n0-0xFE F0-0x3B (=0-254) hours F(=0-59) minutes Remaining time unknown=0xFF F 0xFF\n\nName : Remaining washing time\nEPC : 0xDB\nData Type : unsigne d char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RemainingWashingTime
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  RemainingDryingTimeGet:
+    procedure: get
+    epc: 220
+    size: '2'
+    announce: undefined
+    doc: "Acquires the remaining drying time .in .the . gHH:MM h .format.\n\n0-0xFE F0-0x3B (=0-254) hours F(=0-59) minutes Remaining time unknown=0xFF F0xFF\n\nName : Remaining drying time\nEPC : 0xDC\nData Type : unsign ed\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RemainingDryingTime
+  RemainingDryingTimeSet:
+    procedure: set
+    epc: 220
+    size: '2'
+    announce: undefined
+    doc: "Acquires the remaining drying time .in .the . gHH:MM h .format.\n\n0-0xFE F0-0x3B (=0-254) hours F(=0-59) minutes Remaining time unknown=0xFF F0xFF\n\nName : Remaining drying time\nEPC : 0xDC\nData Type : unsign ed\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RemainingDryingTime
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  ElapsedTimeOnTheOnTimerGet:
+    procedure: get
+    epc: 223
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the time elapsed on the ON timer after the ON timer was activated.\n\n0 to 0xFF: 0 to 0x3B (= 0 to 255): (= 0 to 59)\n\nName : Elapsed time on the ON timer\nEPC : 0xDF\nData Type : unsigne d char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ElapsedTimeOnTheOnTimer
+  ElapsedTimeOnTheOnTimerSet:
+    procedure: set
+    epc: 223
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the time elapsed on the ON timer after the ON timer was activated.\n\n0 to 0xFF: 0 to 0x3B (= 0 to 255): (= 0 to 59)\n\nName : Elapsed time on the ON timer\nEPC : 0xDF\nData Type : unsigne d char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ElapsedTimeOnTheOnTimer
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  PresoakingTimeSettingGet:
+    procedure: get
+    epc: 225
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the duration of the presoaking process and to acquire the current setting.\n\n - 0x00 to 0x17: 0x00 to 0x3B (= 0 to 23 hours): (= 0 to 59 minutes)  - Automatic setting 0xFF: 0xFF - Relative setting in the positive direction 0xA000 to 0xA03B: 1 to 60 minutes - Relative setting in the negative direction 0xC000 to 0xC03B: 1 to 60 minutes\n\nName : Presoaking time setting\nEPC : 0xE1\nData Type : unsigne d char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PresoakingTimeSetting
+  PresoakingTimeSettingSet:
+    procedure: set
+    epc: 225
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the duration of the presoaking process and to acquire the current setting.\n\n - 0x00 to 0x17: 0x00 to 0x3B (= 0 to 23 hours): (= 0 to 59 minutes)  - Automatic setting 0xFF: 0xFF - Relative setting in the positive direction 0xA000 to 0xA03B: 1 to 60 minutes - Relative setting in the negative direction 0xC000 to 0xC03B: 1 to 60 minutes\n\nName : Presoaking time setting\nEPC : 0xE1\nData Type : unsigne d char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PresoakingTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CurrentStageOfWasherAndDryerCycleGet:
+    procedure: get
+    epc: 226
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the current stage of the washer and dryer cycle.\n\nWashing = 0x41 Rinsing = 0x42 Spin drying = 0x43 Suspended = 0x44 Washing completed = 0x45 Washing/drying (without wrinkling minimization) completed = 0x51 Drying = 0x52 Wrinkling minimization = 0x53 Drying (with wrinkling minimization) completed = 0x54 Standing by to start = 0x61 1st rinsing = 0x71 2nd rinsing = 0x72 3rd rinsing = 0x73 4th rinsing = 0x74 5th rinsing = 0x75 6th rinsing = 0x76 7th rinsing = 0x77 8th rinsing = 0x78 1st spin drying = 0x81 2nd spin drying = 0x82 3rd spin drying = 0x83 4th spin drying = 0x84 5th spin drying = 0x85 6th spin drying = 0x86 7th spin drying = 0x87 8th spin drying = 0x88 Preheat spin drying = 0x91 Unique code defined by the manufature = 0xE0 to 0xEF\n\nName : Current stage of washer and dryer cycle\nEPC : 0xE2\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentStageOfWasherAndDryerCycle
+  CurrentStageOfWasherAndDryerCycleSet:
+    procedure: set
+    epc: 226
+    size: '1'
+    announce: undefined
+    doc: "Used to acquire the current stage of the washer and dryer cycle.\n\nWashing = 0x41 Rinsing = 0x42 Spin drying = 0x43 Suspended = 0x44 Washing completed = 0x45 Washing/drying (without wrinkling minimization) completed = 0x51 Drying = 0x52 Wrinkling minimization = 0x53 Drying (with wrinkling minimization) completed = 0x54 Standing by to start = 0x61 1st rinsing = 0x71 2nd rinsing = 0x72 3rd rinsing = 0x73 4th rinsing = 0x74 5th rinsing = 0x75 6th rinsing = 0x76 7th rinsing = 0x77 8th rinsing = 0x78 1st spin drying = 0x81 2nd spin drying = 0x82 3rd spin drying = 0x83 4th spin drying = 0x84 5th spin drying = 0x85 6th spin drying = 0x86 7th spin drying = 0x87 8th spin drying = 0x88 Preheat spin drying = 0x91 Unique code defined by the manufature = 0xE0 to 0xEF\n\nName : Current stage of washer and dryer cycle\nEPC : 0xE2\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentStageOfWasherAndDryerCycle
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WaterVolumeSetting1Get:
+    procedure: get
+    epc: 227
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the water volume in liters and to acquire the current setting.\n\n - 0x00 to 0x7F (0 to 127 liters) < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xBF: 1 to 32 liters - Relative setting in the negative direction 0xC0 to 0xDF (1 to 32 liters)\n\nName : Water volume setting 1\nEPC : 0xE3\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WaterVolumeSetting1
+  WaterVolumeSetting1Set:
+    procedure: set
+    epc: 227
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the water volume in liters and to acquire the current setting.\n\n - 0x00 to 0x7F (0 to 127 liters) < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xBF: 1 to 32 liters - Relative setting in the negative direction 0xC0 to 0xDF (1 to 32 liters)\n\nName : Water volume setting 1\nEPC : 0xE3\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WaterVolumeSetting1
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WaterVolumeSetting2Get:
+    procedure: get
+    epc: 228
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the water volume by selecting a level from among the predefined levels and to acquire the current setting.\n\n - 0x31 to 0x40 (16 levels) - 0x31 and 0x40 shall be used for the lowest and highest water levels, respectively. < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xA7: Levels 1 to 8 - Relative setting in the negative direction 0xC0 to 0xC7: Levels 1 to 8\n\nName : Water volume setting 2\nEPC : 0xE4\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WaterVolumeSetting2
+  WaterVolumeSetting2Set:
+    procedure: set
+    epc: 228
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the water volume by selecting a level from among the predefined levels and to acquire the current setting.\n\n - 0x31 to 0x40 (16 levels) - 0x31 and 0x40 shall be used for the lowest and highest water levels, respectively. < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xA7: Levels 1 to 8 - Relative setting in the negative direction 0xC0 to 0xC7: Levels 1 to 8\n\nName : Water volume setting 2\nEPC : 0xE4\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WaterVolumeSetting2
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WashingTimeSettingGet:
+    procedure: get
+    epc: 229
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the duration of the washing process and to acquire the current setting.\n\n - 0x00 to 0x17: 0x00 to 0x3B (= 0 to 23 hours): (= 0 to 59 minutes) < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA000 to 0xA03B: 1 to 60 minutes Relative setting in the negative direction - 0xC000 to 0xC03B: 1 to 60 minutes\n\nName : Washing time setting\nEPC : 0xE5\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WashingTimeSetting
+  WashingTimeSettingSet:
+    procedure: set
+    epc: 229
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the duration of the washing process and to acquire the current setting.\n\n - 0x00 to 0x17: 0x00 to 0x3B (= 0 to 23 hours): (= 0 to 59 minutes) < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA000 to 0xA03B: 1 to 60 minutes Relative setting in the negative direction - 0xC000 to 0xC03B: 1 to 60 minutes\n\nName : Washing time setting\nEPC : 0xE5\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WashingTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  GnumberOfTimesOfRinsingHSettingGet:
+    procedure: get
+    epc: 230
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the number of times of rinsing and to acquire the current setting.\n\n0 to 8 times (0x00 to 0x08) Automatic = 0xFF\n\nName :  gNumber of times of rinsing h setting\nEPC : 0xE6\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GnumberOfTimesOfRinsingHSetting
+  GnumberOfTimesOfRinsingHSettingSet:
+    procedure: set
+    epc: 230
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the number of times of rinsing and to acquire the current setting.\n\n0 to 8 times (0x00 to 0x08) Automatic = 0xFF\n\nName :  gNumber of times of rinsing h setting\nEPC : 0xE6\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GnumberOfTimesOfRinsingHSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  RinsingProcessSettingGet:
+    procedure: get
+    epc: 231
+    size: '4'
+    announce: undefined
+    doc: "Used to specify the rinsing process(es) to use by means of a bitmap, and to acquire the current setting. Four bits are used to represent each rinsing process as follows: Bits 0 through bit 3: 1st rinsing Bits 4 through bit 7: 2nd rinsing Bits 8 through bit 11: 3rd rinsing Bits 12 through bit 15: 4th rinsing Bits 16 through bit 19: 5th rinsing Bits 20 through bit 23: 6th rinsing Bits 24 through bit 27: 7th rinsing Bits 28 through bit 31: 8th rinsing\n\n0000: Automatic mode 0001: Rinsing without additional feeding of water from the tap 0010: Rinsing with additional feeding of water from the tap 0011: Shower rinsing\n\nName : Rinsing process setting\nEPC : 0xE7\nData Type : unsigned char  ~4\nData Size(Byte) : 4 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RinsingProcessSetting
+  RinsingProcessSettingSet:
+    procedure: set
+    epc: 231
+    size: '4'
+    announce: undefined
+    doc: "Used to specify the rinsing process(es) to use by means of a bitmap, and to acquire the current setting. Four bits are used to represent each rinsing process as follows: Bits 0 through bit 3: 1st rinsing Bits 4 through bit 7: 2nd rinsing Bits 8 through bit 11: 3rd rinsing Bits 12 through bit 15: 4th rinsing Bits 16 through bit 19: 5th rinsing Bits 20 through bit 23: 6th rinsing Bits 24 through bit 27: 7th rinsing Bits 28 through bit 31: 8th rinsing\n\n0000: Automatic mode 0001: Rinsing without additional feeding of water from the tap 0010: Rinsing with additional feeding of water from the tap 0011: Shower rinsing\n\nName : Rinsing process setting\nEPC : 0xE7\nData Type : unsigned char  ~4\nData Size(Byte) : 4 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RinsingProcessSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  SpinDryingTimeSettingGet:
+    procedure: get
+    epc: 232
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the duration of the spin drying process in minutes and to acquire the current setting.\n\n - 0x00 to 0x3B (0 to 59 minutes) < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xBF: 1 to 32 minutes - Relative setting in the negative direction 0xC0 to 0xDF: 1 to 32 minute\n\nName : Spin drying time setting\nEPC : 0xE8\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SpinDryingTimeSetting
+  SpinDryingTimeSettingSet:
+    procedure: set
+    epc: 232
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the duration of the spin drying process in minutes and to acquire the current setting.\n\n - 0x00 to 0x3B (0 to 59 minutes) < Relative setting relative to the automatic setting > - Automatic setting 0xFF - Relative setting in the positive direction 0xA0 to 0xBF: 1 to 32 minutes - Relative setting in the negative direction 0xC0 to 0xDF: 1 to 32 minute\n\nName : Spin drying time setting\nEPC : 0xE8\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SpinDryingTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  DryingTimeSettingGet:
+    procedure: get
+    epc: 233
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the duration of the drying process and to acquire the current setting.\n\n - 0x00 to 0x17: 0x00 to 0x3B (= 0 to 23 hours): (= 0 to 59 minutes) < Relative setting relative to the automatic setting > - Automatic setting 0xFF: 0xFF - Relative setting in the positive direction 0xA000 to 0xA03B: 1 to 60 minutes - Relative setting in the negative direction 0xC000 to 0xC03B: 1 to 60 minutes\n\nName : Drying time setting\nEPC : 0xE9\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DryingTimeSetting
+  DryingTimeSettingSet:
+    procedure: set
+    epc: 233
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the duration of the drying process and to acquire the current setting.\n\n - 0x00 to 0x17: 0x00 to 0x3B (= 0 to 23 hours): (= 0 to 59 minutes) < Relative setting relative to the automatic setting > - Automatic setting 0xFF: 0xFF - Relative setting in the positive direction 0xA000 to 0xA03B: 1 to 60 minutes - Relative setting in the negative direction 0xC000 to 0xC03B: 1 to 60 minutes\n\nName : Drying time setting\nEPC : 0xE9\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DryingTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  WarmWaterSettingGet:
+    procedure: get
+    epc: 234
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the temperature of laundry water in   and to acquire the current setting.\n\n0 to 100  C (0x00 to 0x64) Not to use warm water = 0xFE Automatic water temperature setting = 0xFF\n\nName : Warm water setting\nEPC : 0xEA\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WarmWaterSetting
+  WarmWaterSettingSet:
+    procedure: set
+    epc: 234
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the temperature of laundry water in   and to acquire the current setting.\n\n0 to 100  C (0x00 to 0x64) Not to use warm water = 0xFE Automatic water temperature setting = 0xFF\n\nName : Warm water setting\nEPC : 0xEA\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WarmWaterSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  BathtubWaterRecycleSettingGet:
+    procedure: get
+    epc: 235
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not, and when, to recycle used bathtub water, and acquire the current setting.\n\nBathtub water not used   : 0x40 Washing only                      : 0x41 Rinsing only (excluding the final rinsing)                               : 0x42 All rinsing processes        : 0x43 Washing + rinsing (excluding the final rinsing)                       : 0x44 Washing + all rinsing processes                            : 0x45\n\nName : Bathtub water recycle setting\nEPC : 0xEB\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathtubWaterRecycleSetting
+  BathtubWaterRecycleSettingSet:
+    procedure: set
+    epc: 235
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not, and when, to recycle used bathtub water, and acquire the current setting.\n\nBathtub water not used   : 0x40 Washing only                      : 0x41 Rinsing only (excluding the final rinsing)                               : 0x42 All rinsing processes        : 0x43 Washing + rinsing (excluding the final rinsing)                       : 0x44 Washing + all rinsing processes                            : 0x45\n\nName : Bathtub water recycle setting\nEPC : 0xEB\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: BathtubWaterRecycleSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WrinklingMinimizationSettingGet:
+    procedure: get
+    epc: 236
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the wrinkling minimization function, and to acquire the current setting.\n\nWrinkling minimization function ON                  : 0x41 Wrinkling minimization function OFF                : 0x42\n\nName : Wrinkling minimization setting\nEPC : 0xEC\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WrinklingMinimizationSetting
+  WrinklingMinimizationSettingSet:
+    procedure: set
+    epc: 236
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the wrinkling minimization function, and to acquire the current setting.\n\nWrinkling minimization function ON                  : 0x41 Wrinkling minimization function OFF                : 0x42\n\nName : Wrinkling minimization setting\nEPC : 0xEC\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WrinklingMinimizationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  TimeRemainingToCompleteWasherAndDryerCycleGet:
+    procedure: get
+    epc: 237
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the time remaining to complete the current washer and dryer .cycle .in .the . gHH: .MM h .format.\n\n0 to 0xFE: 0 to 0x3B (= 0 to 254 hours): (= 0 to 59 minutes) Remaining time unknown = 0xFF: 0xFF\n\nName : Time remaining to complete washer and dryer cycle\nEPC : 0xED\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: TimeRemainingToCompleteWasherAndDryerCycle
+  TimeRemainingToCompleteWasherAndDryerCycleSet:
+    procedure: set
+    epc: 237
+    size: '2'
+    announce: undefined
+    doc: "Used to acquire the time remaining to complete the current washer and dryer .cycle .in .the . gHH: .MM h .format.\n\n0 to 0xFE: 0 to 0x3B (= 0 to 254 hours): (= 0 to 59 minutes) Remaining time unknown = 0xFF: 0xFF\n\nName : Time remaining to complete washer and dryer cycle\nEPC : 0xED\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: TimeRemainingToCompleteWasherAndDryerCycle
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  DoorCoverLockSettingGet:
+    procedure: get
+    epc: 238
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the state of the door/cover lock during operation and to acquire the current setting.\n\nLocked: 0x41 Unlocked: 0x42\n\nName : Door/cover lock    setting\nEPC : 0xEE\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorCoverLockSetting
+  DoorCoverLockSettingSet:
+    procedure: set
+    epc: 238
+    size: '1'
+    announce: undefined
+    doc: "Used to specify the state of the door/cover lock during operation and to acquire the current setting.\n\nLocked: 0x41 Unlocked: 0x42\n\nName : Door/cover lock    setting\nEPC : 0xEE\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DoorCoverLockSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  WasherAndDryerCycleGet:
+    procedure: get
+    epc: 239
+    size: '24'
+    announce: undefined
+    doc: "Used to acquire the current washer and dryer cycle setting.\n\nBytes 1 and 2: This property indicates the available items in a bitmap format. Byte 3: Presoaking With presoaking: 0x41 Without presoaking: 0x42 Bytes 4 and 5: Washing time The value of the  gwashing time setting h property shall be referenced. Byte 6: Number of times of rinsing The value of the  g fnumber of times of rinsing f setting h property shall be referenced. Bytes 7 through 10: Rinsing process The value of the  grinsing process setting h property shall be referenced. Byte 11: Spin drying time The value of the  gspin drying time setting h property shall be referenced. Bytes 12 and 13: Drying time The value of the  hdrying time setting h property shall be referenced. Byte 14: Warm water setting The value of the  gwarm water setting h property shall be referenced. Byte 15: Water volume setting 1 The value of the  gwater volume setting 1 h property shall be referenced. Byte 16: Water volume setting 2 The value of the  gwater volume setting 2 h property shall be referenced. Byte 17: Bathtub water recycle setting The value of the  gbathtub water recycle setting h property shall be referenced. Byte 18: Water flow rate setting The value of the  gwater flow rate setting h property shall be referenced. Bytes 19 and 20:  gRotation speed for spin drying h setting The value of the  g frotation speed for spin drying f setting h property shall be referenced. Byte 21:  gDegree of drying h setting The value of the  g fdegree of drying f setting h property shall be referenced. Bytes 22 and 23: Presoaking time setting The value of the  gpresoaking time setting h property shall be referenced. Byte 24: Wrinkling minimization setting The value of the  gwrinkling minimization setting h property shall be referenced.\n\nName : Washer and dryer cycle\nEPC : 0xEF\nData Type : unsigned Char  ~24\nData Size(Byte) : 24 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycle
+  WasherAndDryerCycleSet:
+    procedure: set
+    epc: 239
+    size: '24'
+    announce: undefined
+    doc: "Used to acquire the current washer and dryer cycle setting.\n\nBytes 1 and 2: This property indicates the available items in a bitmap format. Byte 3: Presoaking With presoaking: 0x41 Without presoaking: 0x42 Bytes 4 and 5: Washing time The value of the  gwashing time setting h property shall be referenced. Byte 6: Number of times of rinsing The value of the  g fnumber of times of rinsing f setting h property shall be referenced. Bytes 7 through 10: Rinsing process The value of the  grinsing process setting h property shall be referenced. Byte 11: Spin drying time The value of the  gspin drying time setting h property shall be referenced. Bytes 12 and 13: Drying time The value of the  hdrying time setting h property shall be referenced. Byte 14: Warm water setting The value of the  gwarm water setting h property shall be referenced. Byte 15: Water volume setting 1 The value of the  gwater volume setting 1 h property shall be referenced. Byte 16: Water volume setting 2 The value of the  gwater volume setting 2 h property shall be referenced. Byte 17: Bathtub water recycle setting The value of the  gbathtub water recycle setting h property shall be referenced. Byte 18: Water flow rate setting The value of the  gwater flow rate setting h property shall be referenced. Bytes 19 and 20:  gRotation speed for spin drying h setting The value of the  g frotation speed for spin drying f setting h property shall be referenced. Byte 21:  gDegree of drying h setting The value of the  g fdegree of drying f setting h property shall be referenced. Bytes 22 and 23: Presoaking time setting The value of the  gpresoaking time setting h property shall be referenced. Byte 24: Wrinkling minimization setting The value of the  gwrinkling minimization setting h property shall be referenced.\n\nName : Washer and dryer cycle\nEPC : 0xEF\nData Type : unsigned Char  ~24\nData Size(Byte) : 24 byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: WasherAndDryerCycle
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  OnTimerReservationSettingGet:
+    procedure: get
+    epc: 144
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the ON timer-based reservation function, and to acquire the current setting.\n\nReservation ON = 0x41, reservation OFF = 0x42\n\nName : ON timer reservation setting\nEPC : 0x90\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerReservationSetting
+  OnTimerReservationSettingSet:
+    procedure: set
+    epc: 144
+    size: '1'
+    announce: undefined
+    doc: "Used to specify whether or not to use the ON timer-based reservation function, and to acquire the current setting.\n\nReservation ON = 0x41, reservation OFF = 0x42\n\nName : ON timer reservation setting\nEPC : 0x90\nData Type : unsigned char\nData Size(Byte) : 1 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerReservationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  OnTimerSettingGet:
+    procedure: get
+    epc: 145
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the time for the time-based reservation function of the ON timer and to acquire the current setting.\n\n0 to 0x17: 0 to 0x3B (= 0 to 23): (= 0 to 59)\n\nName : ON timer setting\nEPC : 0x91\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerSetting
+  OnTimerSettingSet:
+    procedure: set
+    epc: 145
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the time for the time-based reservation function of the ON timer and to acquire the current setting.\n\n0 to 0x17: 0 to 0x3B (= 0 to 23): (= 0 to 59)\n\nName : ON timer setting\nEPC : 0x91\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OnTimerSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  RelativeTimeBasedOnTimerSettingGet:
+    procedure: get
+    epc: 146
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the relative time for the relative time-based reservation function of the ON timer and to acquire the time remaining for the current reservation.\n\n0 to 0xFF: 0 to 0x3B (= 0 to 255): (= 0 to 59)\n\nName : Relative time-based ON timer setting\nEPC : 0x92\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RelativeTimeBasedOnTimerSetting
+  RelativeTimeBasedOnTimerSettingSet:
+    procedure: set
+    epc: 146
+    size: '2'
+    announce: undefined
+    doc: "Used to specify the relative time for the relative time-based reservation function of the ON timer and to acquire the time remaining for the current reservation.\n\n0 to 0xFF: 0 to 0x3B (= 0 to 255): (= 0 to 59)\n\nName : Relative time-based ON timer setting\nEPC : 0x92\nData Type : unsigned char  ~2\nData Size(Byte) : 2 byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: RelativeTimeBasedOnTimerSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+
