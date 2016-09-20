@@ -130,6 +130,7 @@ exports.init = function(_REALM, _ROUTER_URL) {
         }
         d.deviceId = deviceid_count++;
         d.status = true;
+        d.prefix = plugin_prefix;
         devices[key] = d;
 
         console.log('Device '+d.deviceId+':'+kwargs.protocol+':'+kwargs.deviceType+'/'+kwargs.uuid+' registered.');
@@ -177,13 +178,17 @@ exports.init = function(_REALM, _ROUTER_URL) {
     cloud.connect(cache[0], cache[1], ROUTER_URL);
   });
 
-  htserv = require('./htserv.js').start(31413, {
-    registered: function(re) {
-      log('Terminal token:' + re.terminal_token);
-      log('Bridge server :' + re.bridge_server);
+  htserv = require('./htserv.js')({
+    routerURL: ROUTER_URL,
+    realm: REALM,
+    callbacks: {
+      registered: function (re) {
+        log('Terminal token:' + re.terminal_token);
+        log('Bridge server :' + re.bridge_server);
 
-      fs.writeFile(cloud.REGISTERED_INFO_CACHE_FILE, re.terminal_token + "\n" + re.bridge_server);
-      cloud.connect(re.terminal_token, re.bridge_server, ROUTER_URL);
+        fs.writeFile(cloud.REGISTERED_INFO_CACHE_FILE, re.terminal_token + "\n" + re.bridge_server);
+        cloud.connect(re.terminal_token, re.bridge_server, ROUTER_URL);
+      }
     }
-  });
+  }).start(31413);
 };
