@@ -71,8 +71,10 @@ function installCrossbar () {
 function installNode () {
   ## https://github.com/nodesource/distributions
   if [ -n "$(command -v node)" ]; then
-    echo "Node.js is already installed. Version: $(node --version)"
-    return 0
+    if [ "$(node --version | sed -e 's/[^0-9.]//g' | awk -F. '{print $1}')" -ge 4 ]; then
+      echo "Node.js is already installed. Version: $(node --version)"
+      return 0
+    fi
   fi
 
   echo "Install Node.js v4.x (Please wait)"
