@@ -42,6 +42,7 @@ function installPip () {
     else
       echo "Installing pip (Please wait)"
       sudo pip install -U pip >/dev/null
+      sudo pip install -U six >/dev/null
       echo -e "Done.\n"
       return 0
     fi
