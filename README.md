@@ -8,53 +8,62 @@ For developers, please see ["For developers" section](#for-developers).
 
 Use automatic install.
 
-```
+```sh
 $ bash <(curl -skL https://git.io/kadecotjs-install)
 ```
 
 <!-- For Raspberry Pi, please follow the special instruction: http://crossbar.io/docs/Installation-on-RaspberryPi/ -->
 
+## Usage
+
+Run crossbar.io with Kadecot|JS by:
+
+```sh
+$ crossbar start
+```
+
+Crossbar setting file exists under [.crossbar](.crossbar) directory.
+
+<!--
+start Kadecot main functionalities and plugins by:
+
+```sh
+node main.js
+```
+-->
+
+If you don't willing to use local crossbar, run `node main.js` as follows:
+
+```sh
+$ ROUTER_URL=ws://[WAMP_ROUTER_HOST]:[WAMP_ROUTER_PORT]/ws node main.js
+```
+
+You can check the API call by accessing `http://[host]:31413/sample.html` from your web browser (assuming there is one ECHONET Lite Air-conditioner exists).
+
 ## For developers
 
 First, clone this repository.
-```
+```sh
 $ git clone https://github.com/SonyCSL/Kadecot-JS.git
 ```
 
 Run install.sh and Install required tools.
-```
+```sh
 $ cd ./Kadecot-JS
 $ bash ./install.sh
 ```
 
 Then install node libraries by hitting
-```
+```sh
 $ npm install
 ```
 
 Also rename v1/htserverdocs/settings.js.orig to v1/htserverdocs/settings.js and edit it.
 
-```
+```sh
 $ cp v1/htserverdocs/settings.js.orig v1/htserverdocs/settings.js
 $ vi v1/htserverdocs/settings.js
 ```
-
-## Running
-run crossbar.io by:
-
-    crossbar start
-
-Crossbar setting file exists under [.crossbar](.crossbar) directory.
-
-start Kadecot main functionalities and plugins by:
-
-    node main.js
-
-If you don't willing to use local crossbar, start main.js as follows:
-
-    ROUTER_URL=ws://[WAMP_ROUTER_HOST]:[WAMP_ROUTER_PORT]/ws node main.js
-
-You can check the API call by accessing *http://[host]:31413/sample.html* from your web browser (assuming there is one ECHONET Lite Air-conditioner exists).
 
 ## Difference from Android Kadecot:
 
