@@ -1,11 +1,14 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 
 module.exports = function factory (htserv) {
   const JSONPRouter = express();
 
   JSONPRouter.set('jsonp callback name', 'callback');
+
+  JSONPRouter.use(cors());
 
   JSONPRouter.use('/*', (req, res, next) => {
     if (!htserv.session) res.status(500).jsonp({ error: 'Server isn\'t ready yet.'});
