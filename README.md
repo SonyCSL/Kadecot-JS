@@ -19,7 +19,7 @@ $ bash <(curl -skL https://git.io/kadecotjs-install)
 Run crossbar.io with Kadecot|JS by:
 
 ```sh
-$ crossbar start
+$ kadecot start
 ```
 
 Crossbar setting file exists under [.crossbar](.crossbar) directory.
@@ -32,11 +32,27 @@ node main.js
 ```
 -->
 
+### JSONP API
+
+Kadecot|JS also has JSON/JSONP API.
+
+Access `http://{YOUR_KADECOT_IP}:31413` and try it.
+
+### Without local crossbar
+
 If you don't willing to use local crossbar, run `node main.js` as follows:
 
 ```sh
-$ ROUTER_URL=ws://[WAMP_ROUTER_HOST]:[WAMP_ROUTER_PORT]/ws node main.js
+$ ROUTER_URL=ws://[WAMP_ROUTER_HOST]:[WAMP_ROUTER_PORT]/ws node $HOME/.kadecot/main.js
 ```
+
+### GotAPI plugin
+
+If you use [DeviceConnect Android], write Android's IP address to `$HOME/.kadecot/v1/plugins/com.sonycsl.kadecot.gotapi/config.yml`.
+
+[DeviceConnect Android]: https://github.com/DeviceConnect/DeviceConnect-Android/blob/master/readme.ja.md
+
+### WAMP sample
 
 You can check the API call by accessing `http://[host]:31413/sample.html` from your web browser (assuming there is one ECHONET Lite Air-conditioner exists).
 

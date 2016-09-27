@@ -17,12 +17,12 @@ function installRequiredPackages () {
   if [ -n "$(command -v yum)" ]; then
     sudo yum groupinstall -y 'Development Tools' >/dev/null 2>/dev/null
     sudo yum install -y \
-      curl python python-devel \
+      git curl python python-devel \
       openssl-devel libffi-devel >/dev/null
   elif [ -n "$(command -v apt-get)" ]; then
     sudo apt-get update >/dev/null
     sudo apt-get install -y \
-      curl python build-essential \
+      git curl python build-essential \
       libssl-dev libffi-dev python-dev >/dev/null
   fi
   echo -e "Done.\n"
@@ -98,6 +98,20 @@ function installNode () {
 
 function installKadecotJs () {
   echo "Installing Kadecot|JS"
+
+  if [ -d $HOME/.kadecot ]; then
+    echo "Kadecot|JS is already installed."
+    return 0
+  fi
+
+  git clone --depth 1 https://github.com/SonyCSL/Kadecot-JS $HOME/.kadecot > /dev/null 2>/dev/null
+  sudo ln -s $HOME/.kadecot/kadecot /usr/local/bin/kadecot > /dev/null
+  sudo chmod a+x $HOME/.kadecot/kadecot /usr/local/bin/kadecot > /dev/null
+
+  cd $HOME/.kadecot && npm install --silent > /dev/null
+  ls -d $HOME/.kadecot/v1/plugins/* | xargs -I{} bash -c 'cd {} && npm install --silent' > /dev/null
+
+  echo "Installed Kadecot|JS to $HOME/.kadecot";
 
   echo -e "Done.\n"
 }

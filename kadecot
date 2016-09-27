@@ -1,0 +1,36 @@
+#!/bin/bash
+
+COMMAND=$1
+case $COMMAND in
+  start)
+    cd $HOME/.kadecot
+    crossbar start
+    ;;
+  update)
+    echo "Updating Kadecot|JS"
+    {
+      cd $HOME/.kadecot
+      git pull origin master
+      sudo chmod a+x $HOME/.kadecot/kadecot
+      npm install
+      ls -d $HOME/.kadecot/v1/plugins/* | xargs -I{} bash -c 'cd {} && npm install --silent'
+    } > /dev/null
+    echo "Updated."
+    ;;
+  uninstall)
+    echo "Uninstalling Kadecot|JS"
+    {
+      sudo rm "$(which kadecot)"
+      rm -rf $HOME/.kadecot
+    } > /dev/null
+    echo "Uninstalled."
+    ;;
+  *)
+    cat <<'EOL'
+Usage:
+  kadecot start     : Start kadecot via crossbar.io
+  kadecot update    : Update kadecot
+  kadecot uninstall : Uninstall kadecot
+EOL
+    ;;
+esac
