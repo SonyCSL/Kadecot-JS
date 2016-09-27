@@ -15,8 +15,7 @@
             "publish": true,
             "subscribe": true
           }
-        },
-        {
+        }, {
           "uri": "wamp.*",
           "allow": {
             "call": false,
@@ -25,8 +24,7 @@
             "subscribe": false
           }
         }]
-      },
-      {
+      }, {
         "name": "provider",
         "permissions": [{
           "uri": "*",
@@ -36,8 +34,7 @@
             "publish": true,
             "subscribe": true
           }
-        },
-        {
+        }, {
           "uri": "wamp.*",
           "allow": {
             "call": true,
@@ -75,5 +72,12 @@
         }
       }
     }]
+  }, {
+    "type": "guest",
+    "executable": "node",
+    "arguments": ["main.js"],
+    "options": {
+      "workdir": "../"
+    }
   }]
 }
