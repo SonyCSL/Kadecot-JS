@@ -3,43 +3,67 @@
   <head>
     <meta charset="utf-8">
     <title>Kadecot WebUI</title>
+
+    <link rel="stylesheet" href="./css/normalize_4.1.1.css">
+    <link rel="stylesheet" href="./css/bulma_0.2.1.css">
+    <style>
+      html, body {
+        font-size: 100%;
+      }
+    </style>
   </head>
   <body>
-    <h1>Kadecot WebUI</h1>
+    <header class="hero is-primary is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Kadecot WebUI
+          </h1>
+        </div>
+      </div>
+    </header>
 
-    <h2>Links</h2>
-    <ul>
-      <li>
-        <a href="./register.html">Register to Cloud</a>
-      </li>
-      <li>
-        <a href="./installer/">Web Installer</a>
-      </li>
-      <li>
-        <a href="./settings/">Settings</a>
-      </li>
-      <li>
-        <a id="jsonpTester" href="./APIQueryGenerator/">JSONP Tester</a>
-      </li>
-    </ul>
+    <section class="section">
+      <div class="container">
+        <div class="content">
+          <h2>Links</h2>
+          <hr>
+          <ul>
+            <li>
+              <a href="./register.html">Register to Cloud</a>
+            </li>
+            <li>
+              <a href="./installer/">Web Installer</a>
+            </li>
+            <li>
+              <a href="./settings/">Settings</a>
+            </li>
+            <li>
+              <a id="jsonpTester" href="./APIQueryGenerator/">JSONP Tester</a>
+            </li>
+          </ul>
 
-    <h2>Info</h2>
-    <h3>Ports</h3>
-    <p>
-      80, 31413 (this is example)
-    </p>
-    <h3>LICENSES</h3>
-    <ul>
-      <li>
-        <a href="https://example.com" target="_blank">
-          EXAMPLE (MIT)
-        </a>
-      </li>
-    </ul>
+          <h2>Info</h2>
+          <hr>
+          <h3>Ports</h3>
+          <p>
+            80, 31413 (this is example)
+          </p>
+          <h3>LICENSES</h3>
+          <ul>
+            <li>
+              <a href="https://example.com" target="_blank">
+                EXAMPLE (MIT)
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
     <script>
       var testerLink = document.getElementById('jsonpTester');
-      testerLink.setAttribute('href', './APIQueryGenerator?k=' + location.hostname);
+      testerLink.setAttribute('href', './APIQueryGenerator/?k=' + location.hostname);
     </script>
   </body>
 </html>
