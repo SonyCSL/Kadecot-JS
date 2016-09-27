@@ -13,7 +13,7 @@ function sudo () {
 }
 
 function installRequiredPackages () {
-  echo "Install required packages (Please wait)"
+  echo "Installing required packages (Please wait)"
   if [ -n "$(command -v yum)" ]; then
     sudo yum groupinstall -y 'Development Tools' >/dev/null 2>/dev/null
     sudo yum install -y \
@@ -40,14 +40,14 @@ function installPip () {
       echo "pip is already installed. Version: $(pip --version | awk '{ print $2 }')"
       return 0
     else
-      echo "Install pip (Please wait)"
+      echo "Installing pip (Please wait)"
       sudo pip install -U pip >/dev/null
       echo -e "Done.\n"
       return 0
     fi
   fi
 
-  echo "Install pip (Please wait)"
+  echo "Installing pip (Please wait)"
   curl -skL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py >/dev/null
   sudo python /tmp/get-pip.py >/dev/null
   rm /tmp/get-pip.py >/dev/null
@@ -67,7 +67,7 @@ function installCrossbar () {
     return 0
   fi
 
-  echo "Install Crossbar.io (Please wait)"
+  echo "Installing Crossbar.io (Please wait)"
 
   ( sudo pip install "crossbar==${CROSSBAR_VERSION}" >/dev/null ) || \
   ( ( echo -e "\n*** Exec \"Install Required Packages\" first. ***\n" >&2 ) && return 255 )
@@ -84,7 +84,7 @@ function installNode () {
     fi
   fi
 
-  echo "Install Node.js v4.x (Please wait)"
+  echo "Installing Node.js v4.x (Please wait)"
   if [ -n "$(command -v yum)" ]; then
     curl -skL "https://rpm.nodesource.com/setup_${NODE_VERSION}" | sudo bash - >/dev/null
     sudo yum install -y nodejs >/dev/null
@@ -96,7 +96,7 @@ function installNode () {
 }
 
 function installKadecotJs () {
-  echo "Install Kadecot|JS"
+  echo "Installing Kadecot|JS"
 
   echo -e "Done.\n"
 }
