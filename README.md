@@ -6,15 +6,13 @@ For developers, please see ["For developers" section](#for-developers).
 
 ## Installation
 
-**[WIP]**
-
-Run install.sh
+Use automatic install.
 
 ```
-$ bash <(curl -skL https://raw.githubusercontent.com/SonyCSL/Kadecot-JS/master/install.sh)
+$ bash <(curl -skL https://git.io/kadecotjs-install)
 ```
 
-For Raspberry Pi, please follow the special instruction: http://crossbar.io/docs/Installation-on-RaspberryPi/
+<!-- For Raspberry Pi, please follow the special instruction: http://crossbar.io/docs/Installation-on-RaspberryPi/ -->
 
 ## For developers
 
