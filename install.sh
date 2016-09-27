@@ -36,13 +36,20 @@ function installPip () {
   fi
 
   if [ -n "$(command -v pip)" ]; then
-    echo "pip is already installed. Version: $(pip --version | awk '{ print $2 }')"
-    return 0
+    if [ "$(pip --version | awk '{ print $2 }' | awk -F. '{print $1}')" -ge 8 ]; then
+      echo "pip is already installed. Version: $(pip --version | awk '{ print $2 }')"
+      return 0
+    else
+      echo "Install pip (Please wait)"
+      sudo pip install -U pip >/dev/null
+      echo -e "Done.\n"
+      return 0
+    fi
   fi
 
   echo "Install pip (Please wait)"
   curl -skL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py >/dev/null
-  python /tmp/get-pip.py --user >/dev/null
+  sudo python /tmp/get-pip.py >/dev/null
   rm /tmp/get-pip.py >/dev/null
   echo -e "Done.\n"
 }
@@ -62,7 +69,7 @@ function installCrossbar () {
 
   echo "Install Crossbar.io (Please wait)"
 
-  ( pip install --user "crossbar==${CROSSBAR_VERSION}" >/dev/null ) || \
+  ( sudo pip install "crossbar==${CROSSBAR_VERSION}" >/dev/null ) || \
   ( ( echo -e "\n*** Exec \"Install Required Packages\" first. ***\n" >&2 ) && return 255 )
 
   echo -e "Done.\n"
@@ -85,6 +92,12 @@ function installNode () {
     curl -skL "https://deb.nodesource.com/setup_${NODE_VERSION}" | sudo bash - >/dev/null
     sudo apt-get install -y nodejs >/dev/null
   fi
+  echo -e "Done.\n"
+}
+
+function installKadecotJs () {
+  echo "Install Kadecot|JS"
+
   echo -e "Done.\n"
 }
 
@@ -122,11 +135,31 @@ function showVersions () {
   echo ""
 }
 
+function automaticInstall () {
+  installRequiredPackages && \
+  installPip && \
+  installCrossbar && \
+  installNode && \
+  installKadecotJs && \
+  echo -e "\n*** The installation was successful. ***"
+  exit 0
+}
+
 function main () {
   welcome
   showVersions
   sleep 1
-  selectDo
+
+  echo "You will be started automatic install in 10 seconds."
+  echo "If you want to install manually, please press any key."
+  echo ""
+
+  for t in $(seq 1 10); do
+    echo -n "."
+    read -t 1 && ( echo ""; selectDo; ) && exit 0
+  done
+  echo ""
+  automaticInstall
 }
 
 function welcome () {
@@ -141,7 +174,7 @@ function welcome () {
 
 EOF
 
-  echo -e "Welcome to Kadecot Installer!\n"
+  echo -e "Welcome to Kadecot|JS Installer!\n"
 }
 
 function selectDo () {
@@ -153,7 +186,7 @@ function selectDo () {
   "Install pip" \
   "Install Crossbar.io" \
   "Install Node.js v4.x" \
-  "Install Kadecot" \
+  "Install Kadecot|JS" \
   "Show versions" \
   "Quit" )
 
@@ -162,11 +195,7 @@ function selectDo () {
     echo -ne "\n"
     case $opt in
       "Automatic Install (** RECOMMENDED **)")
-        installRequiredPackages && \
-        installPip && \
-        installCrossbar && \
-        installNode && \
-        echo -e "\n*** The installation was successful. ***"
+        automaticInstall
         ;;
       "Install Required Packages")
         installRequiredPackages
@@ -180,9 +209,8 @@ function selectDo () {
       "Install Node.js v4.x")
         installNode
         ;;
-      "Install Kadecot")
-        echo "Install Kadecot"
-        break
+      "Install Kadecot|JS")
+        installKadecotJs
         ;;
       "Show versions")
         showVersions
