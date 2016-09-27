@@ -59,7 +59,7 @@ export default {
       return url.format({
         protocol: 'http',
         hostname: this.ip,
-        port: 31413,
+        port: location.port,
         pathname: path.join('jsonp/v1/devices', deviceId),
         query: {
           procedure: encodeURIComponent(this.procedure),
