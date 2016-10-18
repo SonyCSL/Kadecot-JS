@@ -1,8 +1,23 @@
-# Kadecot|JS is the node.js version of Kadecot.
+# What does Kadecot|JS do?
 
-Uses [crossbar.io](http://crossbar.io/docs/Installation-on-CentOS-and-RedHat/) and [Autobahn|js](http://autobahn.ws/js/) as [WAMP](http://wamp.ws) stack. Also uses [node echonet-lite](https://www.npmjs.com/package/node-echonet-lite) in echonet lite plugin.
+Kadecot|JS is an open-source home server implemented by Node.js.
+
+This is essentially a protocol converter, from device-specific one to unified WebAPI, based on JSONP or [WAMP](http://wamp-proto.org/). WAMP is a very convenient websocket-based WebAPI, which supports both PubSub and RPC styled information delivery. On top of WAMP, we added an originally-formatted payload. You can easilly access devices from major web browser using our server.
+
+If you want to use JSONP API, just start the server and access http://[Kadecot|JS IP]:31413/. You will get easy-to-use API Generator.
+If you use WAMP API, we recommend you to use [Autobahn|JS](http://autobahn.ws/js/) as WAMP access library (not well document yet).
+
+In either case, please check Installation and Usage section below.
+
+Currently, this Node.js version only supports ECHONET Lite and [Device WebAPI (GotAPI)](http://en.device-webapi.org/), while the [Android version](https://play.google.com/store/apps/details?id=com.sonycsl.Kadecot) additionally supports Sony's Bravia, IRKit, Hue, and by adding an [external plugin](https://github.com/SonyCSL/LightblueBeanPlugin), LightBlue Bean can also be accessed. If you use the Android version, please use our library (Rather than Autobahn) to access it as described in [this page](http://kadecot.net/English/).
+
+[Device WebAPI (GotAPI)](http://en.device-webapi.org/) is another device WebAPI server managed by Device WebAPI consortium. It runs on smartphones and supports various devices including smart glasses, watches, and so on. If you want to communicate with those devices through Kadecot API, you need to run [Device WebAPI Manager App](https://play.google.com/store/apps/details?id=org.deviceconnect.android.manager) on android phone within the same network, and set the IP address to Kadecot|JS config. Please check below.
+
+You can easily add new protocol by adding a custom plugin and reboot. Please check the [example plugin](v1/plugins/com.sonycsl.kadecot.test/index.js).
 
 For developers, please see ["For developers" section](#for-developers).
+
+This application uses [crossbar.io](http://crossbar.io/docs/Installation-on-CentOS-and-RedHat/) and [Autobahn|js](http://autobahn.ws/js/) as [WAMP](http://wamp.ws) stack. Also uses [node-echonet-lite](https://www.npmjs.com/package/node-echonet-lite) in echonet lite plugin.
 
 ## Installation
 
@@ -38,7 +53,7 @@ Kadecot|JS also has JSON/JSONP API.
 
 Access `http://{YOUR_KADECOT_IP}:31413` and try it.
 
-### Without local crossbar
+### Without local crossbar (Optional)
 
 If you don't willing to use local crossbar, run `node main.js` as follows:
 
@@ -119,4 +134,4 @@ Try these by accessing http://[host]:31413/sample.html
 - Develop REST API
 
 ## Acknowledgements
-- [Futomi Hatano](https://github.com/futomi) helped me a lot to quickly modify his [node echonet-lite library](https://www.npmjs.com/package/node-echonet-lite) to match my request. Thank you very much!!
+- [Futomi Hatano](https://github.com/futomi) helped me a lot to quickly modify his [node-echonet-lite library](https://www.npmjs.com/package/node-echonet-lite) to match my request. Thank you very much!!
