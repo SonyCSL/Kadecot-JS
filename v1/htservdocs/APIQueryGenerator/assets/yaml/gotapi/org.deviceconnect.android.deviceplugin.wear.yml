@@ -1,0 +1,179 @@
+name: 'Android Wear DevicePlugin Support Profile'
+prefix: com.sonycsl.kadecot.gotapi
+rpc:
+  System:
+    name: System
+    procedure: system.get
+    doc: "## System API\n\n| インターフェース名称 | Version | 種別    |\n| :--------- | :------ | :---- |\n| System API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンのシステム情報を提供するAPI\nDevice Connect ManagerのバージョンやサポートするAPI一覧、インストールされているデバイスプラグイン一覧などのアプリケーション情報を取得する。\n\n| HTTPメソッド | URI            |\n| :------- | :------------- |\n| GET      | /gotapi/system |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>バージョン</td>\n    <td colspan=\"2\" text-align=\"center\">version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>Device Connect Manager バージョンの文字列。</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>サポートしているI/Fのプロファイル名一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>プラグイン一覧</td>\n    <td colspan=\"2\" text-align=\"center\">plugins</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>サポートしているプラグインの一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"5\"></td>\n    <td>id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインを識別するID。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグイン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインのバージョン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>デバイスプラグインのサポートするプロファイル名の配列。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>packageName</td>\n    <td>string</td>\n    <td>○</td>\n    <td>デバイスプラグインのパッケージ名。</td>\n  </tr>\n\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/system\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"version\":\"1.0\",\n        \"supports\":[\n            \"authorization\",\n            \"availability\",\n            \"servicediscovery\",\n        \t\"serviceinfomation\",\n            \"system\"\n        ],\n       \"plugins\": [\n           {\n               \"id\": \"xxx1.localhost.deviceconnect.org\",\n               \"name\": \"Exampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"battery\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.example.deviceplugin\"\n           },\n           {\n               \"id\": \"xxx2.localhost.deviceconnect.org\",\n               \"name\": \"Sampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"light\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.sample.deviceplugin\"\n           }\n       ]\n    }\n"
+    docType: markdown
+  DeviceSystemWakeUp_PUT:
+    name: DeviceSystemWakeUp_PUT
+    procedure: system.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: device/wakeup
+      pluginId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Device System WakeUp API PUT\n\n| インターフェース名称               | Version | 種別    |\n| :----------------------- | :------ | :---- |\n| Device System WakeUp API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスプラグインの機能を有効にする。\nデバイスプラグインによっては、設定画面が起動してデバイスとの接続を行う。\n\n| HTTPメソッド | URI                          |\n| :------- | :--------------------------- |\n| PUT      | /gotapi/system/device/wakeup |\n\n| 論理名     | 物理名      | データ型   | 省略  | 設定値           |\n| :------ | :------- | :----- | :-- | :------------ |\n| プラグインID | pluginId | string | -   | 取得対象デバイスプラグイン |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/system/device/wakeup\t\t\t\t\t```\n\n|PUTデータ|\n\\|:--\\|\n|pluginId=xxxxx.localhost.deviceconnect.org|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  SystemEventsUnregister:
+    name: SystemEventsUnregister
+    procedure: system.delete
+    params:
+      interface:
+        type: string
+        const: true
+        value: events
+      sessionKey:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## System Events Unregister API\n\n| インターフェース名称                  | Version | 種別    |\n| :-------------------------- | :------ | :---- |\n| System Event Unregister API | 2.0.0   | 同期I/F |\n\n### 概要\n\n指定されたセッションキーに紐づくイベントを一挙に解除する。\n\n| HTTPメソッド | URI                   |\n| :------- | :-------------------- |\n| DELETE   | /gotapi/system/events |\n\n| 論理名     | 物理名        | データ型   | 省略  | 設定値         |\n| :------ | :--------- | :----- | :-- | :---------- |\n| セッションID | sessionKey | string | -   | イベントセッションID |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/system/events?sessionKey=xxx&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  ServiceInformation:
+    name: ServiceInformation
+    procedure: serviceinformation.get
+    params:
+    doc: "## Service Information API\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Service Information API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンまたは周辺機器についての情報を提供するAPI。\nサポートするプロファイル一覧、ネットワークへの接続状態を取得する。\n\n| HTTPメソッド | URI                        |\n| :------- | :------------------------- |\n| GET      | /gotapi/serviceinformation |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値          |\n| :----- | :-------- | :----- | :-- | :----------- |\n| サービスID | serviceId | string | -   | 取得対象スマートデバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>オブジェクト</td>\n    <td colspan=\"2\" text-align=\"center\">connect</td>\n    <td>object</td>\n    <td>-</td>\n    <td>デバイスプラグインの接続状態。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"4\"></td>\n    <td >wifi</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>WiFiの接続状態。 WiFiを提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >bluetooth</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>Bluetoothの接続状態。Bluetoothが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >nfc</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>NFCの接続状態。NFCが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >ble</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>BLEの接続状態。BLEが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>array</td>\n    <td>-</td>\n    <td>サポートしているプロファイル名の配列。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/serviceinformation?servieId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"connect\":{\n            \"wifi\":true\n        },\n        \"supports\":[\n            \"system\",\n            \"battery\",\n            \"vibration\"\n        ]\n    }\n"
+    docType: markdown
+  ServiceDiscovery:
+    name: ServiceDiscovery
+    procedure: servicediscovery.get
+    doc: "## Service Discovery API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Service Discovery API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイス検索機能を提供するAPI。\nDevice Connect Managerに接続されているスマートデバイス一覧を取得する。\n取得できる情報には、スマートデバイスへの接続するネットワーク、オンライン状態やデバイス固有のコンフィグ情報が格納されている。\n\n| HTTPメソッド | URI                      |\n| :------- | :----------------------- |\n| GET      | /gotapi/servicediscovery |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n\n  <tr>\n    <td>デバイス一覧</td>\n    <td colspan=\"2\" text-align=\"center\">services</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>デバイスデータ(object)の配列。</td>\n  </tr>\n  <tr>\n    <td>デバイスID</td>\n    <td rowspan=\"5\"></td>\n    <td >id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスを識別するID。</td>\n  </tr>\n  <tr>\n    <td>デバイス名</td>\n    <td >name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイス名。</td>\n  </tr>\n  <tr>\n    <td>デバイスタイプ</td>\n    <td >type</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスへの接続するネットワークを示す。<br>WiFi<br>BLE<br>NFC<br>Bluetooth</td>\n  </tr>\n  <tr>\n    <td>ネットワーク接続状態</td>\n    <td >online</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>デバイスのオンライン状態を示す<br>true: オンライン<br>false: オフライン</td>\n  </tr>\n  <tr>\n    <td>コンフィグ</td>\n    <td >config</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスに設定がある場合には、ここに文字列としてデータが格納されている。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/servicediscovery?accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"services\":[\n            {\n                \"id\":\"device1.localhost.deviceconnect.org\",\n                \"name\":\"SW2\",\n                \"type\":\"Bluetooth\",\n                \"online\":true,\n                \"config\":\"\"\n            },\n            {\n                \"id\":\"device2.localhost.deviceconnect.org\",\n                \"name\":\"Hue\",\n                \"type\":\"WiFi\",\n                \"online\":false,\n                \"config\":\"\"\n            }\n        ]\n    }\n"
+    docType: markdown
+  Notification_POST:
+    name: Notification_POST
+    procedure: notification.post
+    params:
+      interface:
+        type: string
+        const: true
+        value: notify
+      type:
+        type: number
+        const: false
+        value: ""
+        required: true
+      dir:
+        type: string
+        const: false
+        value: ""
+        required: false
+      lang:
+        type: string
+        const: false
+        value: ""
+        required: false
+      body:
+        type: string
+        const: false
+        value: ""
+        required: false
+      tag:
+        type: string
+        const: false
+        value: ""
+        required: false
+      uri:
+        type: string
+        const: false
+        value: ""
+        required: false
+    doc: "## Notification API POST\n\n| インターフェース名称       | Version | 種別    |\n| :--------------- | :------ | :---- |\n| Notification API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスにノーティフィケーションの表示要求をする。\nノーティフィケーションの表示要求の到達成否を応答として返却し、ノーティフィケーションの表示完了を待って応答をするわけではない。\nノーティフィケーションの表示方法は表示要求を受けたスマートデバイスに依存する。\n\n| HTTPメソッド | URI                         |\n| :------- | :-------------------------- |\n| POST     | /gotapi/notification/notify |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値                                                          |\n| :----- | :-------- | :----- | :-- | :----------------------------------------------------------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス                                                     |\n| 通知タイプ  | type      | number | -   | 通知のタイプを識別する。<br>0: 音声通話着信<br>1: メール着信<br>2: SMS着信<br>3: イベント |\n| 向き     | dir       | string | ○   | メッセージの文字の向き。<br>auto: 自動<br>rtl: 右から左<br>ltr: 左から右           |\n| 言語     | lang      | string | ○   | メッセージの言語。 ref. BCP47                                         |\n| メッセージ  | body      | string | ○   | 通知メッセージ。                                                     |\n| タグ     | tag       | string | ○   | 任意タグ文字列 カンマ(,)区切りで任意個数指定。                                    |\n| アイコン   | uri       | string | ○   | アイコンファイルのURI。                                                |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名            | データ型   | 省略  | 設定値                |\n| :--- | :------------- | :----- | :-- | :----------------- |\n| 処理結果 | result         | number | -   | 0:正常応答<br>0以外:異常応答 |\n| 通知ID | notificationId | string | ○   | ユニークな文字列。          |\n\n### リクエストサンプル\n\n    POST  http://localhost:4035/gotapi/notification/notify\t\t\t\t\n\n|POSTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&type=0&dir=auto&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"notificationId\":\"nid001\"\n    }\n"
+    docType: markdown
+  Notification_DELETE:
+    name: Notification_DELETE
+    procedure: notification.delete
+    params:
+      interface:
+        type: string
+        const: true
+        value: notify
+      notificationId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Notification API DELETE\n\n| インターフェース名称       | Version | 種別    |\n| :--------------- | :------ | :---- |\n| Notification API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスにノーティフィケーションの消去要求をする。\nノーティフィケーションの消去要求の到達成否を応答として返却し、ノーティフィケーションの消去完了を待って応答をするわけではない。\n\n| HTTPメソッド | URI                         |\n| :------- | :-------------------------- |\n| DELETE   | /gotapi/notification/notify |\n\n| 論理名    | 物理名            | データ型   | 省略  | 設定値       |\n| :----- | :------------- | :----- | :-- | :-------- |\n| サービスID | serviceId      | string | -   | 取得対象デバイス  |\n| 通知ID   | notificationId | string | -   | ユニークな文字列。 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/notification/notify?serviceId=localhost.deviceconnect.org&notificationId=nid001&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  DateSettings_GET:
+    name: DateSettings_GET
+    procedure: settings.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: date
+    doc: "## Date Settings API GET\n\n| インターフェース名称        | Version | 種別    |\n| :---------------- | :------ | :---- |\n| Date Settings API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの日時を取得する。\n\n| HTTPメソッド | URI                   |\n| :------- | :-------------------- |\n| GET      | /gotapi/settings/date |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                                    |\n| :--- | :----- | :----- | :-- | :------------------------------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答                     |\n| 日付   | date   | string | -   | RFC 3339 例: \"2014-01-01T00:00:00+0900\" |\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/setting/date?serviceId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"date\":\"2014-05-05T01:01:01+0900\"\n    }\n"
+    docType: markdown
+  VibrationStart:
+    name: VibrationStart
+    procedure: vibration.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: vibrate
+      pattern:
+        type: string
+        const: false
+        value: ""
+        required: false
+    doc: "## Vibration Start API\n\n| インターフェース名称          | Version | 種別    |\n| :------------------ | :------ | :---- |\n| Vibration Start API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスに対してバイブ鳴動依頼を送る (どのスマートデバイスを振動させるか、振動パターンの選択)。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| PUT      | /gotapi/vibration/vibrate |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値                                                                                                                                                            |\n| :----- | :-------- | :----- | :-- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス                                                                                                                                                       |\n| パターン   | pattern   | string | ○   | カンマ区切りで、震える、止まるを繰り返しバイブレーションする。カンマ区切りされていない場合は、そのms分バイブレーションする。省略された場合は、デバイス毎のMax値分バイブレーションする。デバイス毎にMax値が設定されていない場合は、500ms分バイブレーションする。<br>例)100, 100, 100, 100 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略                 | 設定値 |\n| :--- | :----- | :----- | :----------------- | :-- |\n| 処理結果 | result | number | 0:正常応答<br>0以外:異常応答 |     |\n\n### リクエストサンプル\n\n    PUT http://localhost:4035/gotapi/vibration/vibrate\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&pattern=100%2c%20100%2c%20100%2c%20100&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  VibrationStop:
+    name: VibrationStop
+    procedure: vibration.delete
+    params:
+      interface:
+        type: string
+        const: true
+        value: vibrate
+    doc: "## Vibration Stop API\n\n| インターフェース名称         | Version | 種別    |\n| :----------------- | :------ | :---- |\n| Vibration Stop API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスに対してバイブ鳴動停止依頼を送る。\n\n| HTTPメソッド | URI                       |\n| :------- | :------------------------ |\n| DELETE   | /gotapi/vibration/vibrate |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/vibration/vibrate?serviceId=localhost.deviceconnect.org&accessToken=xxxxx\t\t\t\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  CanvasDrawImage:
+    name: CanvasDrawImage
+    procedure: canvas.post
+    params:
+      interface:
+        type: string
+        const: true
+        value: drawimage
+      mimeType:
+        type: string
+        const: false
+        value: ""
+        required: false
+      data:
+        type: array
+        const: false
+        value: ""
+        required: false
+      uri:
+        type: string
+        const: false
+        value: ""
+        required: false
+      x:
+        type: number
+        const: false
+        value: ""
+        required: false
+      y:
+        type: number
+        const: false
+        value: ""
+        required: false
+      mode:
+        type: string
+        const: false
+        value: ""
+        required: false
+    doc: "## Canvas Draw Image API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Canvas Draw Image API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスに画像を描画する。\n\n| HTTPメソッド | URI                      |\n| :------- | :----------------------- |\n| POST     | /gotapi/canvas/drawimage |\n\n| 論理名                   | 物理名       | データ型    | 省略  | 設定値                                                                                                                                                      |\n| :-------------------- | :-------- | :------ | :-- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| サービスID                | serviceId | string  | -   | 取得対象スマートデバイス                                                                                                                                             |\n| MIMEタイプ               | mimeType  | string  | ○   | 表示する画像のMimeType。                                                                                                                                         |\n| ファイルのbinary           | data      | byte\\[] | ○   | 表示する画像ファイルのbinary。uriと同時に省略することはできない。両方指定した場合の挙動は未定義。                                                                                                    |\n| ファイルのURI              | uri       | string  | ○   | 表示する画像ファイルのURI。dataと同時に省略することはできない。両方指定した場合の挙動は未定義。                                                                                                      |\n| デバイスが持つ空間の左上を原点としたx座標 | x         | int     | ○   | 0～デバイスの空間領域。等倍描画モードの場合のみ有効。                                                                                                                              |\n| デバイスが持つ空間の左上を原点としたy座標 | y         | int     | ○   | 0～デバイスの空間領域。等倍描画モードの場合のみ有効。                                                                                                                              |\n| 画像描画モード               | mode      | string  | ○   | (省略時)：等倍描画モード。座標(x, y)に画像の左上隅がくるように描画する。<br>scales：スケールモード。アスペクト比を保持して最大限に拡大して画面中央に描画する。x, y座標は無効。<br>fills：フィルモード。等倍の画像を並べて画面全体に敷き詰めるように描画する。x, y座標は無効。 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型 | 省略  | 設定値                |\n| :--- | :----- | :--- | :-- | :----------------- |\n| 処理結果 | result | int  | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    POST http://localhost:4035/gotapi/canvas/drawimage\n\n|Mutipartボディ|\n\\|:--\\|\n|Content-Type: multipart/form-data;<br>boundary=----WebKitFormBoundaryp7MA4YWxkTrZu0gW<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"accessToken\"<br>xxxxx<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"serviceId\"<br>localhost.dconnect.com<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"mimeType\"<br>image/png<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"data\"; filename=\"ic_launcher.png\"<br>Content-Type: image/png<br>＜binary省略＞<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"x\"<br>100<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"y\"<br>50----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>Content-Disposition: form-data; name=\"mode\"<br>scales<br>----WebKitFormBoundaryE19zNvXGzXaLvS5C<br>\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\": 0\n    }\n"
+    docType: markdown

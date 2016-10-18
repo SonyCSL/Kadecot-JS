@@ -1,0 +1,5 @@
+hostname: 192.168.1.100
+port: 4035
+ssl: false
+# If true, use DeviceConnect-NodeJS
+createServer: false

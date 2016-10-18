@@ -1,0 +1,229 @@
+name: 'HVC DevicePlugin Support Profile'
+prefix: com.sonycsl.kadecot.gotapi
+rpc:
+  System:
+    name: System
+    procedure: system.get
+    doc: "## System API\n\n| インターフェース名称 | Version | 種別    |\n| :--------- | :------ | :---- |\n| System API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンのシステム情報を提供するAPI\nDevice Connect ManagerのバージョンやサポートするAPI一覧、インストールされているデバイスプラグイン一覧などのアプリケーション情報を取得する。\n\n| HTTPメソッド | URI            |\n| :------- | :------------- |\n| GET      | /gotapi/system |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>バージョン</td>\n    <td colspan=\"2\" text-align=\"center\">version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>Device Connect Manager バージョンの文字列。</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>サポートしているI/Fのプロファイル名一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>プラグイン一覧</td>\n    <td colspan=\"2\" text-align=\"center\">plugins</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>サポートしているプラグインの一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"5\"></td>\n    <td>id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインを識別するID。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグイン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインのバージョン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>デバイスプラグインのサポートするプロファイル名の配列。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>packageName</td>\n    <td>string</td>\n    <td>○</td>\n    <td>デバイスプラグインのパッケージ名。</td>\n  </tr>\n\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/system\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"version\":\"1.0\",\n        \"supports\":[\n            \"authorization\",\n            \"availability\",\n            \"servicediscovery\",\n        \t\"serviceinfomation\",\n            \"system\"\n        ],\n       \"plugins\": [\n           {\n               \"id\": \"xxx1.localhost.deviceconnect.org\",\n               \"name\": \"Exampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"battery\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.example.deviceplugin\"\n           },\n           {\n               \"id\": \"xxx2.localhost.deviceconnect.org\",\n               \"name\": \"Sampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"light\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.sample.deviceplugin\"\n           }\n       ]\n    }\n"
+    docType: markdown
+  DeviceSystemWakeUp_PUT:
+    name: DeviceSystemWakeUp_PUT
+    procedure: system.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: device/wakeup
+      pluginId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Device System WakeUp API PUT\n\n| インターフェース名称               | Version | 種別    |\n| :----------------------- | :------ | :---- |\n| Device System WakeUp API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスプラグインの機能を有効にする。\nデバイスプラグインによっては、設定画面が起動してデバイスとの接続を行う。\n\n| HTTPメソッド | URI                          |\n| :------- | :--------------------------- |\n| PUT      | /gotapi/system/device/wakeup |\n\n| 論理名     | 物理名      | データ型   | 省略  | 設定値           |\n| :------ | :------- | :----- | :-- | :------------ |\n| プラグインID | pluginId | string | -   | 取得対象デバイスプラグイン |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/system/device/wakeup\t\t\t\t\t```\n\n|PUTデータ|\n\\|:--\\|\n|pluginId=xxxxx.localhost.deviceconnect.org|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  SystemEventsUnregister:
+    name: SystemEventsUnregister
+    procedure: system.delete
+    params:
+      interface:
+        type: string
+        const: true
+        value: events
+      sessionKey:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## System Events Unregister API\n\n| インターフェース名称                  | Version | 種別    |\n| :-------------------------- | :------ | :---- |\n| System Event Unregister API | 2.0.0   | 同期I/F |\n\n### 概要\n\n指定されたセッションキーに紐づくイベントを一挙に解除する。\n\n| HTTPメソッド | URI                   |\n| :------- | :-------------------- |\n| DELETE   | /gotapi/system/events |\n\n| 論理名     | 物理名        | データ型   | 省略  | 設定値         |\n| :------ | :--------- | :----- | :-- | :---------- |\n| セッションID | sessionKey | string | -   | イベントセッションID |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/system/events?sessionKey=xxx&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  ServiceInformation:
+    name: ServiceInformation
+    procedure: serviceinformation.get
+    params:
+    doc: "## Service Information API\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Service Information API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンまたは周辺機器についての情報を提供するAPI。\nサポートするプロファイル一覧、ネットワークへの接続状態を取得する。\n\n| HTTPメソッド | URI                        |\n| :------- | :------------------------- |\n| GET      | /gotapi/serviceinformation |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値          |\n| :----- | :-------- | :----- | :-- | :----------- |\n| サービスID | serviceId | string | -   | 取得対象スマートデバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>オブジェクト</td>\n    <td colspan=\"2\" text-align=\"center\">connect</td>\n    <td>object</td>\n    <td>-</td>\n    <td>デバイスプラグインの接続状態。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"4\"></td>\n    <td >wifi</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>WiFiの接続状態。 WiFiを提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >bluetooth</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>Bluetoothの接続状態。Bluetoothが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >nfc</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>NFCの接続状態。NFCが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >ble</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>BLEの接続状態。BLEが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>array</td>\n    <td>-</td>\n    <td>サポートしているプロファイル名の配列。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/serviceinformation?servieId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"connect\":{\n            \"wifi\":true\n        },\n        \"supports\":[\n            \"system\",\n            \"battery\",\n            \"vibration\"\n        ]\n    }\n"
+    docType: markdown
+  ServiceDiscovery:
+    name: ServiceDiscovery
+    procedure: servicediscovery.get
+    doc: "## Service Discovery API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Service Discovery API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイス検索機能を提供するAPI。\nDevice Connect Managerに接続されているスマートデバイス一覧を取得する。\n取得できる情報には、スマートデバイスへの接続するネットワーク、オンライン状態やデバイス固有のコンフィグ情報が格納されている。\n\n| HTTPメソッド | URI                      |\n| :------- | :----------------------- |\n| GET      | /gotapi/servicediscovery |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n\n  <tr>\n    <td>デバイス一覧</td>\n    <td colspan=\"2\" text-align=\"center\">services</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>デバイスデータ(object)の配列。</td>\n  </tr>\n  <tr>\n    <td>デバイスID</td>\n    <td rowspan=\"5\"></td>\n    <td >id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスを識別するID。</td>\n  </tr>\n  <tr>\n    <td>デバイス名</td>\n    <td >name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイス名。</td>\n  </tr>\n  <tr>\n    <td>デバイスタイプ</td>\n    <td >type</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスへの接続するネットワークを示す。<br>WiFi<br>BLE<br>NFC<br>Bluetooth</td>\n  </tr>\n  <tr>\n    <td>ネットワーク接続状態</td>\n    <td >online</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>デバイスのオンライン状態を示す<br>true: オンライン<br>false: オフライン</td>\n  </tr>\n  <tr>\n    <td>コンフィグ</td>\n    <td >config</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスに設定がある場合には、ここに文字列としてデータが格納されている。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/servicediscovery?accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"services\":[\n            {\n                \"id\":\"device1.localhost.deviceconnect.org\",\n                \"name\":\"SW2\",\n                \"type\":\"Bluetooth\",\n                \"online\":true,\n                \"config\":\"\"\n            },\n            {\n                \"id\":\"device2.localhost.deviceconnect.org\",\n                \"name\":\"Hue\",\n                \"type\":\"WiFi\",\n                \"online\":false,\n                \"config\":\"\"\n            }\n        ]\n    }\n"
+    docType: markdown
+  BodyDetect_EVENT:
+    name: BodyDetect_EVENT
+    procedure: humandetect.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: onbodydetection
+      sessionKey:
+        type: string
+        const: false
+        value: ""
+        required: true
+      threshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      minWidth:
+        type: number
+        const: false
+        value: ""
+        required: true
+      minHeight:
+        type: number
+        const: false
+        value: ""
+        required: true
+      maxWidth:
+        type: number
+        const: false
+        value: ""
+        required: true
+      maxHeight:
+        type: number
+        const: false
+        value: ""
+        required: true
+      options:
+        type: array
+        const: false
+        value: ""
+        required: true
+    doc: "## Body Detect EVENT API\n\n| インターフェース名称            | Version | 種別              |\n| :-------------------- | :------ | :-------------- |\n| Body Detect EVENT API | 2.0.0   | 非同期I/F(イベントI/F) |\n\n### 概要\n\nデバイスが人体検出したときにイベントを返す。\nイベントを登録する時に、閾値などの値をリクエストパラメータと共に設定することができる。\n\n| HTTPメソッド | URI                                 |\n| :------- | :---------------------------------- |\n| PUT      | /gotapi/humandetect/onbodydetection |\n\n| 論理名          | 物理名        | データ型   | 省略  | 設定値                                                               |\n| :----------- | :--------- | :----- | :-- | :---------------------------------------------------------------- |\n| サービスID       | serviceId  | string | -   | 取得対象デバイス                                                          |\n| セッションID      | sessionKey | string | -   | イベントセッションID                                                       |\n| 検出しきい値       | threshold  | number | ◯   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 検出最小サイズ(w)  | minWidth   | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値。<br>設定できる値の範囲:0.0~1.0 |\n| 検出最小サイズ(h)  | minHeight  | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0  |\n| 検出最大サイズ(w)  | maxWidth   | number | ◯   | minWidth &lt; maxWidthとすること、省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0    |\n| 検出最大サイズ(h)  | maxHeight  | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値。<br>設定できる値の範囲:0.0~1.0 |\n| 利用するオプション機能 | options    | array  | -   | 利用するオプション機能を指定する。複数指定可能。省略時は指定なし。<br>※使用できるオプションは無し。           |\n\n### メッセージ\n\n| イベント名           | Content-Type     |\n| :-------------- | :--------------- |\n| onbodydetection | application/json |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>人体検出結果</td>\n    <td colspan=\"2\" text-align=\"center\">bodyDetects</td>\n    <td>array</td>\n    <td>-</td>\n    <td>検出された数分出現する。</td>\n  </tr>\n  <tr>\n    <td>人体検出領域中心座標(x)</td>\n    <td rowspan=\"5\"></td>\n    <td >x</td>\n    <td>number</td>\n    <td>-</td>\n    <td>検出領域の中心X座標。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>人体検出領域中心座標(y)</td>\n    <td>y</td>\n    <td>number</td>\n    <td>-</td>\n    <td>検出領域の中心Y座標。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>人体検出領域幅(w)</td>\n    <td >width</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のX方向の幅。<br>※領域幅が提供できない場合は 出現しない。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>人体検出領域幅(h)</td>\n    <td >height</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のY方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>-</td>\n    <td>解析の信頼度。<br>0.0~1.0</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    PUT http://localhost:4035/gotapi/humandetect/onbodydetection\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&sessionKey=0a93ac0aade4e046ed63eb24d1172f5f35c88ca60daa901547c28d5827cb418a5de1d7c5f9e62405&accessToken=xxxxx&threshold=0.7& maxWidth=0.8&maxHeight=0.8|\n\n### メッセージサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"serviceId\":  \"device1.localhost.deviceconnect.org\",\n    \t\"api\" : \"gotapi\",    \n        \"profile\" : \"humandetect\",\n        \"attribute\" : \"onbodydetection\",\n        \"sessionKey\" : \"0a93ac0aade4e046ed63eb24d1172f5f35c88ca60daa901547c28d5827cb418a5de1d7c5f9e62405\",\n        \"bodyDetects\":[\n            {\n                \"x\":0.123445,\n                \"y\":0.53445,\n                \"width\":0.5,\n                \"height\":0.65,\n                \"confidence\":0.83\n            }\n        ]\n    }\n"
+    docType: markdown
+  HandDetect_EVENT:
+    name: HandDetect_EVENT
+    procedure: humandetect.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: onhanddetection
+      sessionKey:
+        type: string
+        const: false
+        value: ""
+        required: true
+      threshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      minWidth:
+        type: number
+        const: false
+        value: ""
+        required: true
+      minHeight:
+        type: number
+        const: false
+        value: ""
+        required: true
+      maxWidth:
+        type: number
+        const: false
+        value: ""
+        required: true
+      maxHeight:
+        type: number
+        const: false
+        value: ""
+        required: true
+      options:
+        type: array
+        const: false
+        value: ""
+        required: true
+    doc: "## Hand Detect EVENT API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Hand Detect EVENT API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスが手検出したときにイベントを返す。\nイベントを登録する時に、閾値などの値をリクエストパラメータと共に設定することができる。\n\n| HTTPメソッド | URI                                 |\n| :------- | :---------------------------------- |\n| PUT      | /gotapi/humandetect/onhanddetection |\n\n| 論理名          | 物理名        | データ型   | 省略  | 設定値                                                               |\n| :----------- | :--------- | :----- | :-- | :---------------------------------------------------------------- |\n| サービスID       | serviceId  | string | -   | 取得対象デバイス                                                          |\n| セッションID      | sessionKey | string | -   | イベントセッションID                                                       |\n| 検出しきい値       | threshold  | number | ◯   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 検出最小サイズ(w)  | minWidth   | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値。<br>設定できる値の範囲:0.0~1.0 |\n| 検出最小サイズ(h)  | minHeight  | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0  |\n| 検出最大サイズ(w)  | maxWidth   | number | ◯   | minWidth &lt; maxWidthとすること、省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0    |\n| 検出最大サイズ(h)  | maxHeight  | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値。<br>設定できる値の範囲:0.0~1.0 |\n| 利用するオプション機能 | options    | array  | -   | 利用するオプション機能を指定する。複数指定可能。省略時は指定なし。<br>※使用できるオプションは無し。           |\n\n### メッセージ\n\n| イベント名           | Content-Type     |\n| :-------------- | :--------------- |\n| onhanddetection | application/json |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>手検出結果</td>\n    <td colspan=\"2\" text-align=\"center\">handDetects</td>\n    <td>array</td>\n    <td>-</td>\n    <td>検出された数分出現する。</td>\n  </tr>\n  <tr>\n    <td>手検出領域中心座標(x)</td>\n    <td rowspan=\"5\"></td>\n    <td >x</td>\n    <td>number</td>\n    <td>-</td>\n    <td>検出領域の中心X座標。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>手検出領域中心座標(y)</td>\n    <td>y</td>\n    <td>number</td>\n    <td>-</td>\n    <td>検出領域の中心Y座標。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>手検出領域幅(w)</td>\n    <td >width</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のX方向の幅。<br>※領域幅が提供できない場合は 出現しない。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>手検出領域幅(h)</td>\n    <td >height</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のY方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>-</td>\n    <td>解析の信頼度。<br>0.0~1.0</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    PUT http://localhost:4035/gotapi/humandetect/onhanddetection\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&sessionKey=0a93ac0aade4e046ed63eb24d1172f5f35c88ca60daa901547c28d5827cb418a5de1d7c5f9e62405&accessToken=xxxxx& maxWidth=0.8&maxHeight=0.8|\n\n### メッセージサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"serviceId\":  \"device1.localhost.deviceconnect.org\",\n    \t\"api\" : \"gotapi\",    \n        \"profile\" : \"humandetect\",\n        \"attribute\" : \"onhanddetection\",\n        \"sessionKey\" : \"0a93ac0aade4e046ed63eb24d1172f5f35c88ca60daa901547c28d5827cb418a5de1d7c5f9e62405\",\n        \"faceDetects\":[\n            {\n                \"x\":0.123445,\n                \"y\":0.53445,\n                \"width\":0.5,\n                \"height\":0.65,\n                \"confidence\":0.83\n            }\n        ]\n    }\n"
+    docType: markdown
+  FaceDetect_EVENT:
+    name: FaceDetect_EVENT
+    procedure: humandetect.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: onfacedetection
+      sessionKey:
+        type: string
+        const: false
+        value: ""
+        required: true
+      threshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      minWidth:
+        type: number
+        const: false
+        value: ""
+        required: true
+      minHeight:
+        type: number
+        const: false
+        value: ""
+        required: true
+      maxWidth:
+        type: number
+        const: false
+        value: ""
+        required: true
+      maxHeight:
+        type: number
+        const: false
+        value: ""
+        required: true
+      options:
+        type: array
+        const: false
+        value: ""
+        required: true
+      eyeThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      noseThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      mouthThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      blinkThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      ageThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      genderThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      faceDirectionThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      gazeThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+      expressionThreshold:
+        type: number
+        const: false
+        value: ""
+        required: true
+    doc: "## Face Detect EVENT API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Hand Detect EVENT API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスが顔検出したときにイベントを返す。\nイベントを登録する時に、閾値などの値をリクエストパラメータと共に設定することができる。\n\n| HTTPメソッド | URI                                 |\n| :------- | :---------------------------------- |\n| put      | /gotapi/humandetect/onfacedetection |\n\n| 論理名          | 物理名                    | データ型   | 省略  | 設定値                                                               |\n| :----------- | :--------------------- | :----- | :-- | :---------------------------------------------------------------- |\n| サービスID       | serviceId              | string | -   | 取得対象デバイス                                                          |\n| セッションID      | sessionKey             | string | -   | イベントセッションID                                                       |\n| 検出しきい値       | threshold              | number | ◯   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 検出最小サイズ(w)  | minWidth               | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値。<br>設定できる値の範囲:0.0~1.0 |\n| 検出最小サイズ(h)  | minHeight              | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0  |\n| 検出最大サイズ(w)  | maxWidth               | number | ◯   | minWidth &lt; maxWidthとすること、省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0    |\n| 検出最大サイズ(h)  | maxHeight              | number | ◯   | minHeight &lt; maxHeightとすること、省略時はデバイス初期値。<br>設定できる値の範囲:0.0~1.0 |\n| 利用するオプション機能 | options                | array  | -   | 利用するオプション機能を指定する。複数指定可能。省略時は指定なし。<br>※使用できるオプションは無し。           |\n| 目の座標検出しきい値   | eyeThreshold           | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 鼻の座標検出しきい値   | noseThreshold          | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 口の座標検出しきい値   | mouthThreshold         | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 目つむり検出しきい値   | blinkThreshold         | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 年齢推定しきい値     | ageThreshold           | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 性別推定しきい値     | genderThreshold        | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 顔向き推定しきい値    | faceDirectionThreshold | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 視線推定しきい値     | gazeThreshold          | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n| 表情推定しきい値     | expressionThreshold    | number | -   | 省略時はデバイス初期値<br>設定できる値の範囲:0.0~1.0                                |\n\n### メッセージ\n\n| イベント名           | Content-Type     |\n| :-------------- | :--------------- |\n| onfacedetection | application/json |\n\n<table>\n  <tr>\n\n    <td><b>論理名</b></td>\n    <td colspan=\"3\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n\n  </tr>\n  <tr>\n\n    <td>顔検出結果</td>\n    <td colspan=\"3\" text-align=\"center\">faceDetects</td>\n    <td>array</td>\n    <td>-</td>\n    <td>検出された数分出現する</td>\n\n  </tr>\n  <tr>\n\n    <td >目の座標推定結果</td>\n    <td rowspan=\"50\"></td>\n    <td colspan=\"2\">eyePoints</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出た\n\nときに出現する</td>\n\n  </tr>\n  <tr>\n\n    <td>左目の中心座標(x)</td>\n    <td rowspan=\"9\"></td>\n    <td >leftEyeX</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>左目の中心座標(y)</td>\n    <td >leftEyeY</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>左目の領域幅(w)</td>\n    <td >leftEyeWidth</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のX方向の幅<br>※領域幅が提供できない場合は出現しない<br>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>左目の領域幅(h)</td>\n    <td >leftEyeHeight</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のY方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>右目の中心座標(x)</td>\n    <td >rightEyeX</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>右目の中心座標(y)</td>\n    <td >rightEyeY</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>右目の領域幅(w)</td>\n    <td >rightEyeWidth</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のX方向の幅<br>※領域幅が提供できない場合は出現しない<br>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>右目の領域幅(h)</td>\n    <td >rightEyeHeight</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のY方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n\n  <tr>\n\n    <td >鼻の座標推定結果</td>\n    <td colspan=\"2\">nosePoints</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n\n  </tr>\n  <tr>\n\n    <td>鼻の中心座標(x)</td>\n    <td rowspan=\"5\"></td>\n    <td >noseX</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>鼻の中心座標(y)</td>\n    <td >noseY</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>鼻の領域幅(w)</td>\n    <td >noseWidth</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のX方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>鼻の領域幅(h)</td>\n    <td >noseHeight</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のY方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n\n  <tr>\n\n    <td >口の座標推定結果</td>\n    <td colspan=\"2\">mouthPoints</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n\n  </tr>\n  <tr>\n\n    <td>口の座標(x)</td>\n    <td rowspan=\"5\"></td>\n    <td >mouthX</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>口の座標(y)</td>\n    <td >mouthY</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n   <td>口の領域幅(w)</td>\n    <td >mouthWidth</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のX方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n  </tr>\n\n  <tr>\n    <td>口の領域幅(h)</td>\n    <td >mouthHeight</td>\n    <td>number</td>\n    <td>-</td>\n    <td>検出領域のY方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n  </tr>\n  <tr>\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0.0~1.0</td>\n  </tr>\n  <tr>\n\n    <td >口の座標推定結果</td>\n    <td colspan=\"2\">mouthPoints</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n\n  </tr>\n  <tr>\n\n    <td>口の座標(x)</td>\n    <td rowspan=\"5\"></td>\n    <td >mouthX</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>口の座標(y)</td>\n    <td >mouthY</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>口の領域幅(w)</td>\n    <td >mouthWidth</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のX方向の幅<br>※領域幅が提供できない場合は出現しない<br>0.0~1.0</td>\n\n  </tr>\n    <tr>\n\n    <td>口の領域幅(h)</td>\n    <td >mouthHeight</td>\n    <td>number</td>\n    <td>○</td>\n    <td>検出領域のY方向の幅<br>※領域幅が提供できない場合は出現しない。<br>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n\n  <tr>\n\n    <td >目つむり推定結果</td>\n    <td colspan=\"2\">blinkResults</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n\n  </tr>\n  <tr>\n\n    <td>目つむり度合(左)</td>\n    <td rowspan=\"3\"></td>\n    <td >leftEye</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>目つむり度合(右)</td>\n    <td >rightEye</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n\n  <tr>\n\n    <td >年齢推定結果</td>\n    <td colspan=\"2\">ageResults</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n\n  </tr>\n  <tr>\n\n    <td>年齢</td>\n    <td rowspan=\"2\"></td>\n    <td >age</td>\n    <td>number</td>\n    <td>○</td>\n    <td>年齢</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n    <td>性別推定結果</td>\n    <td colspan=\"2\">genderResults</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n  </tr>\n  <tr>\n\n    <td>性別</td>\n    <td rowspan=\"2\"></td>\n    <td >gender</td>\n    <td>string</td>\n    <td>○</td>\n    <td>“male”:男性<br>“female”:女性</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n    <td>顔向き推定結果</td>\n    <td colspan=\"2\">faceDirectionResults</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n  </tr>\n  <tr>\n\n    <td>左右方向角度</td>\n    <td rowspan=\"4\"></td>\n    <td >yaw</td>\n    <td>number</td>\n    <td>○</td>\n    <td>-180~180[degree]</td>\n\n  </tr>\n  <tr>\n\n    <td>上下方向角度</td>\n    <td >pitch</td>\n    <td>number</td>\n    <td>○</td>\n    <td>-180~180[degree]</td>\n\n  </tr>\n  <tr>\n\n    <td>顔傾き角度</td>\n    <td >roll</td>\n    <td>number</td>\n    <td>○</td>\n    <td>-180~180[degree]</td>\n\n  </tr>\n\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td >視線推定結果</td>\n    <td colspan=\"2\">gazeResults</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n\n  </tr>\n  <tr>\n\n    <td>左右角度</td>\n    <td rowspan=\"3\"></td>\n    <td >gazeLR</td>\n    <td>number</td>\n    <td>○</td>\n    <td>-90~90[degree]</td>\n\n  </tr>\n  <tr>\n\n    <td>上下角度</td>\n    <td >gateUD</td>\n    <td>number</td>\n    <td>○</td>\n    <td>-90~90[degree]</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n  <tr>\n\n    <td >表情推定</td>\n    <td colspan=\"2\">expressionResults</td>\n    <td>object</td>\n    <td>○</td>\n    <td>結果を受信し、しきい値以上のスコアが出たときに出現する。</td>\n\n  </tr>\n  <tr>\n\n    <td>スコアの表情</td>\n    <td rowspan=\"2\"></td>\n    <td >expression</td>\n    <td>number</td>\n    <td>○</td>\n    <td>\"unknown\":無表情<br>\"smile\":笑 い/喜び<br>\"surprise\":驚 き<br>\"mad\":怒り<br>\"sad\":悲しみ</td>\n\n  </tr>\n  <tr>\n\n    <td>信頼度</td>\n    <td >confidence</td>\n    <td>number</td>\n    <td>○</td>\n    <td>0.0~1.0</td>\n\n  </tr>\n\n</table>\n\n### リクエストサンプル\n\n    PUT http://localhost:4035/gotapi/humandetect/onfacedetection\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&sessionKey=0a93ac0aade4e046ed63eb24d1172f5f35c88ca60daa901547c28d5827cb418a5de1d7c5f9e62405&accessToken=xxxxx& maxWidth=0.8&maxHeight=0.8|\n\n### メッセージサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"serviceId\":  \"device1.localhost.deviceconnect.org\",\n    \t\"api\" : \"gotapi\",    \n        \"profile\" : \"humandetect\",\n        \"attribute\" : \"onfacedetection\",\n        \"sessionKey\" : \"0a93ac0aade4e046ed63eb24d1172f5f35c88ca60daa901547c28d5827cb418a5de1d7c5f9e62405\",\n    \t“faceDetects”: {\n    \t\t “ageResults”:{\n    \t\t\t“age”:”35”,\n    \t\t\t“confidence”:”0.82”\n    \t\t },\n    \t\t“genderResults”:{\n    \t\t\t“gender”:”male”,\n     \t\t\t“confidence”:”0.75”\n    \t\t },\n    \t\t “expressionResults”:{\n    \t\t\t\t“expression”:”surprise”,\n    \t\t\t\t“confidence”:”0.69”\n    \t\t }\n    \t}\n    }\n"
+    docType: markdown

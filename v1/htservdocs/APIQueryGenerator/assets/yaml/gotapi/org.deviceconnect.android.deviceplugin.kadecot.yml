@@ -1,0 +1,260 @@
+name: 'Kadecot DevicePlugin Support Profile'
+prefix: com.sonycsl.kadecot.gotapi
+rpc:
+  System:
+    name: System
+    procedure: system.get
+    doc: "## System API\n\n| インターフェース名称 | Version | 種別    |\n| :--------- | :------ | :---- |\n| System API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンのシステム情報を提供するAPI\nDevice Connect ManagerのバージョンやサポートするAPI一覧、インストールされているデバイスプラグイン一覧などのアプリケーション情報を取得する。\n\n| HTTPメソッド | URI            |\n| :------- | :------------- |\n| GET      | /gotapi/system |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>バージョン</td>\n    <td colspan=\"2\" text-align=\"center\">version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>Device Connect Manager バージョンの文字列。</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>サポートしているI/Fのプロファイル名一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>プラグイン一覧</td>\n    <td colspan=\"2\" text-align=\"center\">plugins</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>サポートしているプラグインの一覧を格納する。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"5\"></td>\n    <td>id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインを識別するID。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグイン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>version</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスプラグインのバージョン名</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>supports</td>\n    <td>string[]</td>\n    <td>-</td>\n    <td>デバイスプラグインのサポートするプロファイル名の配列。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td>packageName</td>\n    <td>string</td>\n    <td>○</td>\n    <td>デバイスプラグインのパッケージ名。</td>\n  </tr>\n\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/system\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"version\":\"1.0\",\n        \"supports\":[\n            \"authorization\",\n            \"availability\",\n            \"servicediscovery\",\n        \t\"serviceinfomation\",\n            \"system\"\n        ],\n       \"plugins\": [\n           {\n               \"id\": \"xxx1.localhost.deviceconnect.org\",\n               \"name\": \"Exampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"battery\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.example.deviceplugin\"\n           },\n           {\n               \"id\": \"xxx2.localhost.deviceconnect.org\",\n               \"name\": \"Sampleデバイスプラグイン\",\n               \"version\": \"1.0.0\",\n               \"supports\": [\n                   \"authorization\",\n                   \"light\",\n                   \"servicediscovery\",\n                   \"serviceinfomation\",\n                   \"system\"\n               ],\n               \"packageName\": \"com.sample.deviceplugin\"\n           }\n       ]\n    }\n"
+    docType: markdown
+  DeviceSystemWakeUp_PUT:
+    name: DeviceSystemWakeUp_PUT
+    procedure: system.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: device/wakeup
+      pluginId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Device System WakeUp API PUT\n\n| インターフェース名称               | Version | 種別    |\n| :----------------------- | :------ | :---- |\n| Device System WakeUp API | 2.0.0   | 同期I/F |\n\n### 概要\n\nデバイスプラグインの機能を有効にする。\nデバイスプラグインによっては、設定画面が起動してデバイスとの接続を行う。\n\n| HTTPメソッド | URI                          |\n| :------- | :--------------------------- |\n| PUT      | /gotapi/system/device/wakeup |\n\n| 論理名     | 物理名      | データ型   | 省略  | 設定値           |\n| :------ | :------- | :----- | :-- | :------------ |\n| プラグインID | pluginId | string | -   | 取得対象デバイスプラグイン |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/system/device/wakeup\t\t\t\t\t```\n\n|PUTデータ|\n\\|:--\\|\n|pluginId=xxxxx.localhost.deviceconnect.org|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  ServiceInformation:
+    name: ServiceInformation
+    procedure: serviceinformation.get
+    params:
+    doc: "## Service Information API\n\n| インターフェース名称              | Version | 種別    |\n| :---------------------- | :------ | :---- |\n| Service Information API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートフォンまたは周辺機器についての情報を提供するAPI。\nサポートするプロファイル一覧、ネットワークへの接続状態を取得する。\n\n| HTTPメソッド | URI                        |\n| :------- | :------------------------- |\n| GET      | /gotapi/serviceinformation |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値          |\n| :----- | :-------- | :----- | :-- | :----------- |\n| サービスID | serviceId | string | -   | 取得対象スマートデバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>オブジェクト</td>\n    <td colspan=\"2\" text-align=\"center\">connect</td>\n    <td>object</td>\n    <td>-</td>\n    <td>デバイスプラグインの接続状態。</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td rowspan=\"4\"></td>\n    <td >wifi</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>WiFiの接続状態。 WiFiを提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >bluetooth</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>Bluetoothの接続状態。Bluetoothが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >nfc</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>NFCの接続状態。NFCが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>属性値</td>\n    <td >ble</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>BLEの接続状態。BLEが提供できない場合は無し。<br>false:OFF<br>true:ON</td>\n  </tr>\n  <tr>\n    <td>サポートプロファイルリスト</td>\n    <td colspan=\"2\" text-align=\"center\">supports</td>\n    <td>array</td>\n    <td>-</td>\n    <td>サポートしているプロファイル名の配列。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/serviceinformation?servieId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"connect\":{\n            \"wifi\":true\n        },\n        \"supports\":[\n            \"system\",\n            \"battery\",\n            \"vibration\"\n        ]\n    }\n"
+    docType: markdown
+  ServiceDiscovery:
+    name: ServiceDiscovery
+    procedure: servicediscovery.get
+    doc: "## Service Discovery API\n\n| インターフェース名称            | Version | 種別    |\n| :-------------------- | :------ | :---- |\n| Service Discovery API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイス検索機能を提供するAPI。\nDevice Connect Managerに接続されているスマートデバイス一覧を取得する。\n取得できる情報には、スマートデバイスへの接続するネットワーク、オンライン状態やデバイス固有のコンフィグ情報が格納されている。\n\n| HTTPメソッド | URI                      |\n| :------- | :----------------------- |\n| GET      | /gotapi/servicediscovery |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n\n  <tr>\n    <td>デバイス一覧</td>\n    <td colspan=\"2\" text-align=\"center\">services</td>\n    <td>object[]</td>\n    <td>-</td>\n    <td>デバイスデータ(object)の配列。</td>\n  </tr>\n  <tr>\n    <td>デバイスID</td>\n    <td rowspan=\"5\"></td>\n    <td >id</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスを識別するID。</td>\n  </tr>\n  <tr>\n    <td>デバイス名</td>\n    <td >name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイス名。</td>\n  </tr>\n  <tr>\n    <td>デバイスタイプ</td>\n    <td >type</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスへの接続するネットワークを示す。<br>WiFi<br>BLE<br>NFC<br>Bluetooth</td>\n  </tr>\n  <tr>\n    <td>ネットワーク接続状態</td>\n    <td >online</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>デバイスのオンライン状態を示す<br>true: オンライン<br>false: オフライン</td>\n  </tr>\n  <tr>\n    <td>コンフィグ</td>\n    <td >config</td>\n    <td>string</td>\n    <td>-</td>\n    <td>デバイスに設定がある場合には、ここに文字列としてデータが格納されている。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/servicediscovery?accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"services\":[\n            {\n                \"id\":\"device1.localhost.deviceconnect.org\",\n                \"name\":\"SW2\",\n                \"type\":\"Bluetooth\",\n                \"online\":true,\n                \"config\":\"\"\n            },\n            {\n                \"id\":\"device2.localhost.deviceconnect.org\",\n                \"name\":\"Hue\",\n                \"type\":\"WiFi\",\n                \"online\":false,\n                \"config\":\"\"\n            }\n        ]\n    }\n"
+    docType: markdown
+  DateSettings_PUT:
+    name: DateSettings_PUT
+    procedure: settings.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: date
+      date:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Date Settings API PUT\n\n| インターフェース名称        | Version | 種別    |\n| :---------------- | :------ | :---- |\n| Date Settings API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの日時の設定依頼を送る。\n\n| HTTPメソッド | URI                   |\n| :------- | :-------------------- |\n| PUT      | /gotapi/settings/date |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値                                    |\n| :----- | :-------- | :----- | :-- | :------------------------------------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス                               |\n| 日時     | date      | string | -   | RFC 3339 例: \"2014-01-01T00:00:00+0900\" |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略                 | 設定値 |\n| :--- | :----- | :----- | :----------------- | :-- |\n| 処理結果 | result | number | 0:正常応答<br>0以外:異常応答 |     |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/setting/date\t\t\t\t\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&date=2014-05-05T01%3A01%3A01%2B090&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  LightStatus:
+    name: LightStatus
+    procedure: light.get
+    params:
+    doc: "## Light Status API\n\n| インターフェース名称       | Version | 種別    |\n| :--------------- | :------ | :---- |\n| Light Status API | 2.0.0   | 同期I/F |\n\n### 概要\n\nライトを識別するIDなどを取得するAPI。\nスマートデバイスが認識しているライトデバイスの一覧を取得する。\n取得できる情報には、ライトの識別子、ライトの名前と状態を持つ。\n\n| HTTPメソッド | URI           |\n| :------- | :------------ |\n| GET      | /gotapi/light |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値          |\n| :----- | :-------- | :----- | :-- | :----------- |\n| サービスID | serviceId | string | -   | 取得対象スマートデバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n\n  <tr>\n    <td>ライト一覧</td>\n    <td colspan=\"2\" text-align=\"center\">lights</td>\n    <td>array</td>\n    <td>-</td>\n    <td>ライト一覧を格納する配列。</td>\n  </tr>\n  <tr>\n    <td>ライトID</td>\n    <td rowspan=\"4\"></td>\n    <td >lightId</td>\n    <td>string</td>\n    <td>-</td>\n    <td>ライトを識別するID。</td>\n  </tr>\n  <tr>\n    <td>ライト名</td>\n    <td>name</td>\n    <td>string</td>\n    <td>-</td>\n    <td>ライト名。</td>\n  </tr>\n  <tr>\n    <td>ライトの点灯状態</td>\n    <td >on</td>\n    <td>boolean</td>\n    <td>-</td>\n    <td>ライトの点灯状態を示す。<br>true: 点灯<br>false: 消灯</td>\n  </tr>\n  <tr>\n    <td>コンフィグ</td>\n    <td >config</td>\n    <td>string</td>\n    <td>-</td>\n    <td>ライトに設定がある場合には、ここに文字列としてデータが格納されている。</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET  http://localhost:4035/gotapi/light?servieId=localhost.dconnect.com&accessToken=xxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"lights\":[\n            {\n                \"lightId\":\"0\",\n                \"name\":\"LightLamp1\",\n                \"on\":true,\n                \"config\":\"\"\n            },\n            {\n                \"lightId\":\"1\",\n                \"name\":\"LightLamp2\",\n                \"online\":false,\n                \"config\":\"\"\n            }\n        ]\n    }\n"
+    docType: markdown
+  LightOn:
+    name: LightOn
+    procedure: light.post
+    params:
+      lightId:
+        type: string
+        const: false
+        value: ""
+        required: true
+      brightness:
+        type: string
+        const: false
+        value: ""
+        required: false
+      color:
+        type: string
+        const: false
+        value: ""
+        required: false
+      flashing:
+        type: string
+        const: false
+        value: ""
+        required: false
+    doc: "## Light On API\n\n| インターフェース名称   | Version | 種別    |\n| :----------- | :------ | :---- |\n| Light On API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスが持つライトを点灯する。\n\n| HTTPメソッド | URI           |\n| :------- | :------------ |\n| POST     | /gotapi/light |\n\n| 論理名      | 物理名        | データ型   | 省略  | 設定値                                                            |\n| :------- | :--------- | :----- | :-- | :------------------------------------------------------------- |\n| サービスID   | serviceId  | string | -   | 対象スマートデバイス                                                     |\n| ライトID    | lightId    | string | -   | 対象ライト                                                          |\n| ライトの明るさ  | brightness | string | ○   | ライトの明るさを0.0-1.0で表す。                                            |\n| ライトの色    | color      | string | ○   | RGB形式の16進数で指定。                                                |\n| ライトの点滅間隔 | flashing   | string | ○   | 点滅間隔をカンマ区切りの msecで点灯、消灯を繰り返し指定できる。このパラメータを指定しなかった場合は、 常時点灯。 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    POST http://localhost:4035/gotapi/light\n\n|POSTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&accessToken=xxxxx&lightId=1&color=FF0000|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\": 0\n    }\n"
+    docType: markdown
+  LightOff:
+    name: LightOff
+    procedure: light.delete
+    params:
+      lightId:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## Light Off API\n\n| インターフェース名称    | Version | 種別    |\n| :------------ | :------ | :---- |\n| Light Off API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスが持つライトを消灯する。\n\n| HTTPメソッド | URI           |\n| :------- | :------------ |\n| DELETE   | /gotapi/light |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値          |\n| :----- | :-------- | :----- | :-- | :----------- |\n| サービスID | serviceId | string | -   | 取得対象スマートデバイス |\n| ライトID  | lightId   | string | -   | 対象ライト        |\n\n### レスポンス\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE http://localhost:4035/gotapi/light?serviceId=localhost.deviceconnect.org&accessToken=xxxxx&lightId=1\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\": 0\n    }\n"
+    docType: markdown
+  AirConditionerGetPowerStatus:
+    name: AirConditionerGetPowerStatus
+    procedure: airconditioner.get
+    params:
+    doc: "## AirConditioner Get Power Status API\n\n| インターフェース名称                          | Version | 種別    |\n| :---------------------------------- | :------ | :---- |\n| AirConditioner Get Power Status API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの電源状態を取得する。\n\n| HTTPメソッド | URI                    |\n| :------- | :--------------------- |\n| GET      | /gotapi/airconditioner |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名        | データ型   | 省略  | 設定値                               |\n| :--- | :--------- | :----- | :-- | :-------------------------------- |\n| 処理結果 | result     | number | -   | 0:正常応答<br>0以外:異常応答                |\n| 電源状態 | powerstate | string | -   | ON:電源オン<br>OFF:電源オフ<br>UNKNOWN:不明 |\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/airconditioner&serviceId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"powerstate\":\"ON\"\n    }\n"
+    docType: markdown
+  AirConditionerPowerOn:
+    name: AirConditionerPowerOn
+    procedure: airconditioner.put
+    params:
+    doc: "## AirConditioner Power On API\n\n| インターフェース名称                  | Version | 種別    |\n| :-------------------------- | :------ | :---- |\n| AirConditioner Power On API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの電源を付ける。\n\n| HTTPメソッド | URI                    |\n| :------- | :--------------------- |\n| PUT      | /gotapi/airconditioner |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/airconditioner\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  AirConditionerPowerOff:
+    name: AirConditionerPowerOff
+    procedure: airconditioner.delete
+    params:
+    doc: "## AirConditioner Power Off API\n\n| インターフェース名称                   | Version | 種別    |\n| :--------------------------- | :------ | :---- |\n| AirConditioner Power Off API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの電源を消す。\n\n| HTTPメソッド | URI                    |\n| :------- | :--------------------- |\n| DELETE   | /gotapi/airconditioner |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    DELETE  http://localhost:4035/gotapi/airconditioner\n\n|DELETEデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&accessToken=xxxxx|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  AirConditionerGetOperationPowerSaving:
+    name: AirConditionerGetOperationPowerSaving
+    procedure: airconditioner.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: operationpowersaving
+    doc: "## AirConditioner Get Operation Power Saving API\n\n| インターフェース名称                                    | Version | 種別    |\n| :-------------------------------------------- | :------ | :---- |\n| AirConditioner Get Operation Power Saving API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの節電動作設定を取得する。\n\n| HTTPメソッド | URI                                         |\n| :------- | :------------------------------------------ |\n| GET      | /gotapi/airconditioner/operationpowersaving |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名    | 物理名                  | データ型   | 省略  | 設定値                                             |\n| :----- | :------------------- | :----- | :-- | :---------------------------------------------- |\n| 処理結果   | result               | number | -   | 0:正常応答<br>0以外:異常応答                              |\n| 節電動作設定 | operationpowersaving | string | -   | PowerSaving：節電動作中<br>Normal：通常動作中<br>Unknown：不明 |\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/airconditioner/operationpowersaving&serviceId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n         \"result\":0,\n        \"operationpowersaving\":\"PowerSaving\"\n    }\n"
+    docType: markdown
+  AirConditionerSetOperationPowerSaving:
+    name: AirConditionerSetOperationPowerSaving
+    procedure: airconditioner.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: operationpowersaving
+      operationpowersaving:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## AirConditioner Set Operation Power Saving API\n\n| インターフェース名称                                    | Version | 種別    |\n| :-------------------------------------------- | :------ | :---- |\n| AirConditioner Set Operation Power Saving API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの節電動作設定を設定する。\n\n| HTTPメソッド | URI                                         |\n| :------- | :------------------------------------------ |\n| PUT      | /gotapi/airconditioner/operationpowersaving |\n\n| 論理名    | 物理名                  | データ型   | 省略  | 設定値                               |\n| :----- | :------------------- | :----- | :-- | :-------------------------------- |\n| サービスID | serviceId            | string | -   | 取得対象デバイス                          |\n| 節電動作設定 | operationpowersaving | string | -   | PowerSaving：節電動作中<br>Normal：通常動作中 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/airconditioner/operationpowersaving\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&accessToken=xxxxx&operationpowersaving=PowerSaving|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  AirConditionerGetOperationModeSetting:
+    name: AirConditionerGetOperationModeSetting
+    procedure: airconditioner.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: operationmodesetting
+    doc: "## AirConditioner Get Operation Mode Setting API\n\n| インターフェース名称                                    | Version | 種別    |\n| :-------------------------------------------- | :------ | :---- |\n| AirConditioner Get Operation Mode Setting API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの運転モード設定を取得する。\n\n| HTTPメソッド | URI                                         |\n| :------- | :------------------------------------------ |\n| GET      | /gotapi/airconditioner/operationmodesetting |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名     | 物理名                  | データ型   | 省略  | 設定値                                                                                              |\n| :------ | :------------------- | :----- | :-- | :----------------------------------------------------------------------------------------------- |\n| 処理結果    | result               | number | -   | 0:正常応答<br>0以外:異常応答                                                                               |\n| 運転モード設定 | operationmodesetting | string | -   | Automatic:自動<br>Cooling:冷房<br>Heating:暖房<br>Dehumidification:除湿<br>AirCirculator:送風<br>Other:その他 |\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/airconditioner/operationmodesetting&serviceId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"operationmodesetting\":\"PowerSaving\"\n    }\n"
+    docType: markdown
+  AirConditionerSetOperationModeSetting:
+    name: AirConditionerSetOperationModeSetting
+    procedure: airconditioner.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: operationmodesetting
+      operationmodesetting:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## AirConditioner Set Operation Mode Setting API\n\n| インターフェース名称                                    | Version | 種別    |\n| :-------------------------------------------- | :------ | :---- |\n| AirConditioner Set Operation Mode Setting API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの運転モード設定を設定する\n\n| HTTPメソッド | URI                                         |\n| :------- | :------------------------------------------ |\n| PUT      | /gotapi/airconditioner/operationmodesetting |\n\n| 論理名     | 物理名                  | データ型   | 省略  | 設定値                                                                                              |\n| :------ | :------------------- | :----- | :-- | :----------------------------------------------------------------------------------------------- |\n| サービスID  | serviceId            | string | -   | 取得対象デバイス                                                                                         |\n| 運転モード設定 | operationmodesetting | string | -   | Automatic:自動<br>Cooling:冷房<br>Heating:暖房<br>Dehumidification:除湿<br>AirCirculator:送風<br>Other:その他 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/airconditioner/operationmodesetting\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&accessToken=xxxxx&operationmodesetting=Automatic|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  AirConditionerGetRoomTemperature:
+    name: AirConditionerGetRoomTemperature
+    procedure: airconditioner.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: roomtemperature
+    doc: "## AirConditioner Get Room Temperature API\n\n| インターフェース名称                              | Version | 種別    |\n| :-------------------------------------- | :------ | :---- |\n| AirConditioner Get Room Temperature API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの室温計測値を取得する。\n\n| HTTPメソッド | URI                                    |\n| :------- | :------------------------------------- |\n| GET      | /gotapi/airconditioner/roomtemperature |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名     | 物理名             | データ型   | 省略  | 設定値                |\n| :------ | :-------------- | :----- | :-- | :----------------- |\n| 処理結果    | result          | number | -   | 0:正常応答<br>0以外:異常応答 |\n| 室内温度計測値 | roomtemperature | number | -   | -127〜125 (℃)       |\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/airconditioner/roomtemperature&serviceId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n         \"result\":0,\n        \"roomtemperature\":24\n    }\n"
+    docType: markdown
+  AirConditionerGetTemperatureValue:
+    name: AirConditionerGetTemperatureValue
+    procedure: airconditioner.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: temperaturevalue
+    doc: "## AirConditioner Get Temperature Value API\n\n| インターフェース名称                               | Version | 種別    |\n| :--------------------------------------- | :------ | :---- |\n| AirConditioner Get Temperature Value API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの温度設定値を取得する。\n\n| HTTPメソッド | URI                                     |\n| :------- | :-------------------------------------- |\n| GET      | /gotapi/airconditioner/temperaturevalue |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名   | 物理名              | データ型   | 省略  | 設定値                |\n| :---- | :--------------- | :----- | :-- | :----------------- |\n| 処理結果  | result           | number | -   | 0:正常応答<br>0以外:異常応答 |\n| 温度設定値 | temperaturevalue | number | -   | 0〜50 (℃)           |\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/airconditioner/temperaturevalue&serviceId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n    \t\"result\":0,\n        \"temperaturevalue\":24\n    }\n"
+    docType: markdown
+  AirConditionerSetTemperatureValue:
+    name: AirConditionerSetTemperatureValue
+    procedure: airconditioner.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: temperaturevalue
+      temperaturevalue:
+        type: number
+        const: false
+        value: ""
+        required: true
+    doc: "## AirConditioner Set Temperature Value API\n\n| インターフェース名称                               | Version | 種別    |\n| :--------------------------------------- | :------ | :---- |\n| AirConditioner Set Temperature Value API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの温度設定値を設定する。\n\n| HTTPメソッド | URI                                     |\n| :------- | :-------------------------------------- |\n| PUT      | /gotapi/airconditioner/temperaturevalue |\n\n| 論理名    | 物理名              | データ型   | 省略  | 設定値      |\n| :----- | :--------------- | :----- | :-- | :------- |\n| サービスID | serviceId        | string | -   | 取得対象デバイス |\n| 温度設定値  | temperaturevalue | number | -   | 0〜50 (℃) |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n"
+    docType: markdown
+  AirConditionerGetAirFlowValue:
+    name: AirConditionerGetAirFlowValue
+    procedure: airconditioner.get
+    params:
+      interface:
+        type: string
+        const: true
+        value: airflowvalue
+    doc: "## AirConditioner Get Air Flow Value API\n\n| インターフェース名称                            | Version | 種別    |\n| :------------------------------------ | :------ | :---- |\n| AirConditioner Get Air Flow Value API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの風量設定値を取得する。\n\n| HTTPメソッド | URI                                 |\n| :------- | :---------------------------------- |\n| GET      | /gotapi/airconditioner/airflowvalue |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名       | 物理名          | データ型    | 省略  | 設定値                                   |\n| :-------- | :----------- | :------ | :-- | :------------------------------------ |\n| 処理結果      | result       | number  | -   | 0:正常応答<br>0以外:異常応答                    |\n| 風量設定値     | airflowvalue | number  | -   | 0.0〜1.0                               |\n| 風量自動モード設定 | airflowauto  | boolean | -   | “true” : 自動モード有効<br>“false” : 自動モード無効 |\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/airconditioner/airflowvalue&serviceId=localhost.deviceconnect.org&accessToken=xxxxx\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"airflowvalue\":0.2,\n        \"airflowauto\":true\n    }\n"
+    docType: markdown
+  AirConditionerSetAirFlowValue:
+    name: AirConditionerSetAirFlowValue
+    procedure: airconditioner.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: airflowvalue
+      airflowvalue:
+        type: number
+        const: false
+        value: ""
+        required: true
+      airflowauto:
+        type: object
+        const: false
+        value: ""
+        required: true
+    doc: "## AirConditioner Set Air Flow Value API\n\n| インターフェース名称                            | Version | 種別    |\n| :------------------------------------ | :------ | :---- |\n| AirConditioner Set Air Flow Value API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスの風量設定値を設定する。\n\n| HTTPメソッド | URI                                 |\n| :------- | :---------------------------------- |\n| PUT      | /gotapi/airconditioner/airflowvalue |\n\n| 論理名       | 物理名          | データ型    | 省略    | 設定値                                   |\n| :-------- | :----------- | :------ | :---- | :------------------------------------ |\n| サービスID    | serviceId    | string  | -     | 取得対象デバイス                              |\n| 風量設定値     | airflowvalue | number  | ○(注1) | 0.0〜1.0                               |\n| 風量自動モード設定 | airflowauto  | boolean | ○(注2) | “true” : 自動モード有効<br>“false” : 自動モード無効 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/airconditioner/airflowvalue\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&accessToken=xxxxx&airflowvalue=0.2&airflowauto=true|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown
+  AirConditionerGetECHONETLiteProperty:
+    name: AirConditionerGetECHONETLiteProperty
+    procedure: airconditioner.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: enlproperty
+      epc:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## AirConditioner Get ECHONET Lite Property API\n\n| インターフェース名称                                    | Version | 種別    |\n| :-------------------------------------------- | :------ | :---- |\n| AirConditioner Get ECHONET Lite  Property API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスがサポートしているECHONET Lite 機器オブジェクトプロパティの設定内容を取得する。（必須プロパティのみ）\n\n| HTTPメソッド | URI                                |\n| :------- | :--------------------------------- |\n| PUT      | /gotapi/airconditioner/enlproperty |\n\n| 論理名         | 物理名       | データ型   | 省略  | 設定値                                       |\n| :---------- | :-------- | :----- | :-- | :---------------------------------------- |\n| サービスID      | serviceId | string | -   | 取得対象デバイス                                  |\n| 取得プロパティのEPC | epc       | string | -   | 取得するプロパティのEPCをカンマ区切りで列挙。10進または16進(0xXX)の値 |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n<table>\n  <tr>\n    <td><b>論理名</b></td>\n    <td colspan=\"2\" text-align=\"center\"><b>物理名</b></td>\n    <td><b>データ型</b></td>\n    <td><b>省略</b></td>\n    <td><b>設定値</b></td>\n  </tr>\n  <tr>\n    <td>処理結果</td>\n    <td colspan=\"2\" text-align=\"center\">result</td>\n    <td>number</td>\n    <td>-</td>\n    <td>0:正常応答<br>0以外:異常応答</td>\n  </tr>\n  <tr>\n    <td>プロパティ</td>\n    <td colspan=\"2\" text-align=\"center\">properties</td>\n    <td>array</td>\n    <td>-</td>\n    <td>プロパティを格納する配列</td>\n  </tr>\n  <tr>\n    <td>EPC</td>\n    <td rowspan=2></td>\n    <td >epc</td>\n    <td>string</td>\n    <td>-</td>\n    <td>EPC</td>\n  </tr>\n  <tr>\n    <td>設定値</td>\n    <td >value</td>\n    <td>string</td>\n    <td>-</td>\n    <td>設定内容</td>\n  </tr>\n</table>\n\n### リクエストサンプル\n\n    GET http://localhost:4035/gotapi/airconditioner/enlproperty&serviceId=localhost.deviceconnect.org&accessToken=xxxxx&epc=128,129\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0,\n        \"properties\":[\n            {\n               “epc”:\"128\",\n                \"value\":\"48\"\n            },\n            {\n               “epc”:\"129\",\n                \"value\":\"0\"\n            }\n         ]\n    }\n"
+    docType: markdown
+  AirConditionerSetECHONETLiteProperty:
+    name: AirConditionerSetECHONETLiteProperty
+    procedure: airconditioner.put
+    params:
+      interface:
+        type: string
+        const: true
+        value: enlproperty
+      epc:
+        type: string
+        const: false
+        value: ""
+        required: true
+      value:
+        type: string
+        const: false
+        value: ""
+        required: true
+    doc: "## AirConditioner Set ECHONET Lite Property API\n\n| インターフェース名称                                   | Version | 種別    |\n| :------------------------------------------- | :------ | :---- |\n| AirConditioner Set ECHONET Lite Property API | 2.0.0   | 同期I/F |\n\n### 概要\n\nスマートデバイスがサポートしているECHONET Lite 機器オブジェクトプロパティに設定を行う。（必須プロパティのみ）\n\n| HTTPメソッド | URI                                |\n| :------- | :--------------------------------- |\n| PUT      | /gotapi/airconditioner/enlproperty |\n\n| 論理名    | 物理名       | データ型   | 省略  | 設定値      |\n| :----- | :-------- | :----- | :-- | :------- |\n| サービスID | serviceId | string | -   | 取得対象デバイス |\n| EPC    | epc       | string | -   | EPC      |\n| 設定値    | value     | string | -   | 設定内容     |\n\n### レスポンス\n\n| Content-Type     | 形式   | HTTPステータス |\n| :--------------- | :--- | :-------- |\n| application/json | JSON | 200       |\n\n| 論理名  | 物理名    | データ型   | 省略  | 設定値                |\n| :--- | :----- | :----- | :-- | :----------------- |\n| 処理結果 | result | number | -   | 0:正常応答<br>0以外:異常応答 |\n\n### リクエストサンプル\n\n    PUT  http://localhost:4035/gotapi/airconditioner/enlproperty\n\n|PUTデータ|\n\\|:--\\|\n|serviceId=localhost.deviceconnect.org&accessToken=xxxxx&epc=128&value=49|\n\n### レスポンスサンプル\n\n    {\n        \"product\":\"Device Connect Manager\",\n        \"version\":\"x.x\",\n        \"result\":0\n    }\n"
+    docType: markdown

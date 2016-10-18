@@ -1,0 +1,1571 @@
+name: SmartElectricEnergyMeter
+prefix: com.sonycsl.kadecot.echonetlite
+rpc:
+  OperationStatusGet:
+    procedure: get
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+  OperationStatusSet:
+    procedure: set
+    epc: 128
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the ON/OFF status.\n\nON＝0x30，OFF＝0x31\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OperationStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  InstallationLocationGet:
+    procedure: get
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+  InstallationLocationSet:
+    procedure: set
+    epc: 129
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the installation location\n\nSee “2.2 ‘Installation location’ property.”\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : mandatory\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: InstallationLocation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  StandardVersionInformationGet:
+    procedure: get
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+  StandardVersionInformationSet:
+    procedure: set
+    epc: 130
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the version number of the corresponding standard.\n\nFirst byte: Fixed at 0x00 (for future reserved). \nSecond byte: Fixed at 0x00 (for future reserved). \nThird byte: Indicates the order of release in the ASCII format. \nFourth byte: Fixed at 0x00 (for future reserved).\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StandardVersionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  IdentificationNumberGet:
+    procedure: get
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+  IdentificationNumberSet:
+    procedure: set
+    epc: 131
+    size: 9or17
+    announce: undefined
+    doc: "A number that allows each object to be uniquely identified.\n\nFirst byte: lower-layer communication ID field\n0x01－0xFD：This is a communication protocol used in the lower-layer communication and is set arbitrarily according to the protocol class in the case where unique number is assigned (not used in ECHONET Lite).\n0x11－0x1F: Power line Communication Protocol A and B systems\n0x31-0x3F: Designated low-powor radio\n0x41-0x4F: Extended HBS\n0x51-0x5F: IrDA\n0x61-0x6F: LonTalk®\n0x71-0x7F: BlueTooth\n0x81-0x8F: Ethernet\n0x91-0x9F: IEEE802.11/11B\n0xA1: Power line Communication Protocol C systems\n0xB2：IPv6/6LoWPAN\n0xFE：2－17 bytes are defined by the manufacturer, and are set according to the type.\n0xFF：2－9 bytes are defined when randomly generated protocol is used in the lower-layer communication.\n0x00：Identification number is not set.\nSecond and succeeding bytes: unique number field\n\nData Type : unsigned char\nData Size(Byte) : 9 or 17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: IdentificationNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredInstantaneousPowerConsumptionGet:
+    procedure: get
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+  MeasuredInstantaneousPowerConsumptionSet:
+    procedure: set
+    epc: 132
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the instantaneous power consumption of the device in watts.\n\n0x0000-0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousPowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  MeasuredCumulativePowerConsumptionGet:
+    procedure: get
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+  MeasuredCumulativePowerConsumptionSet:
+    procedure: set
+    epc: 133
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the cumulative power consumption of the device in increments of 0.001kWh.\n\n0x0-0x3B9AC9FF（0-999,999.999kWh）\n\nData Type : unsigned long\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativePowerConsumption
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  ManufacturersFaultCodeGet:
+    procedure: get
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+  ManufacturersFaultCodeSet:
+    procedure: set
+    epc: 134
+    size: Max225
+    announce: undefined
+    doc: "This property indicates the manufacturer-defined fault code.\n\nFirst byte: Indicates the data size of the fault code field.\nSecond to fourth bytes: Manufacturer code\nFifth and succeeding bytes: Field for manufacturer-defined fault code\n\nData Type : unsigned char×(MAX)225\nData Size(Byte) : Max 225\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturersFaultCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  CurrentLimitSettingGet:
+    procedure: get
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+  CurrentLimitSettingSet:
+    procedure: set
+    epc: 135
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the current limit setting (0-100%).\n0x00-0x64 （=0-100%）\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultStatusGet:
+    procedure: get
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+  FaultStatusSet:
+    procedure: set
+    epc: 136
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether a fault (e.g. a sensor trouble) has occurred or not.\n\nFault occurred＝0x41, No fault has occurred＝0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultStatus
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  FaultDescriptionGet:
+    procedure: get
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+  FaultDescriptionSet:
+    procedure: set
+    epc: 137
+    size: '2'
+    announce: undefined
+    doc: "Describes the fault.\n\nSee “2.5 ‘Fault Description’ Property.”\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: FaultDescription
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  ManufacturerCodeGet:
+    procedure: get
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+  ManufacturerCodeSet:
+    procedure: set
+    epc: 138
+    size: '3'
+    announce: undefined
+    doc: "3-byte manufacturer code\n\n(Defined by the ECHONET Consortium.)\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ManufacturerCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeGet:
+    procedure: get
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+  ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCodeSet:
+    procedure: set
+    epc: 139
+    size: '3'
+    announce: undefined
+    doc: "3-byte business facility code\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×3\nData Size(Byte) : 3\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ￼￼￼￼￼￼￼￼￼￼￼￼BusinessFacilityCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+  ProductCodeGet:
+    procedure: get
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+  ProductCodeSet:
+    procedure: set
+    epc: 140
+    size: '12'
+    announce: undefined
+    doc: "Identifies the product usingASCI I code.\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductCode
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionNumberGet:
+    procedure: get
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+  ProductionNumberSet:
+    procedure: set
+    epc: 141
+    size: '12'
+    announce: undefined
+    doc: "This property indicates the production number using ASCI I code.\n\n（Defined by each manufacturer.）\n\nData Type : unsigned char×12\nData Size(Byte) : 12\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionNumber
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  ProductionDateGet:
+    procedure: get
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+  ProductionDateSet:
+    procedure: set
+    epc: 142
+    size: '4'
+    announce: undefined
+    doc: "4-byte production date code\n\nThis property indicates the product ion date in the YYMD format (1 character = 1 byte) .\nYY： Year (e.g. 1999＝ 0x07CF)\nM： Month (e.g. December＝0x0C)\nD： Day (e.g. 20th＝ 0x14)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ProductionDate
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerSavingOperationSettingGet:
+    procedure: get
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+  PowerSavingOperationSettingSet:
+    procedure: set
+    epc: 143
+    size: '1'
+    announce: undefined
+    doc: "This property indicates whether the device is operating in power-saving mode.\n\nOperating in power-saving mode =0x41\nOperating in normal operation mode =0x42\n\nData Type : unsigned char\nData Size(Byte) : 1\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerSavingOperationSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  PositionInformationGet:
+    procedure: get
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+  PositionInformationSet:
+    procedure: set
+    epc: 147
+    size: '16'
+    announce: undefined
+    doc: "This property indicates the latitude, longitude and altitude of the installation location.\n\nData Type : unsigned char×16\nData Size(Byte) : 16\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional\n\nAnnouncement at status change"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PositionInformation
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  CurrentTimeSettingGet:
+    procedure: get
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+  CurrentTimeSettingSet:
+    procedure: set
+    epc: 151
+    size: '2'
+    announce: undefined
+    doc: "Current time (HH：MM format)\n\n0x00-0x17：0x00-0x3B（ ＝ 0-23）：（ ＝ 0-59）\n\nData Type : unsigned char×2\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentTimeSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CurrentDateSettingGet:
+    procedure: get
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+  CurrentDateSettingSet:
+    procedure: set
+    epc: 152
+    size: '4'
+    announce: undefined
+    doc: "Current date (YYYY：MM：DD format)\n\n1 ～ 0x270F ： 1 ～ 0x0C ： 1 ～ 0x1F (=1 ～ 9999) ： (=1 ～ 12) ： (=1 ～ 31)\n\nData Type : unsigned char×4\nData Size(Byte) : 4\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CurrentDateSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  PowerLimitSettingGet:
+    procedure: get
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+  PowerLimitSettingSet:
+    procedure: set
+    epc: 153
+    size: '2'
+    announce: undefined
+    doc: "This property indicates the power limit setting in watts.\n\n0x0000~0xFFFF（0-65535W）\n\nData Type : unsigned short\nData Size(Byte) : 2\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: PowerLimitSetting
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+  CumulativeOperatingTimeGet:
+    procedure: get
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+  CumulativeOperatingTimeSet:
+    procedure: set
+    epc: 154
+    size: '5'
+    announce: undefined
+    doc: "This property indicates the cumulative number of days, hours, minutes or seconds for which the device has operated, using 1 byte for the unit and 4 bytes for the time.\n\nFirst byte: Indicates the unit.\nSecond： 0x41; Minute： 0x42; Hour： 0x43; Day:0x44\nSecond to fifth bytes ：\nIndicates the elapsed time in the unit specified by the first byte. 0x00000000-0xFFFFFFFF (0-4294967295)\n\nData Type : unsigned char + unsigned long\nData Size(Byte) : 1+4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CumulativeOperatingTime
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  StatusChangeAnnouncementPropertyMapGet:
+    procedure: get
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+  StatusChangeAnnouncementPropertyMapSet:
+    procedure: set
+    epc: 157
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: StatusChangeAnnouncementPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  SetPropertyMapGet:
+    procedure: get
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+  SetPropertyMapSet:
+    procedure: set
+    epc: 158
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: SetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  GetPropertyMapGet:
+    procedure: get
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+  GetPropertyMapSet:
+    procedure: set
+    epc: 159
+    size: Max17
+    announce: undefined
+    doc: "See Appendix 1.\n\nData Type : unsigned char×(MAX17)\nData Size(Byte) : Max.17\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: GetPropertyMap
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  ElectricEnergyMeterClassificationGet:
+    procedure: get
+    epc: 208
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the electric energy meter type.\n\n0x30�FElectric utility company 0x31�FSolar power 0x32�FFuel cell 0x33�FBattery 0x34�FEV 0x35�FOthers\n\nName : Electric energy meter classification\nEPC : 0xD0\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ElectricEnergyMeterClassification
+  ElectricEnergyMeterClassificationSet:
+    procedure: set
+    epc: 208
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the electric energy meter type.\n\n0x30�FElectric utility company 0x31�FSolar power 0x32�FFuel cell 0x33�FBattery 0x34�FEV 0x35�FOthers\n\nName : Electric energy meter classification\nEPC : 0xD0\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ElectricEnergyMeterClassification
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  OwnerClassificationGet:
+    procedure: get
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the type of the owner of the meter.\n\n0x30�FNot specified 0x31�FElectric utility company 0x32�FPrivate sector company 0x33�FIndividual\n\nName : Owner classification\nEPC : 0xD1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OwnerClassification
+  OwnerClassificationSet:
+    procedure: set
+    epc: 209
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the type of the owner of the meter.\n\n0x30�FNot specified 0x31�FElectric utility company 0x32�FPrivate sector company 0x33�FIndividual\n\nName : Owner classification\nEPC : 0xD1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: OwnerClassification
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  ConfigurationInformationOfPhasesAndWiresOfTheSystemsGet:
+    procedure: get
+    epc: 210
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the configuration regarding the phases and wires of the system.\n\nSingle-phase, two-wire system�F 0x30 Single-phase, three-wire system�F 0x31 Three-phase, three-wire system�F 0x32 Three-phase, four-wire system�F 0x33\n\nName : Configuration information of phases and wires of the systems\nEPC : 0xD2\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ConfigurationInformationOfPhasesAndWiresOfTheSystems
+  ConfigurationInformationOfPhasesAndWiresOfTheSystemsSet:
+    procedure: set
+    epc: 210
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the configuration regarding the phases and wires of the system.\n\nSingle-phase, two-wire system�F 0x30 Single-phase, three-wire system�F 0x31 Three-phase, three-wire system�F 0x32 Three-phase, four-wire system�F 0x33\n\nName : Configuration information of phases and wires of the systems\nEPC : 0xD2\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: ConfigurationInformationOfPhasesAndWiresOfTheSystems
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  CompositeTransformationRatioGet:
+    procedure: get
+    epc: 211
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the composite transformation ratio using a 6-digit decimal notation number (initial value = 1).\n\n0x00000000-0x000F423F (000000-999999)\n\nName : Composite transformation ratio\nEPC : 0xD3\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CompositeTransformationRatio
+  CompositeTransformationRatioSet:
+    procedure: set
+    epc: 211
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the composite transformation ratio using a 6-digit decimal notation number (initial value = 1).\n\n0x00000000-0x000F423F (000000-999999)\n\nName : Composite transformation ratio\nEPC : 0xD3\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: CompositeTransformationRatio
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  MultiplyingFactorForCompositeTransformationRatioGet:
+    procedure: get
+    epc: 212
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the multiplying factor for the composite transformation ratio.\n\n0x00�F�~1(initial value) 0x01�F�~0.1 0x02�F�~0.01 0x03�F�~0.001\n\nName : Multiplying factor for composite transformation ratio\nEPC : 0xD4\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiplyingFactorForCompositeTransformationRatio
+  MultiplyingFactorForCompositeTransformationRatioSet:
+    procedure: set
+    epc: 212
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the multiplying factor for the composite transformation ratio.\n\n0x00�F�~1(initial value) 0x01�F�~0.1 0x02�F�~0.01 0x03�F�~0.001\n\nName : Multiplying factor for composite transformation ratio\nEPC : 0xD4\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MultiplyingFactorForCompositeTransformationRatio
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeterTypeCertificationNumberTypeApprovalNumberInJapanGet:
+    procedure: get
+    epc: 213
+    size: '10'
+    announce: undefined
+    doc: "This property indicates the type-certified meter number using alphanumeric characters (0x20-0x70).\n\nType-certified meter (type number): 0000-0��������- 9999-9�������� Non-type certified meter: FFFFFFFFFF (initial value)\n\nName : Meter type certification number (type approval number in Japan)\nEPC : 0xD5\nData Type : unsigned char x 10\nData Size(Byte) : 10 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeterTypeCertificationNumberTypeApprovalNumberInJapan
+  MeterTypeCertificationNumberTypeApprovalNumberInJapanSet:
+    procedure: set
+    epc: 213
+    size: '10'
+    announce: undefined
+    doc: "This property indicates the type-certified meter number using alphanumeric characters (0x20-0x70).\n\nType-certified meter (type number): 0000-0��������- 9999-9�������� Non-type certified meter: FFFFFFFFFF (initial value)\n\nName : Meter type certification number (type approval number in Japan)\nEPC : 0xD5\nData Type : unsigned char x 10\nData Size(Byte) : 10 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeterTypeCertificationNumberTypeApprovalNumberInJapan
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  VerificationExpirationDateGet:
+    procedure: get
+    epc: 214
+    size: '6'
+    announce: undefined
+    doc: "This property indicates, in the form of an ASCII code, the month and year in which the verification of the meter will expire.\n\nYYYYMM YYYY (Year), MM (Month)\n\nName : Verification expiration date\nEPC : 0xD6\nData Type : unsigned char x 6\nData Size(Byte) : 6 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VerificationExpirationDate
+  VerificationExpirationDateSet:
+    procedure: set
+    epc: 214
+    size: '6'
+    announce: undefined
+    doc: "This property indicates, in the form of an ASCII code, the month and year in which the verification of the meter will expire.\n\nYYYYMM YYYY (Year), MM (Month)\n\nName : Verification expiration date\nEPC : 0xD6\nData Type : unsigned char x 6\nData Size(Byte) : 6 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: VerificationExpirationDate
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredCumulativeAmountOfElectricEnergyNormalDirectionGet:
+    procedure: get
+    epc: 224
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured cumulative amount of electric energy using an 8-digit decimal notation number.\n\n0x00000000-0x05F5E0FF (0-99,999,999)\n\nName : Measured cumulative amount of electric energy (normal direction)\nEPC : 0xE0\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativeAmountOfElectricEnergyNormalDirection
+  MeasuredCumulativeAmountOfElectricEnergyNormalDirectionSet:
+    procedure: set
+    epc: 224
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured cumulative amount of electric energy using an 8-digit decimal notation number.\n\n0x00000000-0x05F5E0FF (0-99,999,999)\n\nName : Measured cumulative amount of electric energy (normal direction)\nEPC : 0xE0\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativeAmountOfElectricEnergyNormalDirection
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  UnitForCumulativeAmountsOfElectricEnergyNormalAndReverseDirectionsGet:
+    procedure: get
+    epc: 225
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the unit (multiplying factor) used for the measured cumulative amount of electric energy and the historical data of measured cumulative amounts of electric energy.\n\n0x00: 1kWh 0x01: 0.1kWh 0x02: 0.01kWh 0x03: 0.001kWh (Initial value) 0x04: 0.0001kWh 0x0A: 10kWh 0x0B: 100kWh 0x0C: 1000kWh 0x0D: 10000kWh\n\nName : Unit for cumulative amounts of electric energy (normal and reverse directions)\nEPC : 0xE1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: UnitForCumulativeAmountsOfElectricEnergyNormalAndReverseDirections
+  UnitForCumulativeAmountsOfElectricEnergyNormalAndReverseDirectionsSet:
+    procedure: set
+    epc: 225
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the unit (multiplying factor) used for the measured cumulative amount of electric energy and the historical data of measured cumulative amounts of electric energy.\n\n0x00: 1kWh 0x01: 0.1kWh 0x02: 0.01kWh 0x03: 0.001kWh (Initial value) 0x04: 0.0001kWh 0x0A: 10kWh 0x0B: 100kWh 0x0C: 1000kWh 0x0D: 10000kWh\n\nName : Unit for cumulative amounts of electric energy (normal and reverse directions)\nEPC : 0xE1\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : mandatory"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: UnitForCumulativeAmountsOfElectricEnergyNormalAndReverseDirections
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyNormalDirectionGet:
+    procedure: get
+    epc: 226
+    size: '194'
+    announce: undefined
+    doc: "This property indicates the day for which the historical data of measured cumulative amounts of electric energy is to be retrieved and the historical data of measured cumulative amounts of electric energy (8 digits), which consists of 48 pieces of half-hourly data for the preceding 24 hours.\n\n0x0000-0x0063: 0x00000000-0x05F5E0FF (0-99) : (0-99,999,999)\n\nName : Historical data of measured cumulative amounts of electric energy (normal direction)\nEPC : 0xE2\nData Type : unsigned short + unsigned long x48\nData Size(Byte) : 194 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyNormalDirection
+  HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyNormalDirectionSet:
+    procedure: set
+    epc: 226
+    size: '194'
+    announce: undefined
+    doc: "This property indicates the day for which the historical data of measured cumulative amounts of electric energy is to be retrieved and the historical data of measured cumulative amounts of electric energy (8 digits), which consists of 48 pieces of half-hourly data for the preceding 24 hours.\n\n0x0000-0x0063: 0x00000000-0x05F5E0FF (0-99) : (0-99,999,999)\n\nName : Historical data of measured cumulative amounts of electric energy (normal direction)\nEPC : 0xE2\nData Type : unsigned short + unsigned long x48\nData Size(Byte) : 194 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyNormalDirection
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredCumulativeAmountOfElectricEnergyReverseDirectionGet:
+    procedure: get
+    epc: 227
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured cumulative amount of electric energy using an 8-digit decimal notation number.\n\n0x00000000-0x05F5E0FF (0-99,999,999)\n\nName : Measured cumulative amount of electric energy (reverse direction)\nEPC : 0xE3\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativeAmountOfElectricEnergyReverseDirection
+  MeasuredCumulativeAmountOfElectricEnergyReverseDirectionSet:
+    procedure: set
+    epc: 227
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured cumulative amount of electric energy using an 8-digit decimal notation number.\n\n0x00000000-0x05F5E0FF (0-99,999,999)\n\nName : Measured cumulative amount of electric energy (reverse direction)\nEPC : 0xE3\nData Type : unsigned long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredCumulativeAmountOfElectricEnergyReverseDirection
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyReverseDirectionGet:
+    procedure: get
+    epc: 228
+    size: '194'
+    announce: undefined
+    doc: "This property indicates the day for which the historical data of measured cumulative amounts of electric energy is to be retrieved and the historical data of measured cumulative amounts of electric energy (8 digits), which consists of 48 pieces of half-hourly data for the preceding 24 hours.\n\n0x0000-0x0063: 0x00000000-0x05F5E0FF (0-99) : (0-99,999,999)\n\nName : Historical data of measured cumulative amounts of electric energy (reverse direction)\nEPC : 0xE4\nData Type : unsigned short �{ unsigned long �~48\nData Size(Byte) : 194 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyReverseDirection
+  HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyReverseDirectionSet:
+    procedure: set
+    epc: 228
+    size: '194'
+    announce: undefined
+    doc: "This property indicates the day for which the historical data of measured cumulative amounts of electric energy is to be retrieved and the historical data of measured cumulative amounts of electric energy (8 digits), which consists of 48 pieces of half-hourly data for the preceding 24 hours.\n\n0x0000-0x0063: 0x00000000-0x05F5E0FF (0-99) : (0-99,999,999)\n\nName : Historical data of measured cumulative amounts of electric energy (reverse direction)\nEPC : 0xE4\nData Type : unsigned short �{ unsigned long �~48\nData Size(Byte) : 194 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: HistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyReverseDirection
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+  DayForWhichTheHistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyIsToBeRetrievedGet:
+    procedure: get
+    epc: 229
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the day for which the historical data of measured cumulative amounts of electric energy (which consists of 48 pieces of half-hourly data for the preceding 24 hours) is to be retrieved.\n\n0x00-0x63 ( 0-99) 0: current day 1  . 99: previous day . day that precedes the current day by 99 days\n\nName : Day for which the historical data of measured cumulative amounts of electric energy is to be retrieved\nEPC : 0xE5\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DayForWhichTheHistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyIsToBeRetrieved
+  DayForWhichTheHistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyIsToBeRetrievedSet:
+    procedure: set
+    epc: 229
+    size: '1'
+    announce: undefined
+    doc: "This property indicates the day for which the historical data of measured cumulative amounts of electric energy (which consists of 48 pieces of half-hourly data for the preceding 24 hours) is to be retrieved.\n\n0x00-0x63 ( 0-99) 0: current day 1  . 99: previous day . day that precedes the current day by 99 days\n\nName : Day for which the historical data of measured cumulative amounts of electric energy is to be retrieved\nEPC : 0xE5\nData Type : unsigned char\nData Size(Byte) : 1 Byte\n\nAccessRule\nAnnounce : undefined\nSet : optional\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: DayForWhichTheHistoricalDataOfMeasuredCumulativeAmountsOfElectricEnergyIsToBeRetrieved
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+  MeasuredInstantaneousAmountOfElectricEnergyGet:
+    procedure: get
+    epc: 231
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured effective instantaneous amount of electric energy in watts.\n\n0x80000001-0x7FFFFFFD (-2,147,483,647- 2,147,483,645)\n\nName : Measured instantaneous amount of electric energy\nEPC : 0xE7\nData Type : signed long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousAmountOfElectricEnergy
+  MeasuredInstantaneousAmountOfElectricEnergySet:
+    procedure: set
+    epc: 231
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured effective instantaneous amount of electric energy in watts.\n\n0x80000001-0x7FFFFFFD (-2,147,483,647- 2,147,483,645)\n\nName : Measured instantaneous amount of electric energy\nEPC : 0xE7\nData Type : signed long\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousAmountOfElectricEnergy
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredInstantaneousCurrentsGet:
+    procedure: get
+    epc: 232
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured effective instantaneous R and T phase currents in amperes. In the case of a single-phase, two-wire system, 0x7FFE shall be used for the T phase.\n\n0x8001-0x7FFD�iR phase�j : 0x8001-0x7FFD�iT phase�j (-3,276.7-3,276.5): (-3,276.7-3,276.5)\n\nName : Measured instantaneous currents\nEPC : 0xE8\nData Type : signed short �~2\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousCurrents
+  MeasuredInstantaneousCurrentsSet:
+    procedure: set
+    epc: 232
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured effective instantaneous R and T phase currents in amperes. In the case of a single-phase, two-wire system, 0x7FFE shall be used for the T phase.\n\n0x8001-0x7FFD�iR phase�j : 0x8001-0x7FFD�iT phase�j (-3,276.7-3,276.5): (-3,276.7-3,276.5)\n\nName : Measured instantaneous currents\nEPC : 0xE8\nData Type : signed short �~2\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousCurrents
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+  MeasuredInstantaneousVoltagesGet:
+    procedure: get
+    epc: 233
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured effective instantaneous R-S(N) and S(N)-T voltages in volts. In the case of a single-phase, two-wire system, 0xFFFE shall be used for the S(N)-T voltage.\n\n0x0000-0xFFFD (between R and S(N))�F 0x0000-0xFFFD (between S(N) and T) (0-6,553.3) : (0-6,553.3)\n\nName : Measured instantaneous voltages\nEPC : 0xE9\nData Type : unsigned short �~2\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousVoltages
+  MeasuredInstantaneousVoltagesSet:
+    procedure: set
+    epc: 233
+    size: '4'
+    announce: undefined
+    doc: "This property indicates the measured effective instantaneous R-S(N) and S(N)-T voltages in volts. In the case of a single-phase, two-wire system, 0xFFFE shall be used for the S(N)-T voltage.\n\n0x0000-0xFFFD (between R and S(N))�F 0x0000-0xFFFD (between S(N) and T) (0-6,553.3) : (0-6,553.3)\n\nName : Measured instantaneous voltages\nEPC : 0xE9\nData Type : unsigned short �~2\nData Size(Byte) : 4 Byte\n\nAccessRule\nAnnounce : undefined\nSet : undefined\nGet : optional"
+    params:
+      propertyName:
+        type: string
+        const: true
+        value: MeasuredInstantaneousVoltages
+      propertyValue:
+        type: array
+        const: false
+        value:
+          - 0
+          - 0
+          - 0
+          - 0
+

@@ -1,0 +1,19 @@
+name: Cloud
+prefix: cloud
+rpc:
+  chat:
+    name: chat
+    procedure: chat
+    params:
+      text:
+        type: string
+        const: false
+        value: こんにちは
+      deviceId:
+        type: number
+        const: false
+        value: 1
+
+
+    doc: |-
+      Chat with Kadecot.
