@@ -31,7 +31,7 @@ class HTTPServer {
   initServer () {
     this.app = express();
 
-    this.app.get('/api', function(req, res) {
+    this.app.get('/api', (req, res) => {
       if (typeof this.callbacks[req.query.func] === 'function') {
         this.callbacks[req.query.func](req.query);
         res.jsonp({
