@@ -42,6 +42,7 @@ function installPip () {
     else
       echo "Installing pip (Please wait)"
       sudo pip install -U pip >/dev/null
+      sudo pip install -U setuptools >/dev/null
       sudo pip install -U six >/dev/null
       echo -e "Done.\n"
       return 0
@@ -70,7 +71,7 @@ function installCrossbar () {
 
   echo "Installing Crossbar.io (Please wait)"
 
-  ( sudo pip install "crossbar==${CROSSBAR_VERSION}" >/dev/null ) || \
+  ( sudo pip install "crossbar>=${CROSSBAR_VERSION}" >/dev/null ) || \
   ( ( echo -e "\n*** Exec \"Install Required Packages\" first. ***\n" >&2 ) && return 255 )
 
   echo -e "Done.\n"
