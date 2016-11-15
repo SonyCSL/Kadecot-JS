@@ -4,6 +4,7 @@ NODE_VERSION="4.x"
 CROSSBAR_VERSION="0.15.0"
 SUDO_PATH=$(command -v sudo)
 
+# sudo がない環境でも sudo をつけられるようにする
 function sudo () {
   if [ -n $SUDO_PATH ];then
     eval $SUDO_PATH $@
@@ -12,8 +13,11 @@ function sudo () {
   fi
 }
 
+# インストールに必要なパッケージをインストール
 function installRequiredPackages () {
   echo "Installing required packages (Please wait)"
+
+  # yum か apt-get かで分岐
   if [ -n "$(command -v yum)" ]; then
     sudo yum groupinstall -y 'Development Tools' >/dev/null 2>/dev/null
     sudo yum install -y \
@@ -28,18 +32,23 @@ function installRequiredPackages () {
   echo -e "Done.\n"
 }
 
+# Python のパッケージマネージャ pip をインストール
 function installPip () {
+  # Python が入っているかチェック
   if [ ! -n "$(command -v python)" ]; then
     echo "Error: python is required." >&2
     echo "  Please install python." >&2
     return 255
   fi
 
+  # pip が入っているかチェック
   if [ -n "$(command -v pip)" ]; then
+    # pip のバージョンが 8 以上になっているかチェック
     if [ "$(pip --version | awk '{ print $2 }' | awk -F. '{print $1}')" -ge 8 ]; then
       echo "pip is already installed. Version: $(pip --version | awk '{ print $2 }')"
       return 0
     else
+      # pip のアップデート
       echo "Installing pip (Please wait)"
       sudo pip install -U pip >/dev/null
       sudo pip install -U setuptools >/dev/null
@@ -56,13 +65,16 @@ function installPip () {
   echo -e "Done.\n"
 }
 
+# Crossbar のインストール
 function installCrossbar () {
+  # pip が入っているかチェック
   if [ ! -n "$(command -v pip)" ]; then
     echo "Error: pip is required." >&2
     echo "  Please install pip." >&2
     return 255
   fi
 
+  # Crossbar が入っているかチェック
   if [ -n "$(command -v crossbar)" ]; then
     INSTALLED_CROSSBAR_VERSION=$(crossbar version | grep --color=never 'Crossbar.io' | awk -F':' '{ print $2 }' | sed 's/\s//g')
     echo "Crossbar.io is already installed. Version: ${INSTALLED_CROSSBAR_VERSION}"
@@ -71,15 +83,20 @@ function installCrossbar () {
 
   echo "Installing Crossbar.io (Please wait)"
 
+  # Crossbar のインストール（1行目）に失敗したら，エラーを返す（2行目）
   ( sudo pip install "crossbar>=${CROSSBAR_VERSION}" >/dev/null ) || \
   ( ( echo -e "\n*** Exec \"Install Required Packages\" first. ***\n" >&2 ) && return 255 )
 
   echo -e "Done.\n"
 }
 
+# Node.js のインストール
 function installNode () {
   ## https://github.com/nodesource/distributions
+
+  # node が入っているかチェック
   if [ -n "$(command -v node)" ]; then
+    # バージョンが 4 以上かチェック
     if [ "$(node --version | sed -e 's/[^0-9.]//g' | awk -F. '{print $1}')" -ge 4 ]; then
       echo "Node.js is already installed. Version: $(node --version)"
       return 0
@@ -97,19 +114,25 @@ function installNode () {
   echo -e "Done.\n"
 }
 
+# Kadecot-JS のインストール
 function installKadecotJs () {
   echo "Installing Kadecot|JS"
 
+  # $HOME/.kadecot フォルダがあれば終了
   if [ -d $HOME/.kadecot ]; then
     echo "Kadecot|JS is already installed."
     return 0
   fi
 
+  # $HOME/.kadecot に Kadecot-JS を clone する
   git clone --depth 1 https://github.com/SonyCSL/Kadecot-JS $HOME/.kadecot > /dev/null 2>/dev/null
+  # kadecot コマンドをパスに通す
   sudo ln -s $HOME/.kadecot/kadecot /usr/local/bin/kadecot > /dev/null
   sudo chmod a+x $HOME/.kadecot/kadecot /usr/local/bin/kadecot > /dev/null
 
+  # npm install をする
   cd $HOME/.kadecot && npm install --silent > /dev/null
+  # plugins のフォルダすべてに npm install する
   ls -d $HOME/.kadecot/v1/plugins/* | xargs -I{} bash -c 'cd {} && npm install --silent' > /dev/null
 
   echo "Installed Kadecot|JS to $HOME/.kadecot";
@@ -117,6 +140,7 @@ function installKadecotJs () {
   echo -e "Done.\n"
 }
 
+# バージョンを抽出して表示
 function showVersions () {
   INSTALLED_PYTHON_VERSION=$(\
     [ -n "$(command -v python)" ] && \
@@ -172,6 +196,7 @@ function main () {
 
   for t in $(seq 1 10); do
     echo -n "."
+    # 1秒間入力を待って，入力があれば selectDo に行く
     read -t 1 && ( echo ""; selectDo; ) && exit 0
   done
   echo ""
