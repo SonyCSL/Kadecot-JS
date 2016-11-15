@@ -1,17 +1,24 @@
 #!/bin/bash
 
+# 第一引数を COMMAND に代入
 COMMAND=$1
+
+# COMMAND で条件分岐
 case $COMMAND in
   start)
+    # $HOME/.kadecot で crossbar start する
+    # $HOME/.kadecot/.crossbar の設定ファイルが有効になる
     cd $HOME/.kadecot
     crossbar start
     ;;
   update)
     echo "Updating Kadecot|JS"
     {
+      # git pull する
       cd $HOME/.kadecot
       git pull origin master
       sudo chmod a+x $HOME/.kadecot/kadecot
+      # 全てに npm install する
       npm install
       ls -d $HOME/.kadecot/v1/plugins/* | xargs -I{} bash -c 'cd {} && npm install --silent'
     } > /dev/null
@@ -26,6 +33,7 @@ case $COMMAND in
     echo "Uninstalled."
     ;;
   *)
+    # コマンドが見つからなかったら，ヘルプを表示する
     cat <<'EOL'
 Usage:
   kadecot start     : Start kadecot via crossbar.io
