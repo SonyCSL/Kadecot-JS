@@ -3,56 +3,53 @@
 
 var pluginInterface;
 
-exports.init = function( /*_pluginInterface*/ ) {
-  pluginInterface = this ; //_pluginInterface;
-  pluginInterface.connectRouter({
-	onopen: function() {
+exports.init = function() {
+	pluginInterface = this ;
 
-		EL.init((err) => {
-			if(err) { // An error was occurred
-				pluginInterface.log('Init error:'+JSON.stringify(err)) ;
-			} else {
-				pluginInterface.log('Start discovery.') ;
+	EL.init((err) => {
+		if(err) { // An error was occurred
+			pluginInterface.log('Init error:'+JSON.stringify(err)) ;
+		} else {
+			pluginInterface.log('Start discovery.') ;
 
-				EL.startDiscovery((err, res) => {
-					if(err) { // Error handling
-						console.log(err);
-					} else {
-						onELDeviceFound(res) ;
-					}
-				});
+			EL.startDiscovery((err, res) => {
+				if(err) { // Error handling
+					console.log(err);
+				} else {
+					onELDeviceFound(res) ;
+				}
+			});
 
-				EL.on('data', (res) => {
-					if( res.message.esv !== 'INF' )	return ;
+			EL.on('data', (res) => {
+				if( res.message.esv !== 'INF' )	return ;
 
-					registerELDevice(res.device.address , res.message.seoj).then(function(re){
-						var dev = re.result ;
-						if( !dev || dev.doc == null ) return ;
-						var epcs = dev.doc.epc ;
-						for( var propertyName in epcs ){
-							if( epcs[propertyName].value != res.message.prop[0].epc ) continue ;
-							var pv ;
-							if( res.message.prop[0].buffer == null ) pv = null ;
-							else {
-								pv = [] ;
-								var i8a = new Int8Array(res.message.prop[0].buffer) ;
-								for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
-							}
-
-							pluginInterface.publish( dev.deviceType+'.'+propertyName,[dev.deviceId]
-								,{propertyName:propertyName,propertyValue:pv} ) ;
+				registerELDevice(res.device.address , res.message.seoj).then(function(re){
+					var dev = re.result ;
+					if( !dev || dev.doc == null ) return ;
+					var epcs = dev.doc.epc ;
+					for( var propertyName in epcs ){
+						if( epcs[propertyName].value != res.message.prop[0].epc ) continue ;
+						var pv ;
+						if( res.message.prop[0].buffer == null ) pv = null ;
+						else {
+							pv = [] ;
+							var i8a = new Int8Array(res.message.prop[0].buffer) ;
+							for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
 						}
-					}) ;
-				});
-			}
-		});
-	},
-	onclose: function() {
-		if( EL == undefined ) return ;
-		EL.stopDiscovery();
-	}
-  });
+
+						pluginInterface.publish( dev.deviceType+'.'+propertyName,[dev.deviceId]
+							,{propertyName:propertyName,propertyValue:pv} ) ;
+					}
+				}) ;
+			});
+		}
+	});
 };
+
+// When unloaded
+//	if( EL == undefined ) return ;
+//	EL.stopDiscovery();
+
 
 
 //////////////////////////////////////

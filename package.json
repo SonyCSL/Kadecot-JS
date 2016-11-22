@@ -9,8 +9,7 @@
     "express": "~4.14.0",
     "lodash.iserror": "3.1.1",
     "node-echonet-lite": "^0.0.4",
-    "websocket": "~1.0.23",
-    "when": "~3.7.7"
+    "websocket": "~1.0.23"
   },
   "devDependencies": {
     "eslint-plugin-html": "1.5.2"

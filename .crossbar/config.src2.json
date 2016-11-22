@@ -20,10 +20,21 @@
         }, {
           "uri": "admin.*",
           "allow": {
-            "call": false,
+            "call": true,
             "register": false,
             "publish": false,
             "subscribe": false
+          }
+        }]
+      },{
+        "name": "superuser",
+        "permissions": [{
+          "uri": "*",
+          "allow": {
+            "call": true,
+            "register": true,
+            "publish": true,
+            "subscribe": true
           }
         }]
       }]
