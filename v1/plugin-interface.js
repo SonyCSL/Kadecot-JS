@@ -81,10 +81,18 @@ class PluginInterface {
 	};
 	this.devices[uuid] = deviceInfo;
 
+	var ps = [] ;
 	this.sessions.forEach(session => {
-		session.call('admin.registerdevice', [this.pluginPrefix], deviceInfo).then( deviceId=>{
-			this.devices[uuid].deviceIdMap[session.id] = deviceId ;
-		}) ;
+		ps.push(
+			session.call('admin.registerdevice', [this.pluginPrefix], deviceInfo)
+		) ;
+	}) ;
+
+	Promise.all(ps).then(re=>{
+		for( var si=0;si<this.sessions.length;++si ){
+			this.devices[uuid].deviceIdMap[this.sessions[si].id] = re[si] ;
+		}
+		acpt( this.devices[uuid].deviceIdMap ) ;
 	}) ;
     }) ;
   }

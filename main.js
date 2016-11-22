@@ -6,7 +6,7 @@ provider1.init('v1').then( () => {
 	// local connection
 	provider1.connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user' , 'pass' ) ;
 	// other connection
-	provider1.connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user1' , '186ez5mi' ) ;
+	//provider1.connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user1' , 'uo25u3di' ) ;
 } ).catch( console.log ) ;
 
 
