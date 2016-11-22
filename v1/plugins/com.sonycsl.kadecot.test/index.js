@@ -1,10 +1,8 @@
 //////////////////////////////////////
 // Exports
 
-var pluginInterface;
-
-exports.init = function(_pluginInterface) {
-  pluginInterface = _pluginInterface;
+exports.init = function( /*_pluginInterface*/ ) {
+  var pluginInterface = this;
   pluginInterface.connectRouter({
     onopen: onDeviceSearch,
     onclose: function() {}
@@ -13,8 +11,8 @@ exports.init = function(_pluginInterface) {
 
 function onDeviceSearch() {
   // uuid,deviceType,description,nickname,onregisteredfunc
-  pluginInterface
-    .registerDevice('TestObject', 'TestObject', 'Only one test object', 'TestObject')
+  var pluginInterface = this ;
+    this.registerDevice('TestObject', 'TestObject', 'Only one test object', 'TestObject')
     .then((re) => {
       if (!re.success) return;
       pluginInterface.registerProcedures([{

@@ -9,8 +9,9 @@ function log(msg) {
 }
 //////////////////////////////////////
 // Load libraries
-var autobahn, when;
+var fs, autobahn, when;
 try {
+  fs = require('fs');
   autobahn = require('autobahn');
   when = require('when');
 } catch (e) { // When running in browser, AutobahnJS will be included without a module system
@@ -35,7 +36,7 @@ function init_plugins() {
       return fs.lstatSync(PLUGINS_FOLDER + dirname).isDirectory();
     }).forEach(function(dirname) {
       var pluginInterface = new PluginInterface(REALM, ROUTER_URL, dirname /* as PLUGIN_PREFIX */ );
-      require('./plugins/' + dirname + '/index.js').init(pluginInterface);
+      require('./plugins/' + dirname + '/index.js').init.call(pluginInterface);
     });
   });
 }
@@ -69,6 +70,8 @@ var deviceid_count = 1;
 var htserv, cloud;
 
 exports.init = function(_REALM, _ROUTER_URL) {
+  init_authtest(_REALM, _ROUTER_URL) ;
+  return ;
   REALM = _REALM;
   ROUTER_URL = _ROUTER_URL;
 
@@ -166,8 +169,6 @@ exports.init = function(_REALM, _ROUTER_URL) {
 
   connection.open();
 
-  var fs = require('fs');
-
   cloud = require('./cloud.js');
 
   cloud.REGISTERED_INFO_CACHE_FILE = './' + REALM + '/registered.txt';
@@ -192,3 +193,91 @@ exports.init = function(_REALM, _ROUTER_URL) {
     }
   }).start(31413);
 };
+
+
+function auth_challenge(){
+	var user = 'user2', key = autobahn.auth_cra.derive_key('jnd5z5mi', "Kadecot", 100, 16);
+
+	var conn_client = new autobahn.Connection({
+	   url: ROUTER_URL,
+	   realm: REALM, //'v1',
+	   authmethods: ["wampcra"],
+	   authid: user,
+	   onchallenge: (session, method, extra) => {
+		   if (method === "wampcra") {
+		      //console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
+		      return autobahn.auth_cra.sign(key, extra.challenge);
+		   } else {
+		      throw "don't know how to authenticate using '" + method + "'";
+		   }
+	   }
+
+	});
+	conn_client.onopen = function (session, details) {
+		console.log('AuthConnClientOpen:'+JSON.stringify(arguments)) ;
+	};
+	conn_client.onclose = function (reason, details) {
+		if( details.reason == 'wamp.error.not_authorized' )
+			log('Login failed.') ;
+		else
+			console.log("disconnected", reason, details.reason, details);
+	}
+
+	conn_client.open();
+
+}
+
+var USERDB ;
+
+function init_authtest(_REALM, _ROUTER_URL){
+  REALM = _REALM;
+  ROUTER_URL = _ROUTER_URL;
+
+  USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
+  USERDB = JSON.parse(USERDB) ;
+
+  //////////////////////////////////////
+  // Connect superuser to Wamp router
+  var connection = new autobahn.Connection({
+    url: 'ws://localhost:41314/ws',
+    realm: 'v1',
+    authmethods: ["ticket"],
+    authid: "superuser",
+    onchallenge: (session, method, extra) => {
+      if (method === "ticket") {
+        return 'root' ;
+      } else {
+        throw new Error('Failed to authenticate');
+      }
+    }
+  });
+
+  connection.onopen = function(session) {
+    log('Connection to wamp router open.');
+
+    session.register('admin.authenticate', (args, kwargs, details) => {
+	//log('Authenticate input:'+JSON.stringify(args)) ;
+	var realm = args[0];
+	var authid = args[1];
+	var details = args[2];
+	if (USERDB[authid] !== undefined) {
+	   return USERDB[authid];
+	} else {
+	   throw "no such user";
+	}
+      }).then(
+      () => {	// Registration success
+        log("Registration success");
+
+        // login by dynamic authentication
+	setTimeout( auth_challenge , 1000 ) ;
+
+      },
+      () => {   // Registration failed
+        log("Registration failed", arguments);
+      }
+    );
+  };
+
+  connection.open();
+}

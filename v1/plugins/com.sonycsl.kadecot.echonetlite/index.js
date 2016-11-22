@@ -3,8 +3,8 @@
 
 var pluginInterface;
 
-exports.init = function(_pluginInterface) {
-  pluginInterface = _pluginInterface;
+exports.init = function( /*_pluginInterface*/ ) {
+  pluginInterface = this ; //_pluginInterface;
   pluginInterface.connectRouter({
 	onopen: function() {
 
