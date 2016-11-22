@@ -221,8 +221,8 @@ function connect_controler_to_realm( realm , username , secret ){
 	conn_client.onopen = function (session, details) {
 		// console.log('AuthConnClientOpen:'+JSON.stringify(arguments)) ;
 
-
-		var devices = {hi:{msg:'HIOBJECT'},hi2:{msg:'HIOBJECT2'}}
+		// Dummy implementation
+		var devices = {hi:{deviceId:2,msg:'HIOBJECT'},hi2:{deviceId:3,msg:'HIOBJECT2'}}
 		session.register(PREFIX + '.procedure.getDeviceList', function(args, kwargs, details) {
 		  var dl = [];
 		  for (uuid in devices) dl.push(devices[uuid]);

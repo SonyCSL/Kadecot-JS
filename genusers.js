@@ -19,7 +19,7 @@ var f2 = fs.readFileSync( '.crossbar/config.src2.json' , 'utf-8' ) ;
 var ins_str = '' , users_str = '' , pwd_list = '' ;
 
 
-for( var i=1 ; i<=user_num ; ++i ){
+for( var i=0 ; i<=user_num ; ++i ){
 	var u = {
 		salt : 'Kadecot'
 		,realm : 'v1.'+i
@@ -27,15 +27,18 @@ for( var i=1 ; i<=user_num ; ++i ){
 		,iterations : 100
 		,keylen : 16
 	} ;
+
+	var username = 'user'+i ;
 	var pwd = Math.random().toString(36).slice(-8) ;
+
+	if( i==0 )	{ username = 'user' ; pwd = 'pass' ; }
+	else		{ users_str += ',' ; }
 
 	u.secret = autobahn.auth_cra.derive_key(pwd , u.salt , 100 , 16 ) ;
 
 
 	ins_str += f2.replace('%%%%%',i) ;
-	if( i != 1 )	users_str += ',' ;
 
-	var username = 'user'+i ;
 	users_str += '"'+username + '":'+JSON.stringify(u) ;
 	pwd_list += username + ':'+pwd+"\n" ;
 }
