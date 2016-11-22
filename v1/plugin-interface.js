@@ -5,53 +5,60 @@ const autobahn = require('autobahn');
 const isError = require('lodash.iserror');
 
 class PluginInterface {
-  /**
-   * Constructor
-   * @param  {String} realm         [description]
-   * @param  {String} routerURL     [description]
-   * @param  {String} pluginPrefix  [description]
-   */
-  constructor (realm, routerURL, pluginPrefix) {
-    this.realm = realm;
-    this.routerURL = routerURL;
+  constructor ( pluginPrefix ) {
     this.pluginPrefix = pluginPrefix;
-    this.log = function (msg) {
+    this.log = (msg) => {
       console.log(`${this.pluginPrefix}: ${msg}`);
     };
     this.devices = {};
+
+    this.sessions = [] ;
+    this.registeredProcs = [] ;
   }
 
-  /**
-   * Connect to router.
-   * @param  {Object}   callbacks         [description]
-   * @param  {Function} callbacks.onopen  [description]
-   * @param  {Function} callbacks.onclose [description]
-   */
-  connectRouter (callbacks) {
-    this.connection = new autobahn.Connection({
-      realm: this.realm,
-      url: this.routerURL
-    });
+  onSessionOpened ( session ){
+	this.sessions.push(session) ;
+	session.call('admin.registerplugin', [session.id, this.pluginPrefix]);
 
-    this.connection.onclose = () => {
-      if (typeof callbacks.onclose === 'function') {
-        callbacks.onclose.call(this);
-      }
-      this.session = undefined;
-    };
+	// register already found devices
+	for( var uuid in this.devices ){
+		session.call('admin.registerdevice', [this.pluginPrefix], this.devices[uuid]) ;
+	}
 
-    this.connection.onopen = (session) => {
-      this.session = session;
-      this.log(`Connection to ${this.routerURL} success.`);
-      this.session.call('com.sonycsl.kadecot.provider.procedure.registerplugin', [this.session.id, this.pluginPrefix]);
+	// register already added procedures
 
-      if (typeof callbacks.onopen === 'function') {
-        callbacks.onopen.call(this);
-      }
-    };
-    this.connection.open();
+	const procedures = this.registeredProcs.map((procInfo) => {
+          return session.register(
+            `${this.pluginPrefix}.procedure.${procInfo.name}`,
+            (deviceIdArray, argObj, details) => {
+              // Support to return either real value or promise
+              return Promise.resolve(procInfo.procedure(deviceIdArray, argObj))
+                .then((res) => {
+                  res.success = true;
+                  const resultInstance =
+                    new autobahn.Result([ deviceIdArray[0] ], res);
+                  return Promise.resolve(resultInstance);
+                })
+                .catch((err) => {
+                  if (isError(err) || typeof err !== 'object') {
+                    err = { error: err };
+                  }
+                  err.success = false;
+                  const resultInstance =
+                    new autobahn.Result([ deviceIdArray[0] ], err);
+                  return Promise.resolve(resultInstance);
+                });
+            }
+          );
+        });
 
-    this.log('Plugin loaded.');
+        return Promise.all(procedures);
+  }
+
+  onSessionClosed ( session ){
+	this.sessions = this.sessions.filter( s => {
+		return s != session ;
+	}) ;
   }
 
   /**
@@ -63,27 +70,23 @@ class PluginInterface {
    * @return {Promise<autobahn.Result,autobahn.Error>}   [description]
    */
   registerDevice (uuid, deviceType, description, nickname) {
-    if (!this.session) {
-      return Promise.reject(new Error('No session'));
-    }
-    const deviceInfo = {
-      uuid: uuid,
-      protocol: this.pluginPrefix.split('.').reverse()[0],
-      deviceType: deviceType,
-      description: description,
-      nickname: nickname
-    };
-    this.devices[uuid] = deviceInfo;
+    return new Promise( (acpt,rjct) => {
+	const deviceInfo = {
+	      uuid: uuid,
+	      protocol: this.pluginPrefix.split('.').reverse()[0],
+	      deviceType: deviceType,
+	      description: description,
+	      nickname: nickname,
+	      deviceIdMap: {}
+	};
+	this.devices[uuid] = deviceInfo;
 
-    const promise =
-      this.session.call('com.sonycsl.kadecot.provider.procedure.registerdevice', [this.pluginPrefix], deviceInfo)
-        .then((re) => {
-          if (re.success) {
-            this.devices[uuid].deviceId = re.deviceId;
-          }
-          return re;
-        });
-    return promise;
+	this.sessions.forEach(session => {
+		session.call('admin.registerdevice', [this.pluginPrefix], deviceInfo).then( deviceId=>{
+			this.devices[uuid].deviceIdMap[session.id] = deviceId ;
+		}) ;
+	}) ;
+    }) ;
   }
 
   /**
@@ -92,16 +95,16 @@ class PluginInterface {
    * @return {Promise<autobahn.Result,autobahn.Error>}      [description]
    */
   unregisterDevice (uuid) {
-    if (!this.session) {
-      return Promise.reject(new Error('No session'));
-    }
-    const promise =
-      this.session.call('com.sonycsl.kadecot.provider.procedure.unregisterdevice', [uuid])
-        .then((re) => {
-          this.devices[uuid] = undefined;
-          return re;
-        });
-    return promise;
+    return new Promise( (acpt,rjct) => {
+	var ps = [] ;
+	this.sessions.forEach(session => {
+		ps.push( session.call('admin.unregisterdevice', [uuid]) ) ;
+	}) ;
+	Promise.all(ps).then(() => {
+		this.devices[uuid] = undefined;
+		acpt(uuid) ;
+	}) ;
+    } ) ;
   }
 
   /**
@@ -121,30 +124,42 @@ class PluginInterface {
    * @return {Promise<autobahn.Registration[],autobahn.Error>} [description]
    */
   registerProcedures (procList) {
-    const procedures = procList.map((procInfo) => {
-      return this.session.register(
-        `${this.pluginPrefix}.procedure.${procInfo.name}`,
-        (deviceIdArray, argObj, details) => {
-          // Support to return either real value or promise
-          return Promise.resolve(procInfo.procedure(deviceIdArray, argObj))
-            .then((res) => {
-              res.success = true;
-              const resultInstance =
-                new autobahn.Result([ deviceIdArray[0] ], res);
-              return Promise.resolve(resultInstance);
-            })
-            .catch((err) => {
-              if (isError(err) || typeof err !== 'object') {
-                err = { error: err };
-              }
-              err.success = false;
-              const resultInstance =
-                new autobahn.Result([ deviceIdArray[0] ], err);
-              return Promise.resolve(resultInstance);
-            });
-        }
-      );
+    Array.prototype.push.apply(this.registeredProcs, procList);
+
+    var procedures = [] ;
+
+    procList.forEach( procInfo => {
+	this.sessions.forEach(session => {
+	  this.log('Register '+`${this.pluginPrefix}.procedure.${procInfo.name}`) ;
+
+	  procedures.push(
+            session.register(
+	        `${this.pluginPrefix}.procedure.${procInfo.name}`,
+	        (deviceIdArray, argObj, details) => {
+	          // Support to return either real value or promise
+
+	          return Promise.resolve(procInfo.procedure(deviceIdArray, argObj))
+	            .then((res) => {
+	              res.success = true;
+	              const resultInstance =
+	                new autobahn.Result([ deviceIdArray[0] ], res);
+	              return Promise.resolve(resultInstance);
+	            })
+	            .catch((err) => {
+	              if (isError(err) || typeof err !== 'object') {
+	                err = { error: err };
+	              }
+	              err.success = false;
+	              const resultInstance =
+	                new autobahn.Result([ deviceIdArray[0] ], err);
+	              return Promise.resolve(resultInstance);
+	            });
+	        }
+	    )
+	  ) ;
+        }) ;
     });
+
     return Promise.all(procedures);
   }
 
@@ -155,8 +170,10 @@ class PluginInterface {
    * @param  {Object}  argsObject [description]
    */
   publish (topic, argsArray, argsObject) {
-    if (this.session == undefined || !(argsArray instanceof Array)) return;
-    this.session.publish(`${this.pluginPrefix}.topic.${topic}`, argsArray, argsObject);
+	if ( !(argsArray instanceof Array)) return;
+	this.sessions.forEach(session => {
+		session.publish(`${this.pluginPrefix}.topic.${topic}`, argsArray, argsObject);
+	}) ;
   }
 }
 

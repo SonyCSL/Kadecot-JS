@@ -1,10 +1,13 @@
 /////////////////////////////////////////////////////////////////
-// ROUTER_URL : Wamp router (Crossbar.io only) url. (default ws://127.0.0.1:41314/ws)
-// Ex)  ROUTER_URL=ws://[WAMP_ROUTER_HOST]:[WAMP_ROUTER_PORT]/ws node main.js
 
 // start version 1 API
-require('./v1/provider.js').init('v1',process.env.ROUTER_URL || 'ws://127.0.0.1:41314/ws') ;
-
+var provider1 = require('./v1/provider.js') ;
+provider1.init('v1').then( () => {
+	// local connection
+	provider1.connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user' , 'pass' ) ;
+	// other connection
+	provider1.connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user1' , '186ez5mi' ) ;
+} ).catch( console.log ) ;
 
 
 

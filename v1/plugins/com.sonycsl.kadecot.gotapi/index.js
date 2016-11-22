@@ -1,5 +1,5 @@
 /**
- * (c) 2016- 3846masa
+ * (c) 2016- Sony CSL
  */
 'use strict';
 

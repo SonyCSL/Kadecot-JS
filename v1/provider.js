@@ -1,186 +1,227 @@
-var PREFIX = 'com.sonycsl.kadecot.provider';
-
 //////////////////////////////////////
 // Setup & utilities
-var REALM, ROUTER_URL;
+var REALM ;
+const LOCAL_ROUTER_URL = 'ws://localhost:41314/ws' ;
+const SUPERUSER_PASS = 'root' ;
 
 function log(msg) {
   console.log(REALM + ':main: ' + msg);
 }
 //////////////////////////////////////
 // Load libraries
-var fs, autobahn, when;
+var fs, autobahn;
 try {
   fs = require('fs');
   autobahn = require('autobahn');
-  when = require('when');
 } catch (e) { // When running in browser, AutobahnJS will be included without a module system
-  var when = autobahn.when;
 }
 var PluginInterface = require('./plugin-interface.js');
 
 //////////////////////////////////////
 // Just start plugins
 
-function init_plugins() {
-  log('starting plugins.');
-  plugins = [];
-  var fs = require('fs');
+var htserv, cloud;
+
+var plugins = {};
+
+exports.connect_plugins = function(ROUTER_URL , username , secret ) {
+  var key = autobahn.auth_cra.derive_key(secret, "Kadecot", 100, 16);
 
   var PLUGINS_FOLDER = './' + REALM + '/plugins/';
 
-  fs.readdir(PLUGINS_FOLDER, function(err, files) {
+  fs.readdir(PLUGINS_FOLDER, (err, files) => {
     if (err) throw err;
 
-    files.filter(function(dirname) {
+    var pluginPromiseArray = [] ;
+
+    files.filter(dirname => {
       return fs.lstatSync(PLUGINS_FOLDER + dirname).isDirectory();
-    }).forEach(function(dirname) {
-      var pluginInterface = new PluginInterface(REALM, ROUTER_URL, dirname /* as PLUGIN_PREFIX */ );
-      require('./plugins/' + dirname + '/index.js').init.call(pluginInterface);
+    }).forEach(dirname => {
+	pluginPromiseArray.push(new Promise((acpt,rjct)=>{
+		var session ;
+		var conn_plugin = new autobahn.Connection({
+		   url: ROUTER_URL
+		   ,realm: REALM
+		   ,authmethods: ["wampcra"]
+		   ,authid: username
+		   ,onchallenge: (session, method, extra) => {
+			   if (method === "wampcra") {
+			      //log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
+			      //log('Connecting the plugin '+dirname+' to realm "'+REALM+'"') ;
+			      return autobahn.auth_cra.sign(key, extra.challenge);
+			   } else {
+			      throw "don't know how to authenticate using '" + method + "'";
+			   }
+		   }
+
+		});
+		conn_plugin.onopen = (_session, details) => {
+			session = _session ;
+			var pi = plugins[dirname] ;
+			if( pi == undefined ){
+				pi = new PluginInterface(dirname) ; // dirname as PLUGIN_PREFIX 
+				plugins[dirname] = pi ;
+				pi.onSessionOpened(session) ;
+
+				require('./plugins/' + dirname + '/index.js').init.call(pi) ;
+			} else
+				pi.onSessionOpened(session) ;
+
+			acpt() ;
+		};
+		conn_plugin.onclose = (reason, details) => {
+			if( details.reason == 'wamp.error.not_authorized' )
+				rjct('Login failed.') ;
+			else {
+				console.log("disconnected", reason, details.reason, details);
+				plugins[dirname].onSessionClosed(session) ;
+			}
+		} ;
+
+		conn_plugin.open();
+
+	})) ;
     });
+    Promise.all(pluginPromiseArray).then(()=>{log('All plugins loaded');}).catch(console.error) ;
   });
 }
 
-var plugins = {}; // prefix -> plugin object including session_id
-var plugin_session_id_to_prefix = {};
 
-function register_plugin(session_id, prefix) {
-  plugins[prefix] = {
-    session_id: session_id
-  };
-  plugin_session_id_to_prefix[session_id] = prefix;
-  log('Plugin ' + prefix + ' registered');
-}
 
-function unregister_plugin(session_id) {
-  var prefix = plugin_session_id_to_prefix[session_id];
-  if (prefix === undefined) {
-    return;
-  } // the session is not plugin.
 
-  delete plugins[prefix];
-  delete plugin_session_id_to_prefix[session_id];
-  plugins[prefix] = plugin_session_id_to_prefix[session_id] = undefined;
-  log('Plugin ' + prefix + ' unregistered');
-}
 
-var devices = {};
-var deviceid_count = 1;
 
-var htserv, cloud;
 
-exports.init = function(_REALM, _ROUTER_URL) {
-  init_authtest(_REALM, _ROUTER_URL) ;
-  return ;
-  REALM = _REALM;
-  ROUTER_URL = _ROUTER_URL;
+exports.init = function(_REALM){
 
-  //////////////////////////////////////
-  // Connect to Wamp router
-  var connection = new autobahn.Connection({
-    url: ROUTER_URL,
-    realm: REALM,
-    authmethods: ["ticket"],
-    authid: "kadecot-provider",
-    onchallenge: (session, method, extra) => {
-      if (method === "ticket") {
-        return "KADECOT_PROVIDER";
-      } else {
-        throw new Error('Failed to authenticate');
-      }
-    }
-  });
+  function connect_each_controler_to_realm( realm ){
+    return new Promise( (acpt,rjct) => {
+	var conn_ctrl = new autobahn.Connection({
+	    url: LOCAL_ROUTER_URL,
+	    realm: realm,
+	    authmethods: ["ticket"],
+	    authid: "superuser",
+	    onchallenge: (session, method, extra) => {
+	      if (method === "ticket") {
+	        return SUPERUSER_PASS ;
+	      } else {
+	        throw new Error('Failed to authenticate');
+	      }
+	    }
+	});
+	conn_ctrl.onopen = function (session, details) {
+		log('The controller is connected to '+realm) ;
 
-  connection.onopen = function(session) {
-    log('Connection to wamp router open.');
+		// Define plugin specific variables/functions
 
-    var dl = [
-      session.register(PREFIX + '.procedure.getDeviceList', function(args, kwargs, details) {
-        var dl = [];
-        for (uuid in devices) dl.push(devices[uuid]);
-        return new autobahn.Result([], {
-          deviceList: dl
-        });
-      }), session.register(PREFIX + '.procedure.registerplugin', function(args, kwargs, details) {
-        //log("Plugin registration requested:" + JSON.stringify(args));
-        var session_id = args[0],
-          prefix = args[1];
-        if (plugins[prefix] != undefined) {
-          log('Duplicate plugin registration request for ' + prefix);
-          session.call("wamp.session.kill", [session_id], {
-            reason: "A plugin with same prefix already registered.",
-            message: "A plugin with same prefix already registered."
-          }); //.then(session.log, session.log)
-          return;
-        }
-        register_plugin(session_id, prefix);
-      })
-      //, session.subscribe('wamp.session.on_join', function(args){
-      //	log("Published (wamp.session.on_join) :", JSON.stringify(args));
-      //	session.call("wamp.session.get", [args[0].session]).then(console.log, console.log)
-      //})
-      , session.subscribe('wamp.session.on_leave', function(args) {
-        unregister_plugin(args[0]);
-      }), session.register(PREFIX + '.procedure.registerdevice', function(args, kwargs, details) {
-        var plugin_prefix = args[0];
-        var d = kwargs; //JSON.parse(JSON.stringify(args[0])) ;
-        var key = plugin_prefix + "." + d.uuid;
-        if (devices[key] != undefined) {
-          return {
-            success: true,
-            deviceId: devices[key].deviceId
-          };
-        }
-        d.deviceId = deviceid_count++;
-        d.status = true;
-        d.prefix = plugin_prefix;
-        devices[key] = d;
+		var plugins = {}; // prefix -> plugin object including session_id
+		var plugin_session_id_to_prefix = {};
 
-        console.log('Device '+d.deviceId+':'+kwargs.protocol+':'+kwargs.deviceType+'/'+kwargs.uuid+' registered.');
+		function register_plugin(session_id, prefix) {
+		  plugins[prefix] = {
+		    session_id: session_id
+		  };
+		  plugin_session_id_to_prefix[session_id] = prefix;
+		  log('Plugin ' + prefix + ' registered for realm '+realm);
+		}
 
-        return {
-          success: true,
-          deviceId: d.deviceId
-        };
-      }), session.register(PREFIX + '.procedure.unregisterdevice', function(args, kwargs, details) {
-        var uuid = args[0];
-        var key = plugin_prefix + "." + uuid;
-        if (devices[key] != undefined) {
-          devices[key].status = false;
-        }
-        return {
-          success: true
-        };
-      })
-    ];
+		function unregister_plugin(session_id) {
+		  var prefix = plugin_session_id_to_prefix[session_id];
+		  if (prefix === undefined) {
+		    return;
+		  } // the session is not plugin.
 
-    when.all(dl).then(
-      function() {
-        log("All procedures/topics registered.");
+		  delete plugins[prefix];
+		  delete plugin_session_id_to_prefix[session_id];
+		  plugins[prefix] = plugin_session_id_to_prefix[session_id] = undefined;
+		  log('Plugin ' + prefix + ' unregistered from realm '+realm);
+		}
 
-        // init plugins
-        init_plugins();
-      },
-      function() {
-        log("Registration/Subscription failed!", arguments);
-      }
-    );
-  };
+		var devices = {};
+		var deviceid_count = 1;
 
-  connection.open();
+		// Register admin (+alpha) procedures
+		var dl = [
+		      session.register('com.sonycsl.kadecot.provider.procedure.getDeviceList', function(args, kwargs, details) {
+		        var devl = [];
+		        for (uuid in devices){
+				var dv = JSON.parse(JSON.stringify(devices[uuid])) ;
+				dv.deviceId = dv.deviceIdMap[session.id] ;
+				dv.deviceIdMap = undefined ;
+				devl.push(dv);
+			}
+		        return new autobahn.Result([], {
+		          deviceList: devl
+		        });
+		      }), session.register('admin.registerplugin', function(args, kwargs, details) {
+		        //log("Plugin registration requested:" + JSON.stringify(args));
+		        var session_id = args[0],
+		          prefix = args[1];
+		        if (plugins[prefix] != undefined) {
+		          log('Duplicate plugin registration request for ' + prefix);
+		          session.call("wamp.session.kill", [session_id], {
+		            reason: "A plugin with same prefix already registered.",
+		            message: "A plugin with same prefix already registered."
+		          }); //.then(session.log, session.log)
+		          return;
+		        }
+		        register_plugin(session_id, prefix);
+		      })
+		      //, session.subscribe('wamp.session.on_join', function(args){
+		      //	log("Published (wamp.session.on_join) :", JSON.stringify(args));
+		      //	session.call("wamp.session.get", [args[0].session]).then(console.log, console.log)
+		      //})
+		      , session.subscribe('wamp.session.on_leave', function(args) {
+		        unregister_plugin(args[0]);
+		      }), session.register('admin.registerdevice', function(args, kwargs, details) {
+		        var plugin_prefix = args[0];
+		        var d = kwargs; //JSON.parse(JSON.stringify(args[0])) ;
+		        var key = plugin_prefix + "." + d.uuid;
+		        if (devices[key] != undefined) {
+			  if( devices[key].deviceIdMap[ session.id ] == undefined )
+			    devices[key].deviceIdMap[ session.id ] = deviceid_count++ ;
+			  return devices[key].deviceIdMap[ session.id ] ;
+		        }
 
-  cloud = require('./cloud.js');
+			var newDevId = deviceid_count++;
+		        d.status = true;
+		        d.prefix = plugin_prefix;
+			d.deviceIdMap[ session.id ] = newDevId ;
+		        devices[key] = d;
 
-  cloud.REGISTERED_INFO_CACHE_FILE = './' + REALM + '/registered.txt';
+		        log('Device '+newDevId+':'+kwargs.protocol+':'+kwargs.deviceType+'/'+kwargs.uuid+' registered for realm '+realm);
 
-  fs.stat(cloud.REGISTERED_INFO_CACHE_FILE, function(err, stat) {
-    if (err != null) return;
-    var cache = fs.readFileSync(cloud.REGISTERED_INFO_CACHE_FILE).toString().split("\n");
-    cloud.connect(cache[0], cache[1], ROUTER_URL);
-  });
+		        return newDevId ;
+		      }), session.register('admin.unregisterdevice', function(args, kwargs, details) {
+		        var uuid = args[0];
+		        var key = plugin_prefix + "." + uuid;
+		        if (devices[key] != undefined) {
+		          devices[key].status = false;
+		        }
+		        return {
+		          success: true
+		        };
+		      })
+		];
 
+		Promise.all(dl).then(acpt).catch(rjct) ;
+
+	};
+	conn_ctrl.onclose = function (reason, details) {
+		if( details.reason == 'wamp.error.not_authorized' )
+			rjct('Login failed.') ;
+		else
+			console.log("disconnected", reason, details.reason, details);
+	}
+
+	conn_ctrl.open();
+    } ) ;
+  }
+
+
+/*
   htserv = require('./htserv.js')({
-    routerURL: ROUTER_URL,
+    routerURL: LOCAL_ROUTER_URL,
     realm: REALM,
     callbacks: {
       registered: function (re) {
@@ -192,121 +233,86 @@ exports.init = function(_REALM, _ROUTER_URL) {
       }
     }
   }).start(31413);
+*/
+
+
+
+  return new Promise( (acpt,rjct) => {
+	REALM = _REALM ;
+
+	//////////////////////////////////////
+	// Connect superuser to Wamp router
+	var connection = new autobahn.Connection({
+	    url: LOCAL_ROUTER_URL,
+	    realm: REALM,
+	    authmethods: ["ticket"],
+	    authid: "superuser",
+	    onchallenge: (session, method, extra) => {
+	      if (method === "ticket") {
+	        return SUPERUSER_PASS ;
+	      } else {
+	        throw new Error('Failed to authenticate');
+	      }
+	    }
+	});
+
+	connection.onopen = function(session) {
+	    session.register('admin.authenticate', (args, kwargs, details) => {
+		//log('Authenticate input:'+JSON.stringify(args)) ;
+
+		// load each time
+		var USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
+		USERDB = JSON.parse(USERDB) ;
+
+		var realm = args[0];
+		var authid = args[1];
+		var details = args[2];
+		if (USERDB[authid] !== undefined) {
+		   return USERDB[authid];
+		} else {
+		   throw "no such user";
+		}
+	      }).then(
+	      () => {	// Registration success
+	        log("Authenticator was successfully registered");
+
+		// load each time
+		var USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
+		USERDB = JSON.parse(USERDB) ;
+
+		var ctrl_conn_promises = [] ;
+		for( var usr in USERDB ){
+			(()=>{
+				var rlm = USERDB[usr].realm ;
+				ctrl_conn_promises.push(new Promise( (ac,rj) => {
+					connect_each_controler_to_realm( rlm ).then(ac).catch(rj) ;
+				}))
+			})() ;
+		}
+		Promise.all(ctrl_conn_promises).then(acpt).catch(rjct) ;
+	      }).catch(() => {   // Registration failed
+	        console.log("Registration failed", arguments);
+		rjct('admin.authenticate cannot be registered') ;
+	      });
+	} ;
+
+	connection.open();
+
+  } ) ;
+
+
+/*
+  cloud = require('./cloud.js');
+
+  cloud.REGISTERED_INFO_CACHE_FILE = './' + REALM + '/registered.txt';
+
+  fs.stat(cloud.REGISTERED_INFO_CACHE_FILE, function(err, stat) {
+    if (err != null) return;
+    var cache = fs.readFileSync(cloud.REGISTERED_INFO_CACHE_FILE).toString().split("\n");
+    cloud.connect(cache[0], cache[1], ROUTER_URL);
+  });
+*/
+
 };
 
 
-
-
-
-
-var USERDB ;
-
-function connect_controler_to_realm( realm , username , secret ){
-	var conn_client = new autobahn.Connection({
-	   url: ROUTER_URL,
-	   realm: realm,
-	   authmethods: ["wampcra"],
-	   authid: username,
-	   onchallenge: (session, method, extra) => {
-		   if (method === "wampcra") {
-		      //console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
-		      log('Connecting the manager to realm "'+realm+'"') ;
-		      return autobahn.auth_cra.sign(secret, extra.challenge);
-		   } else {
-		      throw "don't know how to authenticate using '" + method + "'";
-		   }
-	   }
-
-	});
-	conn_client.onopen = function (session, details) {
-		// console.log('AuthConnClientOpen:'+JSON.stringify(arguments)) ;
-
-		// Dummy implementation
-		var devices = {hi:{deviceId:2,msg:'HIOBJECT'},hi2:{deviceId:3,msg:'HIOBJECT2'}}
-		session.register(PREFIX + '.procedure.getDeviceList', function(args, kwargs, details) {
-		  var dl = [];
-		  for (uuid in devices) dl.push(devices[uuid]);
-		  return new autobahn.Result([], {
-		    deviceList: dl
-		  });
-		}) ;
-
-	};
-	conn_client.onclose = function (reason, details) {
-		if( details.reason == 'wamp.error.not_authorized' )
-			log('Login failed.') ;
-		else
-			console.log("disconnected", reason, details.reason, details);
-	}
-
-	conn_client.open();
-}
-
-
-
-
-function init_authtest(_REALM, _ROUTER_URL){
-  REALM = _REALM;
-  ROUTER_URL = _ROUTER_URL;
-
-  USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
-  USERDB = JSON.parse(USERDB) ;
-
-  //////////////////////////////////////
-  // Connect superuser to Wamp router
-  var connection = new autobahn.Connection({
-    url: 'ws://localhost:41314/ws',
-    realm: 'v1',
-    authmethods: ["ticket"],
-    authid: "superuser",
-    onchallenge: (session, method, extra) => {
-      if (method === "ticket") {
-        return 'root' ;
-      } else {
-        throw new Error('Failed to authenticate');
-      }
-    }
-  });
-
-  connection.onopen = function(session) {
-    log('Connection to wamp router.');
-
-    session.register('admin.authenticate', (args, kwargs, details) => {
-	//log('Authenticate input:'+JSON.stringify(args)) ;
-	var realm = args[0];
-	var authid = args[1];
-	var details = args[2];
-	if (USERDB[authid] !== undefined) {
-	   return USERDB[authid];
-	} else {
-	   throw "no such user";
-	}
-      }).then(
-      () => {	// Registration success
-        log("Registration success");
-
-	for( var usr in USERDB ){
-		var u = USERDB[usr] ;
-		connect_controler_to_realm( u.realm , usr , u.secret ) ;
-	}
-
-      },
-      () => {   // Registration failed
-        log("Registration failed", arguments);
-      }
-    );
-
-
-      var devices = {hi:{msg:'HIOBJECT'},hi2:{msg:'HIOBJECT2'}}
-      session.register(PREFIX + '.procedure.getDeviceList', function(args, kwargs, details) {
-        var dl = [];
-        for (uuid in devices) dl.push(devices[uuid]);
-        return new autobahn.Result([], {
-          deviceList: dl
-        });
-      }) ;
-
-  };
-
-  connection.open();
-}
