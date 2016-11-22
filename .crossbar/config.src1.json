@@ -1,0 +1,57 @@
+{
+  "version": 2,
+  "controller": {},
+  "workers": [{
+    "type": "router",
+    "realms": [{
+%%%%%
+      "name": "v1",
+      "roles": [{
+        "name": "superuser",
+        "permissions": [{
+          "uri": "*",
+          "allow": {
+            "call": true,
+            "register": true,
+            "publish": true,
+            "subscribe": true
+          }
+        }]
+      }]
+    }],
+    "transports": [{
+      "type": "web",
+      "endpoint": {
+        "type": "tcp",
+        "port": 41314
+      },
+      "paths": {
+        "ws": {
+          "type": "websocket",
+          "auth": {
+            "ticket": {
+              "type": "static",
+              "principals": {
+                "superuser": {
+                  "ticket": "root"
+                  ,"role": "superuser"
+                }
+              }
+            }
+            ,"wampcra": {
+              "type": "dynamic"
+              ,"authenticator": "admin.authenticate"
+            }
+          }
+        }
+      }
+    }]
+  }, {
+    "type": "guest",
+    "executable": "node",
+    "arguments": ["main.js"],
+    "options": {
+      "workdir": "../"
+    }
+  }]
+}

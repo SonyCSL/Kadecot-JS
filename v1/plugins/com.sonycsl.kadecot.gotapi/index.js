@@ -194,7 +194,7 @@ class GotAPIManagerPlugin {
   }
 }
 
-exports.init = function (_pluginInterface) {
-  const plugin = new GotAPIManagerPlugin(_pluginInterface);
+exports.init = function () {
+  const plugin = new GotAPIManagerPlugin( this );
   return plugin;
 };

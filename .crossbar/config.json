@@ -4,9 +4,9 @@
   "workers": [{
     "type": "router",
     "realms": [{
-      "name": "v1",
+      "name": "v1.1",
       "roles": [{
-        "name": "anonymous",
+        "name": "registered_user",
         "permissions": [{
           "uri": "*",
           "allow": {
@@ -23,9 +23,20 @@
             "publish": false,
             "subscribe": false
           }
+        }, {
+          "uri": "admin.*",
+          "allow": {
+            "call": false,
+            "register": false,
+            "publish": false,
+            "subscribe": false
+          }
         }]
-      }, {
-        "name": "provider",
+      }]
+    },{
+      "name": "v1.2",
+      "roles": [{
+        "name": "registered_user",
         "permissions": [{
           "uri": "*",
           "allow": {
@@ -37,8 +48,61 @@
         }, {
           "uri": "wamp.*",
           "allow": {
-            "call": true,
+            "call": false,
             "register": false,
+            "publish": false,
+            "subscribe": false
+          }
+        }, {
+          "uri": "admin.*",
+          "allow": {
+            "call": false,
+            "register": false,
+            "publish": false,
+            "subscribe": false
+          }
+        }]
+      }]
+    },{
+      "name": "v1.3",
+      "roles": [{
+        "name": "registered_user",
+        "permissions": [{
+          "uri": "*",
+          "allow": {
+            "call": true,
+            "register": true,
+            "publish": true,
+            "subscribe": true
+          }
+        }, {
+          "uri": "wamp.*",
+          "allow": {
+            "call": false,
+            "register": false,
+            "publish": false,
+            "subscribe": false
+          }
+        }, {
+          "uri": "admin.*",
+          "allow": {
+            "call": false,
+            "register": false,
+            "publish": false,
+            "subscribe": false
+          }
+        }]
+      }]
+    },{
+
+      "name": "v1",
+      "roles": [{
+        "name": "superuser",
+        "permissions": [{
+          "uri": "*",
+          "allow": {
+            "call": true,
+            "register": true,
             "publish": true,
             "subscribe": true
           }
@@ -58,15 +122,15 @@
             "ticket": {
               "type": "static",
               "principals": {
-                "kadecot-provider": {
-                  "ticket": "KADECOT_PROVIDER",
-                  "role": "provider"
+                "superuser": {
+                  "ticket": "root"
+                  ,"role": "superuser"
                 }
               }
-            },
-            "anonymous": {
-              "type": "static",
-              "role": "anonymous"
+            }
+            ,"wampcra": {
+              "type": "dynamic"
+              ,"authenticator": "admin.authenticate"
             }
           }
         }
