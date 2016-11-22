@@ -131,6 +131,7 @@
             ,"wampcra": {
               "type": "dynamic"
               ,"authenticator": "admin.authenticate"
+              ,"authenticator-realm": "v1"
             }
           }
         }
