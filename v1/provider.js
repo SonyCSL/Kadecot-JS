@@ -195,18 +195,23 @@ exports.init = function(_REALM, _ROUTER_URL) {
 };
 
 
-function auth_challenge(){
-	var user = 'user2', key = autobahn.auth_cra.derive_key('jnd5z5mi', "Kadecot", 100, 16);
 
+
+
+
+var USERDB ;
+
+function connect_controler_to_realm( realm , username , secret ){
 	var conn_client = new autobahn.Connection({
 	   url: ROUTER_URL,
-	   realm: REALM, //'v1',
+	   realm: realm,
 	   authmethods: ["wampcra"],
-	   authid: user,
+	   authid: username,
 	   onchallenge: (session, method, extra) => {
 		   if (method === "wampcra") {
 		      //console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
-		      return autobahn.auth_cra.sign(key, extra.challenge);
+		      log('Connecting the manager to realm "'+realm+'"') ;
+		      return autobahn.auth_cra.sign(secret, extra.challenge);
 		   } else {
 		      throw "don't know how to authenticate using '" + method + "'";
 		   }
@@ -214,7 +219,18 @@ function auth_challenge(){
 
 	});
 	conn_client.onopen = function (session, details) {
-		console.log('AuthConnClientOpen:'+JSON.stringify(arguments)) ;
+		// console.log('AuthConnClientOpen:'+JSON.stringify(arguments)) ;
+
+
+		var devices = {hi:{msg:'HIOBJECT'},hi2:{msg:'HIOBJECT2'}}
+		session.register(PREFIX + '.procedure.getDeviceList', function(args, kwargs, details) {
+		  var dl = [];
+		  for (uuid in devices) dl.push(devices[uuid]);
+		  return new autobahn.Result([], {
+		    deviceList: dl
+		  });
+		}) ;
+
 	};
 	conn_client.onclose = function (reason, details) {
 		if( details.reason == 'wamp.error.not_authorized' )
@@ -224,10 +240,10 @@ function auth_challenge(){
 	}
 
 	conn_client.open();
-
 }
 
-var USERDB ;
+
+
 
 function init_authtest(_REALM, _ROUTER_URL){
   REALM = _REALM;
@@ -253,7 +269,7 @@ function init_authtest(_REALM, _ROUTER_URL){
   });
 
   connection.onopen = function(session) {
-    log('Connection to wamp router open.');
+    log('Connection to wamp router.');
 
     session.register('admin.authenticate', (args, kwargs, details) => {
 	//log('Authenticate input:'+JSON.stringify(args)) ;
@@ -269,14 +285,27 @@ function init_authtest(_REALM, _ROUTER_URL){
       () => {	// Registration success
         log("Registration success");
 
-        // login by dynamic authentication
-	setTimeout( auth_challenge , 1000 ) ;
+	for( var usr in USERDB ){
+		var u = USERDB[usr] ;
+		connect_controler_to_realm( u.realm , usr , u.secret ) ;
+	}
 
       },
       () => {   // Registration failed
         log("Registration failed", arguments);
       }
     );
+
+
+      var devices = {hi:{msg:'HIOBJECT'},hi2:{msg:'HIOBJECT2'}}
+      session.register(PREFIX + '.procedure.getDeviceList', function(args, kwargs, details) {
+        var dl = [];
+        for (uuid in devices) dl.push(devices[uuid]);
+        return new autobahn.Result([], {
+          deviceList: dl
+        });
+      }) ;
+
   };
 
   connection.open();
