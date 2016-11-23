@@ -92,8 +92,8 @@ class PluginInterface {
 		for( var si=0;si<this.sessions.length;++si ){
 			this.devices[uuid].deviceIdMap[this.sessions[si].id] = re[si] ;
 		}
-		acpt( this.devices[uuid].deviceIdMap ) ;
-	}) ;
+		acpt( {success:true,text:'Registration successful.'} ) ;
+	}).catch(rjct) ;
     }) ;
   }
 
@@ -140,17 +140,28 @@ class PluginInterface {
 	this.sessions.forEach(session => {
 	  this.log('Register '+`${this.pluginPrefix}.procedure.${procInfo.name}`) ;
 
+
 	  procedures.push(
             session.register(
 	        `${this.pluginPrefix}.procedure.${procInfo.name}`,
 	        (deviceIdArray, argObj, details) => {
 	          // Support to return either real value or promise
 
-	          return Promise.resolve(procInfo.procedure(deviceIdArray, argObj))
+
+
+		  var uuidArray = [] ;
+		  for( var uuid in this.devices ){
+			var d = this.devices[uuid] ;
+			var devid = d.deviceIdMap[session.id] ;
+			if( deviceIdArray.indexOf( devid ) >= 0 )
+				uuidArray.push( d.uuid ) ;
+		  }
+
+	          return Promise.resolve(procInfo.procedure(uuidArray, argObj))
 	            .then((res) => {
 	              res.success = true;
 	              const resultInstance =
-	                new autobahn.Result([ deviceIdArray[0] ], res);
+	                new autobahn.Result( deviceIdArray /*[ deviceIdArray[0] ]*/, res);
 	              return Promise.resolve(resultInstance);
 	            })
 	            .catch((err) => {
@@ -159,7 +170,7 @@ class PluginInterface {
 	              }
 	              err.success = false;
 	              const resultInstance =
-	                new autobahn.Result([ deviceIdArray[0] ], err);
+	                new autobahn.Result( deviceIdArray /*[ deviceIdArray[0] ]*/, err);
 	              return Promise.resolve(resultInstance);
 	            });
 	        }
@@ -177,10 +188,22 @@ class PluginInterface {
    * @param  {Array}  argsArray [description]
    * @param  {Object}  argsObject [description]
    */
-  publish (topic, argsArray, argsObject) {
-	if ( !(argsArray instanceof Array)) return;
+  publish (topic, uuidArray, argsObject) {
+	if ( !(uuidArray instanceof Array)) uuidArray = [uuidArray] ;
+	if ( typeof uuidArray[0] != 'string' ) return ;
+
+	// Convert uuidArray to devidArray
 	this.sessions.forEach(session => {
-		session.publish(`${this.pluginPrefix}.topic.${topic}`, argsArray, argsObject);
+		var devidArray = [] ;
+		uuidArray.forEach( uuid => {
+			var dev = this.devices[uuid] ;
+			if( dev == undefined ) return ;
+			var did = dev.deviceIdMap[session.id] ;
+			if( did != undefined )
+				devidArray.push(did) ;
+		}) ;
+
+		session.publish(`${this.pluginPrefix}.topic.${topic}`, devidArray, argsObject);
 	}) ;
   }
 }
