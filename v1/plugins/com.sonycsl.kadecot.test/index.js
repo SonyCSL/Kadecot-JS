@@ -8,13 +8,14 @@ exports.init = function() {
     pluginInterface = this ;
 
     pluginInterface.registerDevice('TestObject', 'TestObject', 'Only one test object', 'TestObject')
-      .then( re => {
+      .then( re => {	// Nothing returned
 	// re is a map of sessionid => deviceId
-	pluginInterface.log('sessionid => deviceId map:'+JSON.stringify(re)) ;
+	pluginInterface.log('Device registration result:'+JSON.stringify(re)) ;
+
         pluginInterface.registerProcedures([{
           name: 'TestProcedure',
-          procedure: (deviceIdArray, argObj) => {
-            pluginInterface.log('proc TestProcedure call:' + JSON.stringify(arguments));
+          procedure: (uuidArray, argObj) => {
+            pluginInterface.log('proc TestProcedure call:' + JSON.stringify(uuidArray));
             return {
               'message': 'Nothing happened.'
             };
