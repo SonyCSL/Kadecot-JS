@@ -12,6 +12,8 @@ const log4js = require('log4js');
 
 const PORT = 4035;
 
+var uuid_serviceid_map = {} ;
+
 class GotAPIManagerPlugin {
   constructor (_pluginInterface) {
     this._pluginInterface = _pluginInterface;
@@ -114,8 +116,10 @@ class GotAPIManagerPlugin {
   registerService (service, packageName) {
     packageName = packageName || '';
     const category = packageName.split('.').reverse()[0] || '';
+    var uuid = `gotapi.${packageName}:${category}:nttdocomo:0:${service.id}` ;
+    uuid_serviceid_map[uuid] = service.id ;
     this._pluginInterface.registerDevice(
-      `gotapi.${packageName}:${category}:nttdocomo:0:${service.id}`, // UUID
+      uuid, // UUID
       packageName, // deviceType
       service.name, // description
       service.name  // nickname
@@ -135,8 +139,10 @@ class GotAPIManagerPlugin {
   }
 
   registerGotAPIManager () {
+    var uuid = 'gotapi.manager:manager:nttdocomo:0:gotapimanager' ;
+    uuid_serviceid_map[uuid] = service.id ;
     return this._pluginInterface.registerDevice(
-      'gotapi.manager:manager:nttdocomo:0:gotapimanager', // UUID
+      uuid, // UUID
       'device-connect', // deviceType
       'GotAPIManager', // description
       'GotAPIManager'  // nickname
@@ -154,26 +160,27 @@ class GotAPIManagerPlugin {
       const methods = [ '', 'GET', 'POST', 'DELETE', 'PUT' ];
       return methods.map((method) => ({
         name: [ name, method.toLowerCase() ].filter((t) => t).join('.'),
-        procedure: (ids, params) => {
+        procedure: (uuids, params) => {
           params.method = method || params.method;
-          return this.procedureMethod(ids, params, name);
+          return this.procedureMethod(uuids, params, name);
         }
       }));
     });
     return _.flattenDeep(procedures);
   }
 
-  procedureMethod (deviceIds, rawParams, name) {
+  procedureMethod (uuids, rawParams, name) {
     const requestPath =
       path.join(name, rawParams.interface || '', rawParams.attribute || '');
     const data = rawParams._raw;
     const method = rawParams.method || 'GET';
+
     const params = Object.assign({}, rawParams, {
       interface: undefined,
       attribute: undefined,
       method: undefined,
       _raw: undefined,
-      serviceId: this._devices[deviceIds[0]]
+      serviceId: uuid_serviceid_map[uuids[0]]
     });
 
     this._logger.info(requestPath);

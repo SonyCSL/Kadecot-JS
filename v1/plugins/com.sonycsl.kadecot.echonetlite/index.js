@@ -37,7 +37,7 @@ exports.init = function() {
 							for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
 						}
 
-						pluginInterface.publish( dev.deviceType+'.'+propertyName,[dev.deviceId]
+						pluginInterface.publish( dev.deviceType+'.'+propertyName,[dev.uuid]
 							,{propertyName:propertyName,propertyValue:pv} ) ;
 					}
 				}) ;
@@ -179,18 +179,18 @@ function registerELDevice( address,eojArray ){
 						return;
 					}
 
-					function genProcResult(bSet,deviceArray,argObj){
+					function genProcResult(bSet,uuidArray,argObj){
 						return new Promise(function(acept2,rjct2){
-							if( deviceArray.length == 0 ){
-								rjct2('Device array cannot be empty') ;
+							if( uuidArray.length == 0 ){
+								rjct2('UUID array cannot be empty') ;
 							} else {
-								if( deviceArray.length>1 )
-									console.log('two or more device ids cannot be accepted') ;
-								var devid = deviceArray[0] ;
+								if( uuidArray.length>1 )
+									console.log('two or more uuids cannot be accepted') ;
 
-								for( var objkey in EOJs ){
-									var dev = EOJs[objkey] ;
-									if( dev.deviceId != devid ) continue ;
+								//for( var objkey in EOJs ){
+								//	var dev = EOJs[objkey] ;
+								//	if( dev.deviceId != devid ) continue ;
+									var dev = EOJs[uuidArray[0]] ;
 									var args = [
 										dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
 										,(err,res)=>{
@@ -215,8 +215,8 @@ function registerELDevice( address,eojArray ){
 									if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
 									else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
 									return ;
-								} ;
-								rjct2( 'No device found for deviceId='+devid ) ;
+								//} ;
+								rjct2( 'No device found for deviceId='+dev.deviceId ) ;
 							}
 						}) ;
 					}
@@ -224,14 +224,14 @@ function registerELDevice( address,eojArray ){
 					var procs = [
 						{
 							name:objDoc.deviceType + '.set'
-							,procedure: (deviceArray,argObj) => {
-								return genProcResult(true,deviceArray,argObj) ;
+							,procedure: (uuidArray,argObj) => {
+								return genProcResult(true,uuidArray,argObj) ;
 							}
 						}
 						,{
 							name:objDoc.deviceType + '.get'
-							,procedure: (deviceArray,argObj) => {
-								return genProcResult(false,deviceArray,argObj) ;
+							,procedure: (uuidArray,argObj) => {
+								return genProcResult(false,uuidArray,argObj) ;
 							}
 						}
 					] ;
