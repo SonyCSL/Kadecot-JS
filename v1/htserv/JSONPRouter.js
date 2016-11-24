@@ -29,7 +29,7 @@ module.exports = function factory (htserv) {
       })
       .then((device) => {
         if (device.length !== 1) {
-          return Promise.reject(new Error('Device is not fould.'));
+          return Promise.reject(new Error('Device is not found.'));
         } else {
           return device[0];
         }

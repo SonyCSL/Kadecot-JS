@@ -3,10 +3,7 @@
 // start version 1 API
 var provider1 = require('./v1/provider.js') ;
 provider1.init('v1').then( () => {
-	// local connection
-	provider1.connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user' , 'pass' ) ;
-	// other connection
-	//provider1.connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user1' , 'uo25u3di' ) ;
+	console.log( 'server for realm "v1" is now running.') ;
 } ).catch( console.log ) ;
 
 
