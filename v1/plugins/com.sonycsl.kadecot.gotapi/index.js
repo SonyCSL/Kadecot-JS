@@ -75,13 +75,14 @@ class GotAPIManagerPlugin {
         Origin: 'http://example.com',
       },
     });
-    this._pluginInterface.connectRouter({
-      onopen: () => {
+
+//    this._pluginInterface.connectRouter({
+//      onopen: () => {
         this.registerGotAPIManager();
         this._checkDevices();
-      },
-      onclose: (function () {}).bind(this)
-    });
+//      },
+//      onclose: (function () {}).bind(this)
+//    });
   }
 
   _checkDevices () {
@@ -140,7 +141,8 @@ class GotAPIManagerPlugin {
 
   registerGotAPIManager () {
     var uuid = 'gotapi.manager:manager:nttdocomo:0:gotapimanager' ;
-    uuid_serviceid_map[uuid] = service.id ;
+    uuid_serviceid_map[uuid] = -1 ;	// Device without serviceid..
+
     return this._pluginInterface.registerDevice(
       uuid, // UUID
       'device-connect', // deviceType

@@ -1,7 +1,7 @@
 {
   "name": "API-query-generator",
   "version": "0.0.1",
-  "author": "3846masa <3846masahiro+git@gmail.com>",
+  "author": "Sony CSL",
   "browser": {
     "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js",
     "select2": "./node_modules/select2/select2.js"

@@ -24,8 +24,10 @@ var htserv, cloud;
 
 var plugins = {};
 
-exports.connect_plugins = function(ROUTER_URL , username , secret ) {
-  var key = autobahn.auth_cra.derive_key(secret, "Kadecot", 100, 16);
+
+exports.init = function(_REALM){
+
+ function connect_plugins(ROUTER_URL , username , secret ) {
 
   var PLUGINS_FOLDER = './' + REALM + '/plugins/';
 
@@ -48,7 +50,7 @@ exports.connect_plugins = function(ROUTER_URL , username , secret ) {
 			   if (method === "wampcra") {
 			      //log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
 			      //log('Connecting the plugin '+dirname+' to realm "'+REALM+'"') ;
-			      return autobahn.auth_cra.sign(key, extra.challenge);
+			      return autobahn.auth_cra.sign(secret, extra.challenge);
 			   } else {
 			      throw "don't know how to authenticate using '" + method + "'";
 			   }
@@ -84,7 +86,7 @@ exports.connect_plugins = function(ROUTER_URL , username , secret ) {
     });
     Promise.all(pluginPromiseArray).then(()=>{log('All plugins loaded');}).catch(console.error) ;
   });
-}
+ }
 
 
 
@@ -92,7 +94,6 @@ exports.connect_plugins = function(ROUTER_URL , username , secret ) {
 
 
 
-exports.init = function(_REALM){
 
   function connect_each_controler_to_realm( realm ){
     return new Promise( (acpt,rjct) => {
@@ -219,21 +220,40 @@ exports.init = function(_REALM){
   }
 
 
-/*
-  htserv = require('./htserv.js')({
-    routerURL: LOCAL_ROUTER_URL,
-    realm: REALM,
-    callbacks: {
-      registered: function (re) {
-        log('Terminal token:' + re.terminal_token);
-        log('Bridge server :' + re.bridge_server);
+  function start_web_jsonp_server(){
 
-        fs.writeFile(cloud.REGISTERED_INFO_CACHE_FILE, re.terminal_token + "\n" + re.bridge_server);
-        cloud.connect(re.terminal_token, re.bridge_server, ROUTER_URL);
-      }
-    }
-  }).start(31413);
-*/
+	htserv = require('./htserv.js')({
+	    routerURL: LOCAL_ROUTER_URL,
+	    realm: REALM,
+	    username: default_user_name,
+	    secret: default_user_secret,
+	    callbacks: {
+	      // called when /api?func=CALLBACK_NAME&KEY1=VALUE1&KEY2=VALUE2..  is accessed.
+	      CALLBACK_NAME: function (re) {
+		log('API access to func=testapi. Params='+JSON.stringify(re)) ;
+	      }
+	    }
+	}).start(31413);
+  }
+
+
+  var default_user_name , default_user_secret ;
+  {
+	// Find the default user (assigned realm is 'v1.0')
+	var USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
+	USERDB = JSON.parse(USERDB) ;
+
+	for( var u in USERDB ){
+		if( USERDB[u].realm == 'v1.0' ){
+			default_user_name = u ;
+			default_user_secret = USERDB[u].secret ;
+			break ;
+		}
+	}
+	if( default_user_name == undefined ){
+		log( 'The default user (whose realm is "v1.0") was not found.' ) ;
+	}
+  }
 
 
 
@@ -286,10 +306,32 @@ exports.init = function(_REALM){
 				var rlm = USERDB[usr].realm ;
 				ctrl_conn_promises.push(new Promise( (ac,rj) => {
 					connect_each_controler_to_realm( rlm ).then(ac).catch(rj) ;
-				}))
+				})) ;
 			})() ;
 		}
-		Promise.all(ctrl_conn_promises).then(acpt).catch(rjct) ;
+
+		Promise.all(ctrl_conn_promises).then(() => {
+			acpt();
+
+
+			////////////////////////////////////////////////
+			////////////////////////////////////////////////
+			/// Can now login.
+			////////////////////////////////////////////////
+
+
+			// local connection
+			connect_plugins( LOCAL_ROUTER_URL , default_user_name , default_user_secret ) ;
+			// other connection
+			//connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user1' , 'uo25u3di' ) ;
+
+
+			start_web_jsonp_server();
+
+
+
+		}).catch(rjct) ;
+
 	      }).catch(() => {   // Registration failed
 	        console.log("Registration failed", arguments);
 		rjct('admin.authenticate cannot be registered') ;
@@ -299,20 +341,4 @@ exports.init = function(_REALM){
 	connection.open();
 
   } ) ;
-
-
-/*
-  cloud = require('./cloud.js');
-
-  cloud.REGISTERED_INFO_CACHE_FILE = './' + REALM + '/registered.txt';
-
-  fs.stat(cloud.REGISTERED_INFO_CACHE_FILE, function(err, stat) {
-    if (err != null) return;
-    var cache = fs.readFileSync(cloud.REGISTERED_INFO_CACHE_FILE).toString().split("\n");
-    cloud.connect(cache[0], cache[1], ROUTER_URL);
-  });
-*/
-
 };
-
-

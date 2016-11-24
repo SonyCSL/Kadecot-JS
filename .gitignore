@@ -5,8 +5,6 @@ v1/registered.txt
 .crossbar/key.priv
 .crossbar/key.pub
 .crossbar/node.pid
-passwords.txt
-users.json
 
 # Created by https://www.gitignore.io/api/node,python
 

@@ -6,9 +6,11 @@ const autobahn = require('autobahn');
 const JSONPRouterFactory = require('./htserv/JSONPRouter');
 
 class HTTPServer {
-  constructor (realm, routerURL, callbacks) {
+  constructor (realm, routerURL, username, secret, callbacks) {
     this.realm = realm;
     this.routerURL = routerURL;
+    this.username = username;
+    this.secret = secret;
     this.callbacks = callbacks;
 
     this.initWAMPClient();
@@ -16,14 +18,29 @@ class HTTPServer {
   }
 
   initWAMPClient () {
-    this.connection = new autobahn.Connection({
-      realm: this.realm,
-      url: this.routerURL
+   if( this.username == undefined ){
+	console.error('Cannot start JSONP server.') ;
+	return ;
+   }
+
+   this.connection = new autobahn.Connection({
+        url: this.routerURL
+        ,realm: this.realm
+        ,authmethods: ["wampcra"]
+        ,authid: this.username
+        ,onchallenge: (session, method, extra) => {
+              if (method === "wampcra") {
+                return autobahn.auth_cra.sign(this.secret, extra.challenge);
+              } else {
+                 throw "don't know how to authenticate using '" + method + "'";
+              }
+        }
     });
 
     this.connection.onclose = () => {};
     this.connection.onopen = (session) => {
-      this.session = session;
+	// console.log('The web server logged in to the main server') ;
+	this.session = session;
     };
     this.connection.open();
   }
@@ -41,7 +58,7 @@ class HTTPServer {
       }
     });
 
-    this.app.use(express.static(path.resolve(__dirname, './htservdocs')));
+    this.app.use(express.static(path.resolve(__dirname, './htdocs')));
 
     this.app.use(`/jsonp/${this.realm}/devices`, JSONPRouterFactory(this));
   }
@@ -54,5 +71,5 @@ class HTTPServer {
 }
 
 module.exports = function (args) {
-  return new HTTPServer(args.realm, args.routerURL, args.callbacks);
+  return new HTTPServer(args.realm, args.routerURL, args.username, args.secret, args.callbacks );
 };
