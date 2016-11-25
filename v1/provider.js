@@ -20,14 +20,16 @@ var PluginInterface = require('./plugin-interface.js');
 //////////////////////////////////////
 // Just start plugins
 
-var htserv, cloud;
+var htserv ;
 
 var plugins = {};
 
+exports.init = function(_REALM,_ARGVAL){
+ REALM = _REALM ;
 
-exports.init = function(_REALM){
+ var bBridgeMode = (_ARGVAL == 'bridge') ;
 
- function connect_plugins(ROUTER_URL , username , secret ) {
+ function connect_plugins(username , secret ) {
 
   var PLUGINS_FOLDER = './' + REALM + '/plugins/';
 
@@ -49,7 +51,7 @@ exports.init = function(_REALM){
 	pluginPromiseArray.push(new Promise((acpt,rjct)=>{
 		var session ;
 		var conn_plugin = new autobahn.Connection({
-		   url: ROUTER_URL
+		   url: LOCAL_ROUTER_URL
 		   ,realm: REALM
 		   ,authmethods: ["wampcra"]
 		   ,authid: username
@@ -241,6 +243,7 @@ exports.init = function(_REALM){
   }
 
 
+
   var default_user_name , default_user_secret ;
   {
 	// Find the default user (assigned realm is 'v1.0')
@@ -262,7 +265,6 @@ exports.init = function(_REALM){
 
 
   return new Promise( (acpt,rjct) => {
-	REALM = _REALM ;
 
 	//////////////////////////////////////
 	// Connect superuser to Wamp router
@@ -324,11 +326,12 @@ exports.init = function(_REALM){
 			////////////////////////////////////////////////
 
 			// local connection
-			if( connect_plugins( LOCAL_ROUTER_URL , default_user_name , default_user_secret ) )
-				start_web_jsonp_server();	// Plugin exists.
-			else
-				log('JSONP server is not started because no plugins are available for access.') ;
-
+			if( bBridgeMode ){
+				// Do nothing
+			} else {
+				connect_plugins( default_user_name , default_user_secret ) ;
+				start_web_jsonp_server();
+			}
 		}).catch(rjct) ;
 
 	      }).catch(() => {   // Registration failed

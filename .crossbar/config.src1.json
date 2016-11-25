@@ -50,7 +50,7 @@
   }, {
     "type": "guest",
     "executable": "node",
-    "arguments": ["main.js"],
+    "arguments": ["main.js"%%%ARGS%%%],
     "options": {
       "workdir": "../"
     }
