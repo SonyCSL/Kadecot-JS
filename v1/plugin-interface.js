@@ -131,18 +131,20 @@ class PluginInterface {
    * @param  {Object[]} procList [description]
    * @return {Promise<autobahn.Registration[],autobahn.Error>} [description]
    */
-  registerProcedures (procList) {
+  registerProcedures (procList,postfix) {
     Array.prototype.push.apply(this.registeredProcs, procList);
+    if ( typeof postfix != 'string' ) postfix = '' ;
+    else postfix = '.'+postfix ;
 
     var procedures = [] ;
 
     procList.forEach( procInfo => {
 	this.sessions.forEach(session => {
-	  //this.log('Register '+`${this.pluginPrefix}.procedure.${procInfo.name}`) ;
+	  //this.log('Register '+`${this.pluginPrefix}${postfix}.procedure.${procInfo.name}`) ;
 
 	  procedures.push(
             session.register(
-	        `${this.pluginPrefix}.procedure.${procInfo.name}`,
+	        `${this.pluginPrefix}${postfix}.procedure.${procInfo.name}`,
 	        (deviceIdArray, argObj, details) => {
 	          // Support to return either real value or promise
 
@@ -187,9 +189,11 @@ class PluginInterface {
    * @param  {Array}  argsArray [description]
    * @param  {Object}  argsObject [description]
    */
-  publish (topic, uuidArray, argsObject) {
+  publish (topic, uuidArray, argsObject, postfix) {
 	if ( !(uuidArray instanceof Array)) uuidArray = [uuidArray] ;
 	if ( typeof uuidArray[0] != 'string' ) return ;
+	if ( typeof postfix != 'string' ) postfix = '' ;
+	else postfix = '.'+postfix ;
 
 	// Convert uuidArray to devidArray
 	this.sessions.forEach(session => {
@@ -202,7 +206,7 @@ class PluginInterface {
 				devidArray.push(did) ;
 		}) ;
 
-		session.publish(`${this.pluginPrefix}.topic.${topic}`, devidArray, argsObject);
+		session.publish(`${this.pluginPrefix}${postfix}.topic.${topic}`, devidArray, argsObject);
 	}) ;
   }
 }
