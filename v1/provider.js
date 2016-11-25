@@ -31,6 +31,13 @@ exports.init = function(_REALM){
 
   var PLUGINS_FOLDER = './' + REALM + '/plugins/';
 
+  try {
+	fs.statSync( PLUGINS_FOLDER ) ;
+  } catch(e){
+	log('No plugins exists. (possibly in bridge mode)') ;
+	return false ;
+  }
+
   fs.readdir(PLUGINS_FOLDER, (err, files) => {
     if (err) throw err;
 
@@ -86,12 +93,9 @@ exports.init = function(_REALM){
     });
     Promise.all(pluginPromiseArray).then(()=>{log('All plugins loaded');}).catch(console.error) ;
   });
+
+  return true ;
  }
-
-
-
-
-
 
 
 
@@ -319,16 +323,11 @@ exports.init = function(_REALM){
 			/// Can now login.
 			////////////////////////////////////////////////
 
-
 			// local connection
-			connect_plugins( LOCAL_ROUTER_URL , default_user_name , default_user_secret ) ;
-			// other connection
-			//connect_plugins( 'ws://127.0.0.1:41314/ws' , 'user1' , 'uo25u3di' ) ;
-
-
-			start_web_jsonp_server();
-
-
+			if( connect_plugins( LOCAL_ROUTER_URL , default_user_name , default_user_secret ) )
+				start_web_jsonp_server();	// Plugin exists.
+			else
+				log('JSONP server is not started because no plugins are available for access.') ;
 
 		}).catch(rjct) ;
 
