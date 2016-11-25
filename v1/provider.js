@@ -2,7 +2,7 @@
 // Setup & utilities
 var REALM ;
 const LOCAL_ROUTER_URL = 'ws://localhost:41314/ws' ;
-const SUPERUSER_PASS = 'root' ;
+const SUPERUSER_PASS = process.env.ROOTPASS ;
 
 function log(msg) {
   console.log(REALM + ':main: ' + msg);

@@ -74,7 +74,7 @@
               "type": "static",
               "principals": {
                 "superuser": {
-                  "ticket": "root"
+                  "ticket": "${ROOTPASS}"
                   ,"role": "superuser"
                 }
               }

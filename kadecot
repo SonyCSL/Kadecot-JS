@@ -9,6 +9,7 @@ case $COMMAND in
     # $HOME/.kadecot で crossbar start する
     # $HOME/.kadecot/.crossbar の設定ファイルが有効になる
     cd $HOME/.kadecot
+    export ROOTPASS=`cat /dev/urandom| tr -dc 'A-Za-z0-9'| head -c 20`
     crossbar start
     ;;
   update)
