@@ -131,25 +131,22 @@ class PluginInterface {
    * @param  {Object[]} procList [description]
    * @return {Promise<autobahn.Registration[],autobahn.Error>} [description]
    */
-  registerProcedures (procList,postfix) {
+  registerProcedures (procList,suffix) {
     Array.prototype.push.apply(this.registeredProcs, procList);
-    if ( typeof postfix != 'string' ) postfix = '' ;
-    else postfix = '.'+postfix ;
+    if ( typeof suffix != 'string' ) suffix = '' ;
+    else suffix = '.'+suffix ;
 
     var procedures = [] ;
 
     procList.forEach( procInfo => {
 	this.sessions.forEach(session => {
-	  //this.log('Register '+`${this.pluginPrefix}${postfix}.procedure.${procInfo.name}`) ;
+	  this.log('Registering '+`${this.pluginPrefix}${suffix}.procedure.${procInfo.name}`) ;
 
 	  procedures.push(
             session.register(
-	        `${this.pluginPrefix}${postfix}.procedure.${procInfo.name}`,
+	        `${this.pluginPrefix}${suffix}.procedure.${procInfo.name}`,
 	        (deviceIdArray, argObj, details) => {
 	          // Support to return either real value or promise
-
-
-
 		  var uuidArray = [] ;
 		  for( var uuid in this.devices ){
 			var d = this.devices[uuid] ;
@@ -189,11 +186,11 @@ class PluginInterface {
    * @param  {Array}  argsArray [description]
    * @param  {Object}  argsObject [description]
    */
-  publish (topic, uuidArray, argsObject, postfix) {
+  publish (topic, uuidArray, argsObject, suffix) {
 	if ( !(uuidArray instanceof Array)) uuidArray = [uuidArray] ;
 	if ( typeof uuidArray[0] != 'string' ) return ;
-	if ( typeof postfix != 'string' ) postfix = '' ;
-	else postfix = '.'+postfix ;
+	if ( typeof suffix != 'string' ) suffix = '' ;
+	else suffix = '.'+suffix ;
 
 	// Convert uuidArray to devidArray
 	this.sessions.forEach(session => {
@@ -206,7 +203,7 @@ class PluginInterface {
 				devidArray.push(did) ;
 		}) ;
 
-		session.publish(`${this.pluginPrefix}${postfix}.topic.${topic}`, devidArray, argsObject);
+		session.publish(`${this.pluginPrefix}${suffix}.topic.${topic}`, devidArray, argsObject);
 	}) ;
   }
 }

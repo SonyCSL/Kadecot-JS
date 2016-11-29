@@ -2,6 +2,7 @@ node_modules/
 .crossbar/key.priv
 .crossbar/key.pub
 .crossbar/node.pid
+v1/plugins/net.kadecot.external/clients.json
 
 # Created by https://www.gitignore.io/api/node,python
 
