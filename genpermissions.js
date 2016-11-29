@@ -2,11 +2,10 @@ var user_num = -1 ;	// default 10 users
 var bBridgeMode = false ;
 
 if( process.argv.length < 3 ){
-	console.error('Usage : node reconfig.js #user [bridge]') ;
-	console.error('bridge mode will disable all plugins and randomize default user password. Also, JSONP server is disabled') ;
+	console.error('Usage : node genpermissions.js #user') ;
+	// console.error('bridge mode will disable all plugins and randomize default user password. Also, JSONP server is disabled') ;
 
-	console.error('Example 1 : node reconfig.js 5  => Generate 5 users') ;
-	console.error('Example 2 : node reconfig.js 100 bridge  => Generate 100 users and configure as bridge mode') ;
+	console.error('Example : node reconfig.js 5  => Generate 5 users') ;
 	process.exit(-1) ;
 }
 
