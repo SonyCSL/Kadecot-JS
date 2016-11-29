@@ -10,11 +10,11 @@ clients = JSON.parse(clients) ;
 function getHashKey(){ return crypto.randomBytes(20).toString('hex'); }
 
 exports.init = function() {
-	// uuid,deviceType,description,nickname,onregisteredfunc
 	pluginInterface = this ;
 
 	clients.forEach( client => {
     
+		// deviceInfoArray:[uuid,deviceType,description,nickname]
 		pluginInterface.registerDevice.apply(pluginInterface,client.deviceInfoArray).then( re => {	// Nothing returned
 			pluginInterface.log('Device registration result:'+JSON.stringify(re)) ;
 
@@ -59,7 +59,7 @@ exports.init = function() {
 				}) ;
 
 				socket.on('hello', msg => {
-					console.log('Hello recv:'+JSON.stringify(msg));
+					//console.log('Hello recv:'+JSON.stringify(msg));
 					if( msg.suffix != client.suffix ){
 						socket.emit('error','Suffix does not match.');
 						console.log('error','Suffix does not match.');

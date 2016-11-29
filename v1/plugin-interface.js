@@ -140,7 +140,7 @@ class PluginInterface {
 
     procList.forEach( procInfo => {
 	this.sessions.forEach(session => {
-	  this.log('Registering '+`${this.pluginPrefix}${suffix}.procedure.${procInfo.name}`) ;
+	  //this.log('Registering '+`${this.pluginPrefix}${suffix}.procedure.${procInfo.name}`) ;
 
 	  procedures.push(
             session.register(
