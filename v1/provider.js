@@ -24,10 +24,8 @@ var htserv ;
 
 var plugins = {};
 
-exports.init = function(_REALM,_ARGVAL){
+exports.init = function(_REALM){
  REALM = _REALM ;
-
- var bBridgeMode = (_ARGVAL == 'bridge') ;
 
  function connect_plugins(username , secret ) {
 
@@ -187,6 +185,10 @@ exports.init = function(_REALM,_ARGVAL){
 		        if (devices[key] != undefined) {
 			  if( devices[key].deviceIdMap[ session.id ] == undefined )
 			    devices[key].deviceIdMap[ session.id ] = deviceid_count++ ;
+			  devices[key].status = true ;
+		          log('Device '+devices[key].deviceIdMap[ session.id ]
+				+':'+d.protocol+':'+d.deviceType+'/'+d.uuid+' re-registered for realm '+realm);
+
 			  return devices[key].deviceIdMap[ session.id ] ;
 		        }
 
@@ -201,7 +203,7 @@ exports.init = function(_REALM,_ARGVAL){
 		        return newDevId ;
 		      }), session.register('admin.unregisterdevice', function(args, kwargs, details) {
 		        var uuid = args[0];
-		        var key = plugin_prefix + "." + uuid;
+		        var key = plugin_session_id_to_prefix[session.id] + "." + uuid;
 		        if (devices[key] != undefined) {
 		          devices[key].status = false;
 		        }
@@ -319,19 +321,8 @@ exports.init = function(_REALM,_ARGVAL){
 		Promise.all(ctrl_conn_promises).then(() => {
 			acpt();
 
-
-			////////////////////////////////////////////////
-			////////////////////////////////////////////////
-			/// Can now login.
-			////////////////////////////////////////////////
-
-			// local connection
-			if( bBridgeMode ){
-				// Do nothing
-			} else {
-				connect_plugins( default_user_name , default_user_secret ) ;
-				start_web_jsonp_server();
-			}
+			connect_plugins( default_user_name , default_user_secret ) ;
+			start_web_jsonp_server();
 		}).catch(rjct) ;
 
 	      }).catch(() => {   // Registration failed

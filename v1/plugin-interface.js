@@ -110,6 +110,7 @@ class PluginInterface {
 	}) ;
 	Promise.all(ps).then(() => {
 		this.devices[uuid] = undefined;
+		this.log('Device '+uuid+' unregistered.') ;
 		acpt(uuid) ;
 	}) ;
     } ) ;
@@ -139,9 +140,9 @@ class PluginInterface {
     var procedures = [] ;
 
     procList.forEach( procInfo => {
-	this.sessions.forEach(session => {
-	  //this.log('Registering '+`${this.pluginPrefix}${suffix}.procedure.${procInfo.name}`) ;
+	this.log('Registering '+`${this.pluginPrefix}${suffix}.procedure.${procInfo.name}`) ;
 
+	this.sessions.forEach(session => {
 	  procedures.push(
             session.register(
 	        `${this.pluginPrefix}${suffix}.procedure.${procInfo.name}`,
