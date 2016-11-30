@@ -23,53 +23,61 @@ exports.init = function() {
 			socket.on('connect',function(){
 				var replyWait = {} ;
 
-				socket.on('registerProcedures',procArray => {
-					//console.log('RegProcs : '+JSON.stringify(procArray)) ;
-					var regProcs = [] ;
-					procArray.forEach( procName => {
-						regProcs.push( {
-							name : procName
-							,procedure : (uuidArray , argObj) => {
-								return new Promise( (acpt,rjct) => {
-									var key = getHashKey() ;
-									replyWait[ key ] = acpt ;
+				var CALLBACKS = {
+					'hello' : (key,args) => {
+						//console.log('Hello recv:'+JSON.stringify(args));
+						if( args.suffix != client.suffix ){
+							socket.emit('callreply',{key:key,args:{success:false,error:'Suffix does not match.'}}) ;
+							socket.disconnect();
+							return ;
+						}
 
-									setTimeout( ()=>{
-										// Already processed
-										if( replyWait[key] == undefined ) return ;
-										delete replyWait[key] ;
-										replyWait[key] = undefined ;
-										rjct({success:false,error:'Timeout'}) ;
-									}, 30 * 1000 ) ; // timeout is 30 sec.
-
-									socket.emit( procName , {key:key,value:argObj} ) ;
-								} ) ;
-							}
-						} ) ;
-					}) ;
-					pluginInterface.registerProcedures( regProcs,client.suffix ) ;
-				}) ;
-
-				socket.on('procReply', re => {
-					if( replyWait[re.key] != undefined ){
-						replyWait[re.key](re.value) ;	// acpt()
+						socket.emit('callreply',{key:key,args:{success:true , id:client.id_for_client , token:client.token}}) ;
 					}
-					delete replyWait[re.key] ;
-					replyWait[re.key] = undefined ;
-				}) ;
+					,'registerProcedures' : (key,procArray) => {
+						//console.log('RegProcs : '+JSON.stringify(procArray)) ;
+						var regProcs = [] ;
+						procArray.forEach( procName => {
+							regProcs.push( {
+								name : procName
+								,procedure : (uuidArray , argObj) => {
+									return new Promise( (acpt,rjct) => {
+										var key = getHashKey() ;
+										replyWait[ key ] = acpt ;
 
-				socket.on('hello', msg => {
-					//console.log('Hello recv:'+JSON.stringify(msg));
-					if( msg.suffix != client.suffix ){
-						socket.emit('error','Suffix does not match.');
-						console.log('error','Suffix does not match.');
-						socket.disconnect();
-						return ;
+										setTimeout( ()=>{
+											// Already processed
+											if( replyWait[key] == undefined ) return ;
+											delete replyWait[key] ;
+											replyWait[key] = undefined ;
+											rjct({success:false,error:'Timeout'}) ;
+										}, 30 * 1000 ) ; // timeout is 30 sec.
+
+										socket.emit( 'call' , {key:key,proc:procName,args:argObj} ) ;
+									} ) ;
+								}
+							} ) ;
+						}) ;
+
+						pluginInterface.registerProcedures( regProcs,client.suffix ) ;
+						socket.emit('callreply',{key:key,args:{success:true}}) ;
 					}
+					,'callreply' : (key,re) =>{
+						if( replyWait[re.key] != undefined ){
+							replyWait[re.key](re.args) ;	// acpt()
+						}
+						delete replyWait[re.key] ;
+						replyWait[re.key] = undefined ;
+						socket.emit('callreply',{key:key,args:{success:true}}) ;
+					}
+				} ;
 
-
-					socket.emit('welcome',{success:true});
-				}) ;
+				socket.on('call',callargs =>{
+					if( CALLBACKS[callargs.proc] != undefined )
+						CALLBACKS[callargs.proc](callargs.key,callargs.args) ;
+					else
+						socket.emit('callreply',{key:key,args:{success:false,error:'No such procedure ('+callargs.proc}}) ;
+				} ) ;
 
 			});
 
