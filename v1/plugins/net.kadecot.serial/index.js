@@ -12,6 +12,7 @@
 
 const WEBSOCKET_PORT = 41316 ;
 var  SOCKET_PORT = 41317 ;
+const SEP = ';' ;
 
 
 var pluginInterface ;
@@ -51,7 +52,7 @@ function initWebsocketServer(){
 				recv_buf += message.utf8Data ;
 
 				var idx ;
-				while( (idx = recv_buf.indexOf(':')) >= 0 ){
+				while( (idx = recv_buf.indexOf(SEP)) >= 0 ){
 					onmsg(recv_buf.substring(0,idx)) ;
 					recv_buf = recv_buf.substring(idx+1) ;
 				}
@@ -71,7 +72,7 @@ function initWebsocketServer(){
 		function onmsg(msg){
 			if( id == undefined ){
 				if( connections[ msg ] != undefined ){
-					connection.sendUTF('Duplicate connection of '+type+':'+msg) ;
+					connection.sendUTF('Duplicate connection of '+msg) ;
 					console.log('Duplicate connection of '+msg) ;
 					connection.close() ;
 					return ;
@@ -106,7 +107,7 @@ function initSocketServer(){
 			recv_buf += data ;
 
 			var idx ;
-			while( (idx = recv_buf.indexOf(':')) >= 0 ){
+			while( (idx = recv_buf.indexOf(SEP)) >= 0 ){
 				onmsg(recv_buf.substring(0,idx)) ;
 				recv_buf = recv_buf.substring(idx+1) ;
 			}
@@ -127,7 +128,7 @@ function initSocketServer(){
 		function onmsg(msg){
 			if( id == undefined ){
 				if( connections[ msg ] != undefined ){
-					sock.write('Duplicate connection of '+type+':'+msg) ;
+					sock.write('Duplicate connection of '+msg) ;
 					console.log('Duplicate connection of '+msg) ;
 					sock.close() ;
 					return ;
@@ -166,7 +167,7 @@ exports.init = function() {
 					var conn = connections[uuid] ;
 					if( conn == undefined ) return ;
 
-					conn( argObj.value+':' ) ;
+					conn( argObj.value+SEP ) ;
 				} ) ;
 				return {success:true} ;
 			}
