@@ -4,7 +4,7 @@
   "description": "node.js version of Kadecot",
   "main": "main.js",
   "dependencies": {
-    "autobahn": "~0.10.1",
+    "autobahn": "^0.10.1",
     "cors": "2.8.1",
     "express": "~4.14.0",
     "http": "0.0.0",

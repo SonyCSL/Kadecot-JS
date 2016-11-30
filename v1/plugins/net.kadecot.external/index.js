@@ -3,6 +3,8 @@
 var pluginInterface ;
 var crypto = require("crypto");
 var fs = require('fs');
+var autobahn = require('autobahn');
+const LOCAL_ROUTER_URL = 'ws://localhost:41314/ws' ;
 
 var clients = fs.readFileSync( 'v1/plugins/net.kadecot.external/clients.json' , 'utf-8' ) ;
 clients = JSON.parse(clients) ;
@@ -11,12 +13,14 @@ function getHashKey(){ return crypto.randomBytes(20).toString('hex'); }
 
 exports.init = function() {
 	pluginInterface = this ;
+	log = pluginInterface.log ;
 
 	clients.forEach( client => {
-    
+		var wamp_session ;
+
 		// deviceInfoArray:[uuid,deviceType,description,nickname]
 		pluginInterface.registerDevice.apply(pluginInterface,client.deviceInfoArray).then( re => {	// Nothing returned
-			pluginInterface.log('Device registration result:'+JSON.stringify(re)) ;
+			log('Device registration result:'+JSON.stringify(re)) ;
 
 			var clsock = require('socket.io-client');
 			var socket = clsock.connect(client.host);
@@ -24,17 +28,17 @@ exports.init = function() {
 				var replyWait = {} ;
 
 				var CALLBACKS = {
-					'hello' : (key,args) => {
+					'hello' : (args,acpt,rjct) => {
 						//console.log('Hello recv:'+JSON.stringify(args));
 						if( args.suffix != client.suffix ){
-							socket.emit('callreply',{key:key,args:{success:false,error:'Suffix does not match.'}}) ;
+							rjct('Suffix does not match.') ;
 							socket.disconnect();
 							return ;
 						}
 
-						socket.emit('callreply',{key:key,args:{success:true , id:client.id_for_client , token:client.token}}) ;
+						acpt({success:true , id:client.id_for_client , token:client.token}) ;
 					}
-					,'registerProcedures' : (key,procArray) => {
+					,'registerProcedures' : (procArray,acpt,rjct) => {
 						//console.log('RegProcs : '+JSON.stringify(procArray)) ;
 						var regProcs = [] ;
 						procArray.forEach( procName => {
@@ -60,22 +64,45 @@ exports.init = function() {
 						}) ;
 
 						pluginInterface.registerProcedures( regProcs,client.suffix ) ;
-						socket.emit('callreply',{key:key,args:{success:true}}) ;
+						acpt({success:true}) ;
 					}
-					,'callreply' : (key,re) =>{
+					,'callreply' : (re,acpt,rjct) =>{
 						if( replyWait[re.key] != undefined ){
 							replyWait[re.key](re.args) ;	// acpt()
 						}
 						delete replyWait[re.key] ;
 						replyWait[re.key] = undefined ;
-						socket.emit('callreply',{key:key,args:{success:true}}) ;
+						acpt({success:true}) ;
+					}
+					// args : [procedure, args, kwargs, options]
+					,'rpc' : (args,acpt,rjct) =>{
+						if( wamp_session == undefined ){
+							rjct('local wamp session was not opened yet.') ;
+							return ;
+						}
+
+						// return rpc result as acpt
+					}
+					// args : [topic,options]  / Client must subscribe to extended topic homeid.[desired topic]
+					//        and then call reqpub (otherwise client does not publish)
+					,'reqpub' : (args,acpt,rjct) =>{
+						// return success ack and subscribe to the topic.
+						// if published, send result back to cloud and publish with home id
+					}
+					// args : [topic]
+					,'unreqpub' : (args,acpt,rjct) =>{
+						// just unsubscribe the topic and return success ack by acpt()
 					}
 				} ;
 
 				socket.on('call',callargs =>{
-					if( CALLBACKS[callargs.proc] != undefined )
-						CALLBACKS[callargs.proc](callargs.key,callargs.args) ;
-					else
+					if( CALLBACKS[callargs.proc] != undefined ){
+						CALLBACKS[callargs.proc](
+							callargs.args
+							, rep => {socket.emit('callreply',{key:callargs.key,args:rep}) ;}
+							, e => {socket.emit('callreply',{key:callargs.key,args:{success:false,error:e}}) ;}
+						)
+					} else
 						socket.emit('callreply',{key:key,args:{success:false,error:'No such procedure ('+callargs.proc}}) ;
 				} ) ;
 
@@ -84,9 +111,49 @@ exports.init = function() {
 			socket.on('disconnect',function(){
 				pluginInterface.unregisterDevice(client.deviceInfoArray[0]) ;
 			}) ;
-
-
 		} );
+
+		// Log in to local wamp router
+		var USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
+		USERDB = JSON.parse(USERDB) ;
+
+		if( typeof client.realm != 'string' )
+			client.realm = 'v1.0' ;
+
+		var login_user ;
+
+		for( var username in USERDB ){
+			if( USERDB[username].realm == client.realm ){
+				login_user = username ;
+				break ;
+			}
+		}
+
+		if( login_user == undefined )	return ;
+
+		var connection = new autobahn.Connection({
+			url: LOCAL_ROUTER_URL
+			,realm: 'v1' //client.realm
+			,authmethods: ["wampcra"]
+			,authid: login_user
+			,onchallenge: (session, method, extra) => {
+				//log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
+				if (method === "wampcra") {
+					//log('Connecting '+login_user+' / '+USERDB[login_user].secret) ;
+					return autobahn.auth_cra.sign(USERDB[login_user].secret, extra.challenge);
+				} else {
+					throw "don't know how to authenticate using '" + method + "'";
+				}
+		        }
+		});
+
+		connection.onopen = function (session) {
+			wamp_session = session ;
+			log('External object '+client.suffix+' was connected to WAMP router.');
+		};
+		connection.onclose = function (session) { wamp_session = undefined ; } ;
+		connection.open();
+
 	} ) ;
 
 } ;

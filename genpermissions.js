@@ -1,24 +1,13 @@
-var user_num = -1 ;	// default 10 users
+// The digit parameter is the number of accounts to create.
+
+var user_num = 0 ;	// default 0 users
 var workdir = '../' ;
 var bBridgeMode = false ;
-
-if( process.argv.length < 3 ){
-	console.error('Usage : node genpermissions.js #user') ;
-	// console.error('bridge mode will disable all plugins and randomize default user password. Also, JSONP server is disabled') ;
-
-	console.error('Example : node genpermissions.js 5  => Generate 5 users') ;
-	process.exit(-1) ;
-}
 
 for( var aai=2;aai<process.argv.length;++aai ){
 	if( process.argv[aai] == '0' )		user_num = 0 ;
 	else if(parseInt(process.argv[aai]))	user_num = parseInt(process.argv[aai]) ;
 	else					{ bBridgeMode = true ; workdir = process.argv[aai] ; }
-}
-
-if( user_num == -1 ){
-	console.error('How many users do you want?') ;
-	process.exit(-1) ;
 }
 
 var autobahn ;
