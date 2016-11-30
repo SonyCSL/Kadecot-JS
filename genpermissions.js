@@ -6,7 +6,7 @@ if( process.argv.length < 3 ){
 	console.error('Usage : node genpermissions.js #user') ;
 	// console.error('bridge mode will disable all plugins and randomize default user password. Also, JSONP server is disabled') ;
 
-	console.error('Example : node reconfig.js 5  => Generate 5 users') ;
+	console.error('Example : node genpermissions.js 5  => Generate 5 users') ;
 	process.exit(-1) ;
 }
 
