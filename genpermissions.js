@@ -1,4 +1,5 @@
 var user_num = -1 ;	// default 10 users
+var workdir = '../' ;
 var bBridgeMode = false ;
 
 if( process.argv.length < 3 ){
@@ -12,7 +13,7 @@ if( process.argv.length < 3 ){
 for( var aai=2;aai<process.argv.length;++aai ){
 	if( process.argv[aai] == '0' )		user_num = 0 ;
 	else if(parseInt(process.argv[aai]))	user_num = parseInt(process.argv[aai]) ;
-	else if(process.argv[aai] == 'bridge')	bBridgeMode = true ;
+	else					{ bBridgeMode = true ; workdir = process.argv[aai] ; }
 }
 
 if( user_num == -1 ){
@@ -62,7 +63,7 @@ for( var i=0 ; i<=user_num ; ++i ){
 	pwd_list += username + ':'+pwd+"\n" ;
 }
 
-f1 = f1.replace('%%%%%',ins_str).replace('%%%ARGS%%%',(bBridgeMode? ',"bridge"' : '' )) ;
+f1 = f1.replace('%%%%%',ins_str).replace('%%%WORKDIR%%%',workdir) ;
 
 
 fs.writeFileSync( '.crossbar/config.json',f1 ) ;
