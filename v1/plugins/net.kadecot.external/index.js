@@ -16,7 +16,7 @@ exports.init = function() {
 	log = pluginInterface.log ;
 
 	clients.forEach( client => {
-		var wamp_session ;
+		var wamp_session , wamp_connection;
 
 		// deviceInfoArray:[uuid,deviceType,description,nickname]
 		pluginInterface.registerDevice.apply(pluginInterface,client.deviceInfoArray).then( re => {	// Nothing returned
@@ -53,7 +53,7 @@ exports.init = function() {
 											// Already processed
 											if( replyWait[key] == undefined ) return ;
 											delete replyWait[key] ;
-											replyWait[key] = undefined ;
+											//replyWait[key] = undefined ;
 											rjct({success:false,error:'Timeout'}) ;
 										}, 30 * 1000 ) ; // timeout is 30 sec.
 
@@ -71,7 +71,7 @@ exports.init = function() {
 							replyWait[re.key](re.args) ;	// acpt()
 						}
 						delete replyWait[re.key] ;
-						replyWait[re.key] = undefined ;
+						//replyWait[re.key] = undefined ;
 						acpt({success:true}) ;
 					}
 					// args : [procedure, args, kwargs, options]
@@ -130,6 +130,8 @@ exports.init = function() {
 			socket.on('disconnect',function(){
 				pluginInterface.unregisterDevice(client.deviceInfoArray[0]) ;
 				if( wamp_session == undefined ) return ;
+
+				wamp_connection.close() ;
 			}) ;
 		} );
 
@@ -150,7 +152,7 @@ exports.init = function() {
 
 			if( login_user == undefined )	return ;
 
-			var connection = new autobahn.Connection({
+			wamp_connection = new autobahn.Connection({
 				url: LOCAL_ROUTER_URL
 				,realm: 'v1' //client.realm
 				,authmethods: ["wampcra"]
@@ -166,12 +168,12 @@ exports.init = function() {
 			        }
 			});
 
-			connection.onopen = function (session) {
+			wamp_connection.onopen = function (session) {
 				wamp_session = session ;
 				log('External object '+client.suffix+' was connected to WAMP router.');
 			};
-			connection.onclose = function (session) { wamp_session = undefined ; } ;
-			connection.open();
+			wamp_connection.onclose = function (session) { wamp_session = undefined ; } ;
+			wamp_connection.open();
 		}
 
 	} ) ;
