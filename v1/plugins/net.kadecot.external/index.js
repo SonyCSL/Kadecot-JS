@@ -22,8 +22,6 @@ exports.init = function() {
 		pluginInterface.registerDevice.apply(pluginInterface,client.deviceInfoArray).then( re => {	// Nothing returned
 			log('Device registration result:'+JSON.stringify(re)) ;
 
-			var subscriptions = {} ;
-
 			var clsock = require('socket.io-client');
 			var socket = clsock.connect(client.host);
 			socket.on('connect',function(){
@@ -92,7 +90,6 @@ exports.init = function() {
 					,'reqpub' : (args,acpt,rjct) =>{
 						// return success ack and subscribe to the topic.
 						// if published, send result back to cloud and publish with home id
-
 						var topic = args[0] , options = args[1] , sessionid = args[2] ;
 
 						if( wamp_session == undefined ){
@@ -100,29 +97,20 @@ exports.init = function() {
 							return ;
 						}
 
-						if( subscriptions[topic] != undefined ){
-							acpt('reqpub:the specified topic is already subscribed.') ;
-							return ;
-						}
-
-						wamp_session.subscribe( topic,(rargs, rkwargs, rdetails) =>{
+						// Subscription is usually successful, but moves to catch clause..
+						wamp_session.subscribe( topic, (rargs, rkwargs, rdetails) =>{
 							socket.emit('published',[sessionid,topic,rargs, rkwargs, rdetails]) ;
-						},options ).then(subscription=>{
-							subscriptions[topic] = subscription ;
-							acpt(subscription);
-						}).catch(rjct) ;
+						} ,options ).then( acpt ).catch( rjct ) ;
 					}
-					// args : [topic]
+					// args : [subscription]
 					,'unreqpub' : (args,acpt,rjct) =>{
 						// just unsubscribe the topic and return success ack by acpt()
-						var topic = args[0] ;
-						var sbs = subscriptions[topic] ;
-						subscriptions[topic] = undefined ;
-						if( sbs == undefined ){
-							rjct('The topic '+topic+' is already unsubscribed.') ;
+						var subscription = args[0] ;
+						if( subscription == undefined ){
+							rjct('Subscription id is not supplied.') ;
 							return ;
 						}
-						wamp_session.unsubscribe(sbs).then(acpt).catch(rjct) ;
+						wamp_session.unsubscribe(subscription).then(acpt).catch(rjct) ;
 					}
 				} ;
 
@@ -142,11 +130,6 @@ exports.init = function() {
 			socket.on('disconnect',function(){
 				pluginInterface.unregisterDevice(client.deviceInfoArray[0]) ;
 				if( wamp_session == undefined ) return ;
-				for( var topic in subscriptions ){
-					log( 'Unsubscribing '+topic ) ;
-					wamp_session.unsubscribe(subscriptions[topic]) ;
-				}
-				subscriptions = {} ;
 			}) ;
 		} );
 
