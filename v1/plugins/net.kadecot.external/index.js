@@ -18,8 +18,8 @@ exports.init = function() {
 	clients.forEach( client => {
 		var wamp_session , wamp_connection;
 
-		// deviceInfoArray:[uuid,deviceType,description,nickname]
-		pluginInterface.registerDevice.apply(pluginInterface,client.deviceInfoArray).then( re => {	// Nothing returned
+		// device_info_array:[uuid,deviceType,description,nickname]
+		pluginInterface.registerDevice.apply(pluginInterface,client.device_info_array).then( re => {	// Nothing returned
 			log('Device registration result:'+JSON.stringify(re)) ;
 
 			var clsock = require('socket.io-client');
@@ -128,7 +128,7 @@ exports.init = function() {
 			});
 
 			socket.on('disconnect',function(){
-				pluginInterface.unregisterDevice(client.deviceInfoArray[0]) ;
+				pluginInterface.unregisterDevice(client.device_info_array[0]) ;
 				if( wamp_session == undefined ) return ;
 
 				wamp_connection.close() ;
