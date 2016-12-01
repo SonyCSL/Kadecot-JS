@@ -150,46 +150,46 @@ exports.init = function() {
 			}) ;
 		} );
 
-		// Log in to local wamp router
-		var USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
-		USERDB = JSON.parse(USERDB) ;
+		// Without realm, remote access is disabled.
+		if( typeof client.realm == 'string' ){
+			// Log in to local wamp router
+			var USERDB = fs.readFileSync( 'users.json' , 'utf-8' ) ;
+			USERDB = JSON.parse(USERDB) ;
 
-		if( typeof client.realm != 'string' )
-			client.realm = 'v1.0' ;
+			var login_user ;
 
-		var login_user ;
-
-		for( var username in USERDB ){
-			if( USERDB[username].realm == client.realm ){
-				login_user = username ;
-				break ;
-			}
-		}
-
-		if( login_user == undefined )	return ;
-
-		var connection = new autobahn.Connection({
-			url: LOCAL_ROUTER_URL
-			,realm: 'v1' //client.realm
-			,authmethods: ["wampcra"]
-			,authid: login_user
-			,onchallenge: (session, method, extra) => {
-				//log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
-				if (method === "wampcra") {
-					//log('Connecting '+login_user+' / '+USERDB[login_user].secret) ;
-					return autobahn.auth_cra.sign(USERDB[login_user].secret, extra.challenge);
-				} else {
-					throw "don't know how to authenticate using '" + method + "'";
+			for( var username in USERDB ){
+				if( USERDB[username].realm == client.realm ){
+					login_user = username ;
+					break ;
 				}
-		        }
-		});
+			}
 
-		connection.onopen = function (session) {
-			wamp_session = session ;
-			log('External object '+client.suffix+' was connected to WAMP router.');
-		};
-		connection.onclose = function (session) { wamp_session = undefined ; } ;
-		connection.open();
+			if( login_user == undefined )	return ;
+
+			var connection = new autobahn.Connection({
+				url: LOCAL_ROUTER_URL
+				,realm: 'v1' //client.realm
+				,authmethods: ["wampcra"]
+				,authid: login_user
+				,onchallenge: (session, method, extra) => {
+					//log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
+					if (method === "wampcra") {
+						//log('Connecting '+login_user+' / '+USERDB[login_user].secret) ;
+						return autobahn.auth_cra.sign(USERDB[login_user].secret, extra.challenge);
+					} else {
+						throw "don't know how to authenticate using '" + method + "'";
+					}
+			        }
+			});
+
+			connection.onopen = function (session) {
+				wamp_session = session ;
+				log('External object '+client.suffix+' was connected to WAMP router.');
+			};
+			connection.onclose = function (session) { wamp_session = undefined ; } ;
+			connection.open();
+		}
 
 	} ) ;
 
