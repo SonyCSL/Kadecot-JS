@@ -21,7 +21,7 @@ kadecot_init({
 	// [Optional] host name or IP address string of the Kadecot server to connect to.
 	// host parameter is NOT necessary when the address is supplied as the URL argument k.
 	// (Eg. http://a.b.c.d/test?k=KadecotIP)
-	,host : '192.168.11.121'
+	,host : location.hostname
 
 }).then( function(re){
 	log(re.devices) ;	// devices list
