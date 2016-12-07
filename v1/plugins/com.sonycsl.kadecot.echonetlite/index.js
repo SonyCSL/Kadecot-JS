@@ -181,42 +181,40 @@ function registerELDevice( address,eojArray ){
 
 					function genProcResult(bSet,uuidArray,argObj){
 						return new Promise(function(acept2,rjct2){
+
 							if( uuidArray.length == 0 ){
 								rjct2('UUID array cannot be empty') ;
 							} else {
 								if( uuidArray.length>1 )
 									console.log('two or more uuids cannot be accepted') ;
 
-								//for( var objkey in EOJs ){
-								//	var dev = EOJs[objkey] ;
-								//	if( dev.deviceId != devid ) continue ;
-									var dev = EOJs[uuidArray[0]] ;
-									var args = [
-										dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
-										,(err,res)=>{
-											if( err )	rjct2(res) ;
+								var dev = EOJs[uuidArray[0]] ;
+								var args = [
+									dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
+									,(err,res)=>{
+										if( err )	rjct2(res) ;
+										else {
+											var pv ;
+											if( res.message.prop[0].buffer == null ) pv = argObj.propertyValue ;
 											else {
-												var pv ;
-												if( res.message.prop[0].buffer == null ) pv = argObj.propertyValue ;
-												else {
-													pv = [] ;
-													var i8a = new Int8Array(res.message.prop[0].buffer) ;
-													for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
-												}
-
-												acept2({
-													propertyName:argObj.propertyName
-													,propertyValue:pv
-													,digest:res.message.prop[0].edt
-												}) ;
+												pv = [] ;
+												var i8a = new Int8Array(res.message.prop[0].buffer) ;
+												for( var ii=0 ; ii<i8a.length ; ++ii )	pv.push(i8a[ii]) ;
 											}
+
+											acept2({
+												propertyName:argObj.propertyName
+												,propertyValue:pv
+												,digest:res.message.prop[0].edt
+											}) ;
 										}
-									] ;
-									if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
-									else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
-									return ;
-								//} ;
-								rjct2( 'No device found for deviceId='+dev.deviceId ) ;
+									}
+								] ;
+
+								//console.log('EL '+(bSet?'set':'get')+' call:'+args[0]+','+args[1]+','+args[2])
+
+								if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
+								else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
 							}
 						}) ;
 					}
