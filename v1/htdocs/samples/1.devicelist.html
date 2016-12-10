@@ -1,0 +1,74 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script src='http://app.kadecot.net/js/kadecot.m.js'></script>
+<script>
+
+onload = function(){
+
+	kadecot_init().then( function(k){
+		log( 'List all devices' ) ;
+		log( k.devices ) ;
+
+		log( 'Get all ECHONET Lite devices' ) ;
+		log( k.querydevices({protocol:'echonetlite'}) ) ;
+
+		log( 'Get ECHOENT Lite home airconditioner' ) ;
+		log( k.querydevices({protocol:'echonetlite',deviceType:'HomeAirConditioner'}) ) ;
+
+		log( 'Get all serial devices' ) ;
+		log( k.querydevices({protocol:'serial'}) ) ;
+	}) ;
+} ;
+
+// Helper function
+function log(text){
+	var ele = document.createElement("hr");
+	var str = document.createTextNode( typeof text == 'string' ? text : JSON.stringify(text) );
+	ele.appendChild(str);
+
+	document.body.appendChild(ele);
+}
+
+
+/*
+
+///////////////////////
+///////////////////////
+// Parameters for kadecot_init()
+// ex: kadecot_init({realm:'v1'})
+///////////////////////
+///////////////////////
+
+///////////////////////
+// mandatory
+///////////////////////
+
+realm : 'v1' (Linux version) or 'default' (Android version)
+
+///////////////////////
+// optional
+///////////////////////
+
+host : String of local Kadecot IP address.
+Not necessary when the address is supplied as the URL argument k.
+(Eg. http://a.b.c.d/test?k=KadecotIP)
+
+///////////////////////
+// currently unused
+///////////////////////
+
+scope : "scope string"
+// Required permission of the application
+
+manifest: [ {device object 1},{device object 2}, .. ]
+// List of required devices.
+// each device object should contain protocol, deviceType, deviceId, and nickname.
+
+*/
+
+</script>
+</head>
+<body>
+</body>
+</html>

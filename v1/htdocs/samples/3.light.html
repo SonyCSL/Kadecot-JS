@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script src='http://app.kadecot.net/js/kadecot.m.js'></script>
+<script>
+
+onload = function(){
+	kadecot_init().then( function(k){
+		var lights = k.querydevices({protocol:'echonetlite',deviceType:'GeneralLighting'}) ;
+
+		lights.forEach( light => {
+			// General Lighting found.
+			// Use PubSub to monitor General Lignting power change
+			light.sub(
+				// A string called 'Topic'.
+				// Check available topics on http://app.kadecot.net/docs/ProcTopic/
+				'com.sonycsl.kadecot.echonetlite.topic.GeneralLighting.OperationStatus'
+				// Callback function on property change
+				, function (newval) {
+					log( 'Ligh power changed:' ) ;
+					log( newval ) ;
+				}
+			)
+			// Optionally set success callback
+			.then( function(){ log( 'Successfully subscribed' ) ; } ) ;
+
+
+			// Use of RPC (command send/information get on demand)
+			// Send power on signal after 5 seconds. (it is desirable to take sufficient time between calls)
+			var bOn = false ;
+			setInterval( function(){
+				light.rpc(
+					// A string called 'Procedure'. 
+					// Check available procedures on http://app.kadecot.net/docs/ProcTopic/
+					'com.sonycsl.kadecot.echonetlite.procedure.GeneralLighting.set'
+					// Procedure-dependent parameter.
+					,{"propertyName":"OperationStatus","propertyValue":[bOn?0x30:0x31]}
+				)
+				// Optionally set call result callback
+				.then( log ) ;
+
+				bOn = !bOn ;
+			},5000 ) ;
+		} ) ;
+	} ) ;
+} ;
+
+
+function log(text){
+	var ele = document.createElement("hr");
+	var str = document.createTextNode( typeof text == 'string' ? text : JSON.stringify(text) );
+	ele.appendChild(str);
+	document.body.appendChild(ele);
+}
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script>
+
+const KADECOT_IP = location.host.split(':')[0] ;
+
+function jumplink(no){
+	switch(no){
+	case 1: window.open( '1.devicelist.html?k='+KADECOT_IP ) ; break ;
+	case 2: window.open( '2.aircon.html?k='+KADECOT_IP ) ; break ;
+	case 3: window.open( '3.light.html?k='+KADECOT_IP ) ; break ;
+	case 4: window.open( '4.serial.html?k='+KADECOT_IP ) ; break ;
+	case 5: window.open( 'all.zip' ) ; break ;
+	}
+}
+</script>
+</head>
+<body>
+
+<h3>Kadecot API Tutorial</h3>
+
+1. Just follow the links below and see what happens.<br />
+<br />
+<input type='button' onclick='jumplink(1)' value='device list'></input><br />
+<input type='button' onclick='jumplink(2)' value='aircon example'></input><br />
+<input type='button' onclick='jumplink(3)' value='light example'></input><br />
+<input type='button' onclick='jumplink(4)' value='serial example'></input><br />
+<br />
+2. Download the following zip<br />
+<br />
+<input type='button' onclick='jumplink(5)' value='download all'></input><br />
+<br />
+3. Extract to some folder (call it %KSAMPLE_FOLDER% in the following)<br />
+<br />
+4. Open index.html(this file!) by your favorite text editor and modify KADECOT_IP to your Kadecot's IP address<br />
+<br />
+5. Start web server with the documentroot set to %KSAMPLE_FOLDER%.<br />
+<a href="https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb/related?hl=ja" target="_blank">Web Server for Chrome</a> is my recommendation.(Dead easy!)<br />
+<br />
+6. Open index.html with your browser and check the samples works as before.<br />
+<br />
+7. Since you have your files locally, you can modify the samples now. Enjoy!<br />
+<!-- Check also http://kadecot.net/webapi/. -->
+</body>
+</html>

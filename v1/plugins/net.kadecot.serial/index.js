@@ -48,7 +48,7 @@ function initWebsocketServer(){
 
 		connection.on('message', function(message) {
 			if (message.type === 'utf8') {
-				console.log('Received Message: ' + message.utf8Data);
+				//console.log('Received Message: ' + message.utf8Data);
 				recv_buf += message.utf8Data ;
 
 				var idx ;
