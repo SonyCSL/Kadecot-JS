@@ -17,6 +17,7 @@ exports.init = function() {
 
 	clients.forEach( client => {
 		var wamp_session , wamp_connection;
+		var subscriptions = {} ;
 
 		// device_info_array:[uuid,deviceType,description,nickname]
 		pluginInterface.registerDevice.apply(pluginInterface,client.device_info_array).then( re => {	// Nothing returned
@@ -100,17 +101,33 @@ exports.init = function() {
 						// Subscription is usually successful, but moves to catch clause..
 						wamp_session.subscribe( topic, (rargs, rkwargs, rdetails) =>{
 							socket.emit('published',[sessionid,topic,rargs, rkwargs, rdetails]) ;
-						} ,options ).then( acpt ).catch( rjct ) ;
+						} ,options ).then( function(subscription){
+							var subs_id ;
+							do{ 
+								subs_id = getHashKey();
+							} while ( subscriptions[subs_id]!=undefined ) ;
+							subscriptions[subs_id] = subscription ;
+							console.log('ReqPub : Subscribe success:' /*+JSON.stringify(r)*/) ;
+							acpt(subs_id);
+						}).catch( function(e){
+							console.log('ReqPub : Subscribe unsuccessful:' /*+JSON.stringify(e)*/) ;
+							rjct(e);
+						}) ;
 					}
 					// args : [subscription]
 					,'unreqpub' : (args,acpt,rjct) =>{
 						// just unsubscribe the topic and return success ack by acpt()
-						var subscription = args[0] ;
+						var subs_id = args[0] ;
+						var subscription = subscriptions[subs_id] ;
 						if( subscription == undefined ){
-							rjct('Subscription id is not supplied.') ;
+							rjct('Subscription id does not exist.') ;
 							return ;
 						}
-						wamp_session.unsubscribe(subscription).then(acpt).catch(rjct) ;
+						delete subscriptions[subs_id] ;
+
+						wamp_session.unsubscribe(subscription).then(
+							re=>{console.log('PPQQ:Successfully unsubscribed');acpt(re);}
+							).catch(e=>{console.error('PPQQ:Unsubscription failed:');rjct(e);}) ;
 					}
 				} ;
 
@@ -131,7 +148,18 @@ exports.init = function() {
 				pluginInterface.unregisterDevice(client.device_info_array[0]) ;
 				if( wamp_session == undefined ) return ;
 
-				wamp_connection.close() ;
+				var unsubPromises = [] ;
+				for( var subs_id in subscriptions ){
+					unsubPromises.push( new Promise((ac,rj)=>{
+						// console.log('Unsubscribing '+subs_id) ;
+						wamp_session.unsubscribe(subscriptions[subs_id]).then(ac).catch(rj) ;
+					}) ) ;
+				}
+				Promise.all(unsubPromises).then( ()=>{
+					console.log('Successfully unsubscribed all topics.') ;
+					subscriptions = {} ;
+					wamp_connection.close() ;
+				} ) ;
 			}) ;
 		} );
 
