@@ -81,6 +81,7 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
+    "prebuild": "mkdir -p dist/",
     "build": "npm-run-all build:browselify build:uglify",
     "build:browselify": "browserify -v -p licensify -e src/main.js -o dist/build.huge.js",
     "build:uglify": "cat dist/build.huge.js | uglifyjs --comments all -c warnings=false -m > dist/build.js",

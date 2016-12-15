@@ -31,7 +31,7 @@ nav.navbar.navbar-fixed-top
   div.container
     div.row
       div.col-xs-12.app-title
-        p #[strong Kadecot API Query Maker] #[small by @3846masa]
+        p #[strong Kadecot API Query Maker]
       div.col-xs-12.input-group
         jsonp-path
 main.main-container
