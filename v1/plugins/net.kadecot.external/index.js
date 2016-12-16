@@ -23,9 +23,10 @@ exports.init = function() {
 		pluginInterface.registerDevice.apply(pluginInterface,client.device_info_array).then( re => {	// Nothing returned
 			log('Device registration result:'+JSON.stringify(re)) ;
 
-			var clsock = require('socket.io-client');
-			var socket = clsock.connect(client.host);
-			socket.on('connect',function(){
+			var WebSocketClient = require('websocket').client;
+			var clsock = new WebSocketClient();
+
+			clsock.on('connect', function(conn) {
 				var replyWait = {} ;
 
 				var CALLBACKS = {
@@ -33,7 +34,7 @@ exports.init = function() {
 						//console.log('Hello recv:'+JSON.stringify(args));
 						if( args.suffix != client.suffix ){
 							rjct('Suffix does not match.') ;
-							socket.disconnect();
+							conn.close() ;
 							return ;
 						}
 
@@ -58,7 +59,10 @@ exports.init = function() {
 											rjct({success:false,error:'Timeout'}) ;
 										}, 30 * 1000 ) ; // timeout is 30 sec.
 
-										socket.emit( 'call' , {key:key,proc:procName,args:argObj} ) ;
+										conn.sendUTF( JSON.stringify(
+											{proc:precName,key:key,arg:argObj}
+											//{proc:'call',arg:{key:key,proc:procName,args:argObj}}
+										) ) ;
 									} ) ;
 								}
 							} ) ;
@@ -100,7 +104,9 @@ exports.init = function() {
 
 						// Subscription is usually successful, but moves to catch clause..
 						wamp_session.subscribe( topic, (rargs, rkwargs, rdetails) =>{
-							socket.emit('published',[sessionid,topic,rargs, rkwargs, rdetails]) ;
+							conn.sendUTF(JSON.stringify(
+								{proc:'published',arg:[sessionid,topic,rargs, rkwargs, rdetails]}
+							)) ;
 						} ,options ).then( function(subscription){
 							var subs_id ;
 							do{ 
@@ -131,36 +137,43 @@ exports.init = function() {
 					}
 				} ;
 
-				socket.on('call',callargs =>{
+				conn.on('message',msg =>{
+					if( msg.type !== 'utf8' ) return ;
+
+					var callargs = JSON.parse(msg.utf8Data) ;
+
 					if( CALLBACKS[callargs.proc] != undefined ){
 						CALLBACKS[callargs.proc](
-							callargs.args
-							, rep => {socket.emit('callreply',{key:callargs.key,args:rep}) ;}
-							, e => {socket.emit('callreply',{key:callargs.key,args:{success:false,error:e}}) ;}
+							callargs.arg
+							, rep =>{ conn.sendUTF(JSON.stringify({proc:'callreply',key:callargs.key,arg:rep})); }
+							, e =>	{ conn.sendUTF(JSON.stringify({proc:'callreply',key:callargs.key,arg:{success:false,error:e}}));}
 						)
 					} else
-						socket.emit('callreply',{key:key,args:{success:false,error:'No such procedure ('+callargs.proc}}) ;
+						conn.sendUTF(JSON.stringify(
+							{proc:'callreply',key:callargs.key,arg:{success:false,error:'No such procedure ('+callargs.proc+')'}}
+						)) ;
 				} ) ;
 
+				conn.on('close',function(){
+					pluginInterface.unregisterDevice(client.device_info_array[0]) ;
+					if( wamp_session == undefined ) return ;
+
+					var unsubPromises = [] ;
+					for( var subs_id in subscriptions ){
+						unsubPromises.push( new Promise((ac,rj)=>{
+							// console.log('Unsubscribing '+subs_id) ;
+							wamp_session.unsubscribe(subscriptions[subs_id]).then(ac).catch(rj) ;
+						}) ) ;
+					}
+					Promise.all(unsubPromises).then( ()=>{
+						console.log('Successfully unsubscribed all topics.') ;
+						subscriptions = {} ;
+						wamp_connection.close() ;
+					} ) ;
+				}) ;
 			});
 
-			socket.on('disconnect',function(){
-				pluginInterface.unregisterDevice(client.device_info_array[0]) ;
-				if( wamp_session == undefined ) return ;
-
-				var unsubPromises = [] ;
-				for( var subs_id in subscriptions ){
-					unsubPromises.push( new Promise((ac,rj)=>{
-						// console.log('Unsubscribing '+subs_id) ;
-						wamp_session.unsubscribe(subscriptions[subs_id]).then(ac).catch(rj) ;
-					}) ) ;
-				}
-				Promise.all(unsubPromises).then( ()=>{
-					console.log('Successfully unsubscribed all topics.') ;
-					subscriptions = {} ;
-					wamp_connection.close() ;
-				} ) ;
-			}) ;
+			clsock.connect(client.host ,null) ;
 		} );
 
 		// Without realm, remote access is disabled.
