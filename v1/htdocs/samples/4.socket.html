@@ -10,18 +10,18 @@ onload = function(){
 	// Initialization
 	kadecot_init().then( function(re){
 		log( re.devices ) ;	// devices list
-		var serialdevs = re.querydevices({ protocol : 'serial' /*, uuid : SERIAL_DEVICE_ID*/ }) ;
+		var socketdevs = re.querydevices({ protocol : 'socket' /*, uuid : SERIAL_DEVICE_ID*/ }) ;
 
-		if( serialdevs.length == 0 ){
+		if( socketdevs.length == 0 ){
 			log( 'No serial device with specific uuid found.' ) ;
 			return ;
 		}
 
-		serialdevs.forEach( sdev=>{
+		socketdevs.forEach( sdev=>{
 			// Use PubSub to monitor serial data 
 			sdev.sub(
 				// A string called 'Topic'.
-				'net.kadecot.serial.topic.message'
+				'net.kadecot.socket.topic.message'
 
 				// Callback function on property change
 				, function (newval) {
@@ -39,7 +39,7 @@ onload = function(){
 				sdev.rpc(
 					// A string called 'Procedure'. 
 					// Check available procedures on http://app.kadecot.net/docs/ProcTopic/
-					'net.kadecot.serial.procedure.message'
+					'net.kadecot.socket.procedure.message'
 
 					// Procedure-dependent parameter.
 					,{"value":""+curval}
