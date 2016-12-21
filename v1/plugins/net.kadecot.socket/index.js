@@ -15,10 +15,10 @@
   2) Send/Receive arbitrary text message with the separator ';'
 
  If the client has GPIO and use the it only, we recommend to use
-   'GPIO mode'. To use GPIO mode, the client name should be followed by the
-   pin availability information as follows:
-   /in:1,3,4,5/out:1,2
-   This means
+   'GPIO mode'. To switch into GPIO mode, the client should declare its gpio
+   pin availability information after the name (without separator ';') as follows:
+   DEVICE_ID/in:1,3,4,5/out:1,2;			(DEVIE_ID is the unique id of the device)
+   which means
     there are four input pins: 1,3,4,5
     there are two output pins: 1,2
 
@@ -98,7 +98,7 @@ function initWebsocketServer(){
 			connection.onclose(description) ;
 		});
 
-		connection.send = function(msg){connection.sock.sendUTF(msg);} ;
+		connection.send = function(msg){connection.sock.sendUTF(msg+SEP);} ;
 		connection.close = function(){connection.sock.close();} ;
 
 
@@ -128,7 +128,7 @@ function initSocketServer(){
 			console.log('Socket error: ' + err.stack);
 		});
 
-		connection.send = function(txt){sock.write(txt);} ;
+		connection.send = function(txt){sock.write(txt+SEP);} ;
 
 		init_main( connection ) ;
 
@@ -238,7 +238,7 @@ exports.init = function() {
 					var conn = connections[uuid] ;
 					if( conn == undefined )	return {success:false,error:uuid+' not found.'};
 
-					conn.send( argObj.value+SEP ) ;
+					conn.send( argObj.value ) ;
 				} ) ;
 				return {success:true} ;
 			}
@@ -260,7 +260,7 @@ exports.init = function() {
 				var conn = connections[uuid] ;
 				if( conn == undefined )	return {success:false,error:uuid+' not found.'};
 
-				conn.send( 'set:'+argObj.pin+':'+argObj.value+';' ) ;
+				conn.send( 'set:'+argObj.pin+':'+argObj.value ) ;
 
 				return {success:true} ;
 			}
@@ -277,7 +277,7 @@ exports.init = function() {
 					}
 
 					var key = getHashKey() ;
-					conn.send( 'get:'+argObj.pin+':'+key+';' ) ;
+					conn.send( 'get:'+argObj.pin+':'+key ) ;
 					conn.gpioget_waitlist[key] = acpt ;
 				} ) ;
 			}
