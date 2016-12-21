@@ -18,37 +18,45 @@ onload = function(){
 		}
 
 		socketdevs.forEach( sdev=>{
-			// Use PubSub to monitor serial data 
-			sdev.sub(
-				// A string called 'Topic'.
-				'net.kadecot.socket.topic.message'
+			if( sdev.deviceType == 'gpio'){
+				sdev.rpc('net.kadecot.socket.procedure.gpiopins').then(log) ;
+				sdev.rpc('net.kadecot.socket.procedure.get',{pin:3}).then( re1 =>{
+					log('Pin 3 value : '+JSON.stringify(re1)) ;
+					sdev.rpc('net.kadecot.socket.procedure.set',{pin:3,value:(1.0-re1.value)}).then( log ) ;
+				} ) ;
+			} else {
+				// Use PubSub to monitor serial data 
+				sdev.sub(
+					// A string called 'Topic'.
+					'net.kadecot.socket.topic.message'
 
-				// Callback function on property change
-				, function (newval) {
-					log( 'Serial value received.'+sdev.uuid ) ;
-					log( newval ) ;
-				}
-			)
-			// Optionally set success callback
-			.then( function(){ log( 'Successfully subscribed' ) ; } ) ;
-
-			// Use of RPC (command send/information get on demand)
-			// Send power on signal after 5 seconds. (it is desirable to take sufficient time between calls)
-			var curval = 1023 ;
-			setInterval( function(){
-				sdev.rpc(
-					// A string called 'Procedure'. 
-					// Check available procedures on http://app.kadecot.net/docs/ProcTopic/
-					'net.kadecot.socket.procedure.message'
-
-					// Procedure-dependent parameter.
-					,{"value":""+curval}
+					// Callback function on property change
+					, function (newval) {
+						log( 'Serial value received.'+sdev.uuid ) ;
+						log( newval ) ;
+					}
 				)
-				// Optionally set call result callback
-				//.then( log ) ;
+				// Optionally set success callback
+				.then( function(){ log( 'Successfully subscribed' ) ; } ) ;
 
-				curval = 1023-curval ;
-			},5000 ) ;
+				// Use of RPC (command send/information get on demand)
+				// Send power on signal after 5 seconds. (it is desirable to take sufficient time between calls)
+				var curval = 1023 ;
+				setInterval( function(){
+					sdev.rpc(
+						// A string called 'Procedure'. 
+						// Check available procedures on http://app.kadecot.net/docs/ProcTopic/
+						'net.kadecot.socket.procedure.message'
+
+						// Procedure-dependent parameter.
+						,{"value":""+curval}
+					)
+					// Optionally set call result callback
+					//.then( log ) ;
+
+					curval = 1023-curval ;
+				},5000 ) ;
+			}
 		} ) ;
 	} ) ;
 

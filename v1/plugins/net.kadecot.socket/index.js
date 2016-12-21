@@ -33,7 +33,7 @@
 		,"out":[1,2]
   	}
 
-  net.kadecot.socket.procedure.out( {"pin":PINNUMBER , "value":VALUE_IN_FLOARING_POINT} )
+  net.kadecot.socket.procedure.set( {"pin":PINNUMBER , "value":VALUE_IN_FLOARING_POINT} )
   	PINNUMBER : an integer digit that should be one of output pins
 	VALUE_IN_FLOARING_POINT : a floating point number (0 to 1)
 
@@ -59,6 +59,86 @@ var pluginInterface ;
 var connections = {
 } ;
 
+
+// Websocket server start and initalization
+function initWebsocketServer(){
+
+	var WebSocketServer = require('websocket').server;
+	var http = require('http');
+
+	var server = http.createServer(function (request, response) {
+	    console.log( request.url + ' accessed to http server. returns 404' );
+	    response.writeHead(404);
+	    response.end();
+	});
+	server.listen(WEBSOCKET_PORT);
+
+	var wsServer = new WebSocketServer({
+	    httpServer: server, autoAcceptConnections: false
+	});
+
+
+
+	wsServer.on('request', function(request) {
+		console.log((new Date()) + ' Connection attempt from '+request.origin);
+		if( pluginInterface == undefined /*|| request.origin!='ACCEPT_ORIGIN'*/ ) { request.reject(); return; }
+
+
+		var connection = {
+			sock : request.accept(null, request.origin)
+		} ;
+
+		connection.sock.on('message', function(message) {
+			if (message.type === 'utf8') {
+				connection.onrecv( message.utf8Data ) ;
+			} else if (message.type === 'binary') {}
+		});
+
+		connection.sock.on('close', function(reasonCode, description) {
+			connection.onclose(description) ;
+		});
+
+		connection.send = function(msg){connection.sock.sendUTF(msg);} ;
+		connection.close = function(){connection.sock.close();} ;
+
+
+		init_main( connection ) ;
+	});
+}
+
+var net = require('net') ;
+
+// Plain socket server start and initalization
+function initSocketServer(){
+
+	net.createServer(function(sock) {
+		console.log('socket connected: ' + sock.remoteAddress +':'+ sock.remotePort);
+
+		var connection = {
+			sock : sock
+		} ;
+
+		sock.on('data', function(data) {
+			connection.onrecv( data ) ;
+		});
+		sock.on('close', function(had_error) {
+			connection.onclose(had_error) ;
+		});
+		sock.on('error', function(err) {
+			console.log('Socket error: ' + err.stack);
+		});
+
+		connection.send = function(txt){sock.write(txt);} ;
+
+		init_main( connection ) ;
+
+	}).listen(SOCKET_PORT, 'localhost');
+
+	console.log('Listening socket on port '+SOCKET_PORT);
+}
+
+
+// Common initialization on connection to client (socket/websocket abstracted)
 function init_main(connection){
 	var id ;
 
@@ -73,7 +153,7 @@ function init_main(connection){
 				connection.out=[] ;
 				defs.forEach( def => {
 					var terms = def.split(':') ;
-					connection[terms[0]] = terms[1].split(',') ;
+					connection[terms[0]] = terms[1].split(',').map(numstr=>parseInt(numstr)) ;
 				}) ;
 
 				connection.isgpio = ()=>{return true;} ;
@@ -91,24 +171,27 @@ function init_main(connection){
 			connections[ id ] = connection ;
 
 			// uuid, deviceType, description, nickname
-			pluginInterface.registerDevice( id , 'socket' , 'Socket connection of '+id , id ).then(re=>{
+			pluginInterface.registerDevice( id , (connection.isgpio()?'gpio':'socket') , 'Socket connection of '+id , id ).then(re=>{
 				console.log('Device registartion success:'+id+':socket');
 			}).catch( e=>{
 				console.error('Device registartion error:'+JSON.stringify(e));
 			}) ;
 		} else {
 			if( connection.isgpio() ){
-				var msg_sp = msg.split(':') ;
+				var msg_sp = msg.trim().split(':') ;
 				if( msg_sp.length == 3 ){
 					switch( msg_sp[0] ){
-					case 'reply' :
-						if( typeof connection.gpioget_waitlist[msg_sp[1]] == 'function' ){
-							connection.gpioget_waitlist[msg_sp[1]]( msg_sp[2] ) ;
-							delete connection.gpioget_waitlist[msg_sp[1]] ;
+					case 'rep' :
+						if( typeof connection.gpioget_waitlist[msg_sp[2]] == 'function' ){
+							connection.gpioget_waitlist[msg_sp[2]]( {value:parseFloat(msg_sp[1])} ) ;
+							delete connection.gpioget_waitlist[msg_sp[2]] ;
 						}
 						break ;
 					case 'pub' :
-						pluginInterface.publish( 'in',[id],{value:parseFloat(msg_sp[2])} ) ;
+						pluginInterface.publish( 'in',[id],{
+							pin:parseInt(msg_sp[1])
+							,value:parseFloat(msg_sp[2])
+						} ) ;
 						break ;
 					}
 				}
@@ -138,83 +221,8 @@ function init_main(connection){
 	} ;
 }
 
-function initWebsocketServer(){
-
-	var WebSocketServer = require('websocket').server;
-	var http = require('http');
-
-	var server = http.createServer(function (request, response) {
-	    console.log( request.url + ' accessed to http server. returns 404' );
-	    response.writeHead(404);
-	    response.end();
-	});
-	server.listen(WEBSOCKET_PORT);
-
-	var wsServer = new WebSocketServer({
-	    httpServer: server, autoAcceptConnections: false
-	});
 
 
-
-	wsServer.on('request', function(request) {
-		console.log((new Date()) + ' Connection attempt from '+request.origin);
-		if( pluginInterface == undefined /*|| request.origin!='ACCEPT_ORIGIN'*/ ) { request.reject(); return; }
-
-
-		var connection = {
-			sock : request.accept(null, request.origin)
-		} ;
-		//var id ;
-		//var recv_buf = '' ;
-
-		connection.sock.on('message', function(message) {
-			if (message.type === 'utf8') {
-				//console.log('Received Message: ' + message.utf8Data);
-				connection.onrecv( message.utf8Data ) ;
-			} else if (message.type === 'binary') {}
-		});
-
-		connection.sock.on('close', function(reasonCode, description) {
-			connection.onclose(description) ;
-		});
-
-		connection.send = function(msg){connection.sock.sendUTF(msg);} ;
-		connection.close = function(){connection.sock.close();} ;
-
-
-		init_main( connection ) ;
-	});
-}
-
-var net = require('net') ;
-
-function initSocketServer(){
-
-	net.createServer(function(sock) {
-		console.log('socket connected: ' + sock.remoteAddress +':'+ sock.remotePort);
-
-		var connection = {
-			sock : sock
-		} ;
-
-		sock.on('data', function(data) {
-			connection.onrecv( data ) ;
-		});
-		sock.on('close', function(had_error) {
-			connection.onclose(had_error) ;
-		});
-		sock.on('error', function(err) {
-			console.log('Socket error: ' + err.stack);
-		});
-
-		connection.send = sock.write ; //function(msg){connection.sock.sendUTF(msg);} ;
-
-		init_main( connection ) ;
-
-	}).listen(SOCKET_PORT, 'localhost');
-
-	console.log('Listening socket on port '+SOCKET_PORT);
-}
 
 exports.init = function() {
 	pluginInterface = this ;
@@ -246,14 +254,14 @@ exports.init = function() {
 			}
 		}
 		,{
-			name : 'out'
+			name : 'set'
 			,procedure : (uuidArray , argObj) => {
-				uuidArray.forEach( uuid => {
-					var conn = connections[uuid] ;
-					if( conn == undefined )	return {success:false,error:uuid+' not found.'};
+				var uuid = uuidArray[0] ;
+				var conn = connections[uuid] ;
+				if( conn == undefined )	return {success:false,error:uuid+' not found.'};
 
-					conn.send( argObj ) ;
-				} ) ;
+				conn.send( 'set:'+argObj.pin+':'+argObj.value+';' ) ;
+
 				return {success:true} ;
 			}
 		}
@@ -268,11 +276,9 @@ exports.init = function() {
 						return ;
 					}
 
-					argObj.key = getHashKey() ;
-					conn.send( argObj ) ;
-					conn.gpioget_waitlist[argObj.key] = (ret)=>{
-						acpt( ret ) ;
-					} ;
+					var key = getHashKey() ;
+					conn.send( 'get:'+argObj.pin+':'+key+';' ) ;
+					conn.gpioget_waitlist[key] = acpt ;
 				} ) ;
 			}
 		}
