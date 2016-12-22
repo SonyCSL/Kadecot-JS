@@ -4,36 +4,54 @@
 <script src='http://app.kadecot.net/js/kadecot.m.js'></script>
 <script>
 
-const SERIAL_DEVICE_ID = 'CocoaBit-d57c' ;
+const PROTOCOL = 'serial' ; //'socket' ;
 
 onload = function(){
 	// Initialization
-	kadecot_init().then( function(re){
+	kadecot_init({host:location.hostname}).then( function(re){
 		log( re.devices ) ;	// devices list
-		var socketdevs = re.querydevices({ protocol : 'socket' /*, uuid : SERIAL_DEVICE_ID*/ }) ;
+		var sdevs = re.querydevices({ deviceType:'gpio'}) ;
 
-		if( socketdevs.length == 0 ){
-			log( 'No serial device with specific uuid found.' ) ;
+		if( sdevs.length == 0 ){
+			log( 'No gpio device with specific uuid found.' ) ;
 			return ;
 		}
 
-		socketdevs.forEach( sdev=>{
+		sdevs.forEach( sdev=>{
+			var PROTOCOL = sdev.protocol ;
 			if( sdev.deviceType == 'gpio'){
-				sdev.rpc('net.kadecot.socket.procedure.gpiopins').then(log) ;
-				sdev.rpc('net.kadecot.socket.procedure.get',{pin:3}).then( re1 =>{
-					log('Pin 3 value : '+JSON.stringify(re1)) ;
-					sdev.rpc('net.kadecot.socket.procedure.set',{pin:3,value:(1.0-re1.value)}).then( log ) ;
-				} ) ;
+				sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.gpiopins').then(setup=>{
+					sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.get',{pin:setup.in[0]}).then( re1 =>{
+						log('Pin '+setup.in[0]+' value : '+JSON.stringify(re1)) ;
+					} ) ;
+
+					var v = 0.8 ;
+					setInterval( ()=>{
+						sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.set',{pin:setup.out[0],value:v}) ;
+						v = 1 - v ;
+					},500)
+				}) ;
+
+				sdev.sub(
+					// A string called 'Topic'.
+					'net.kadecot.'+PROTOCOL+'.topic.in'
+					// Callback function on property change
+					, function (newval) {
+						log( 'A value received for input pins ('+sdev.uuid+') :' + JSON.stringify(newval) ) ;
+					}
+				)
+				// Optionally set success callback
+				.then( function(){ log( 'Successfully subscribed' ) ; } ) ;
 			} else {
+
 				// Use PubSub to monitor serial data 
 				sdev.sub(
 					// A string called 'Topic'.
-					'net.kadecot.socket.topic.message'
+					'net.kadecot.'+PROTOCOL+'.topic.message'
 
 					// Callback function on property change
 					, function (newval) {
-						log( 'Serial value received.'+sdev.uuid ) ;
-						log( newval ) ;
+						log( 'A value received ('+sdev.uuid+') : ' + JSON.stringify(newval) ) ;
 					}
 				)
 				// Optionally set success callback
@@ -41,12 +59,12 @@ onload = function(){
 
 				// Use of RPC (command send/information get on demand)
 				// Send power on signal after 5 seconds. (it is desirable to take sufficient time between calls)
-				var curval = 1023 ;
+				var curval = 1 ;
 				setInterval( function(){
 					sdev.rpc(
 						// A string called 'Procedure'. 
 						// Check available procedures on http://app.kadecot.net/docs/ProcTopic/
-						'net.kadecot.socket.procedure.message'
+						'net.kadecot.'+PROTOCOL+'.procedure.message'
 
 						// Procedure-dependent parameter.
 						,{"value":""+curval}
@@ -54,7 +72,7 @@ onload = function(){
 					// Optionally set call result callback
 					//.then( log ) ;
 
-					curval = 1023-curval ;
+					curval = 1-curval ;
 				},5000 ) ;
 			}
 		} ) ;
