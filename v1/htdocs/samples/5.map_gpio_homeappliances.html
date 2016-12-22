@@ -1,0 +1,212 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script src='/js/kadecot.m.js'></script>
+<script>
+
+var d = console.log ;
+
+var devinprops = [] , devoutprops = [] , gpioinprops = [] , gpiooutprops = [] ;
+
+onload = function(){
+	// Initialization
+	kadecot_init({host:location.hostname}).then( function(re){
+		d( re.devices ) ;	// devices list
+		var gpios = re.querydevices({ deviceType:'gpio'}) ;
+		var aircons = re.querydevices({ deviceType:'HomeAirConditioner'}) ;
+		var lights = re.querydevices({ deviceType:'GeneralLighting'}) ;
+		var shades = re.querydevices({ deviceType:'ElectricallyOperatedShade'}) ;
+
+		if( gpios.length == 0 ){
+			d( 'No gpio device found.' ) ;
+			return ;
+		}
+
+		if( aircons.length + lights.length + shades.length == 0 ){
+			d( 'No home appliances found.' ) ;
+			return ;
+		}
+
+		Promise.all([
+			new Promise( (ac,re)=>{
+				var promises = [] ;
+
+				// Setup aircons and lights
+				aircons.concat(lights).forEach(dev=>{
+					promises.push( new Promise( (ac2,re2)=>{
+						// input.
+						var entry_in = {
+							name : dev.deviceType+' in ('+dev.deviceId+') power'
+							, targetgpio : -1
+						} ;
+
+						dev.sub( 'com.sonycsl.kadecot.echonetlite.topic.'+dev.deviceType+'.OperationStatus' , val => {
+							if( entry_in.targetgpio == -1 ) return ;
+							gpiooutprops[entry_in.targetgpio].set( val.propertyValue[0] == 0x30 ? 1 : 0 ) ;
+						} ).then( ()=>{
+							/// Successfully registered
+							devinprops.push(entry_in) ;
+
+							ac2() ;
+						}) ;
+
+
+						// output.
+						var entry_out = {
+							name : dev.deviceType+' out ('+dev.deviceId+') power'
+							, set : newval => {
+								dev.rpc( 'com.sonycsl.kadecot.echonetlite.procedure.'+dev.deviceType+'.set'
+									, { propertyName : 'OperationStatus' , propertyValue : [ newval < 0.5 ? 0x31 : 0x30 ] } ) ;
+							}
+						} ;
+
+						devoutprops.push(entry_out) ;
+
+					} ) ) ;
+				}) ;
+
+				Promise.all(promises).then(ac) ;
+			} )
+			, new Promise( (ac,re)=>{
+				ac() ;
+				/*
+				var promises = [] ;
+				// Setup shades
+				shades.forEach(dev=>{
+					promises.push( new Promise( (ac2,re2)=>{
+						// input.
+						var entry_in = {
+							name : dev.deviceType+' in ('+dev.deviceId+') open/close'
+							, targetgpio : -1
+						} ;
+
+						dev.sub( 'com.sonycsl.kadecot.echonetlite.topic.'+dev.deviceType+'.OpenCloseSetting' , val => {
+							if( entry_in.targetgpio == -1 ) return ;
+							gpiooutprops[entry_in.targetgpio].set( val.propertyValue[0] == 0x41 ? 1 : 0 ) ;
+						} ).then( ()=>{
+							/// Successfully registered
+							devinprops.push(entry_in) ;
+							ac2() ;
+						}) ;
+
+
+						// output.
+						var entry_out = {
+							name : dev.deviceType+' out ('+dev.deviceId+') open/close'
+							, set : newval => {
+								dev.rpc( 'com.sonycsl.kadecot.echonetlite.procedure.'+dev.deviceType+'.set'
+									, { propertyName : 'OpenCloseSetting' , propertyValue : [ newval < 0.5 ? 0x41 : 0x42 ] } ) ;
+							}
+						} ;
+
+						devoutprops.push(entry_out) ;
+					} ) ) ;
+				}) ;
+				Promise.all(promises).then(ac) ;
+				*/
+			} )
+			, new Promise( (ac,re)=>{
+				var promises = [] ;
+
+				gpios.forEach( gpio=>{
+					var PROTOCOL = gpio.protocol ;
+					var map_pinin_to_propidx = {} ;
+
+					promises.push( new Promise( (ac2,re2)=>{
+						gpio.sub( 'net.kadecot.'+PROTOCOL+'.topic.in'
+							, function (newval) {
+								var entry = gpioinprops[ map_pinin_to_propidx[newval.pin] ] ;
+
+								if( entry.targetdev == -1 ) return ;
+								devoutprops[entry.targetdev].set(newval.value) ;
+							}
+						).then(ac2) ;
+					}) ) ;
+					promises.push( new Promise( (ac2,re2)=>{
+						gpio.rpc('net.kadecot.'+PROTOCOL+'.procedure.gpiopins').then(setup=>{
+							setup.in.forEach( pin_in => {
+								map_pinin_to_propidx[pin_in] = gpioinprops.length ;
+
+								var entry = {
+									name : 'GPIO in ('+gpio.deviceId+') pin ' + pin_in
+									,targetdev : -1
+								} ;
+
+								gpioinprops.push(entry) ;
+							} ) ;
+
+							setup.out.forEach( pin_out => {
+								var entry = {
+									name : 'GPIO out ('+gpio.deviceId+') pin ' + pin_out
+									, set : newval => {
+										gpio.rpc('net.kadecot.'+PROTOCOL+'.procedure.set',{pin:pin_out , value:newval }) ;
+									}
+								} ;
+
+								gpiooutprops.push(entry) ;
+							} ) ;
+
+							ac2() ;
+						}) ;
+					} ) ) ;
+				} ) ;
+
+				Promise.all(promises).then(ac) ;
+			})
+		]).then(()=>{
+			// Display
+			// GPIO -> Device
+			var ht = '<tr><th>GPIO</th><th>Device</th></tr>' ;
+			var gpi=0 ;
+			gpioinprops.forEach( gpin => {
+				ht += '<tr><td>'+gpin.name+'</td><td>' ;
+				ht += '<select onchange="onchange_gpio_to_dev('+(gpi++)+',this.value)">' ;
+				var doi = -1 ;
+				ht += '<option value="'+(doi++)+'">No assignment</option><br />' ;
+				devoutprops.forEach(devout => {
+					ht += '<option value="'+(doi++)+'">'+devout.name +'</option><br />' ;
+				}) ;
+				ht += '</select></td></tr>' ;
+			}) ;
+			document.getElementById("gpio_to_dev").innerHTML = ht ;
+
+			// Device -> GPIO
+
+			ht = '<tr><th>Device</th><th>GPIO</th></tr>' ;
+			var di=0 ;
+			devinprops.forEach( din => {
+				ht += '<tr><td>'+din.name+'</td><td>' ;
+				ht += '<select onchange="onchange_dev_to_gpio('+(di++)+',this.value)">' ;
+				var gpi = -1 ;
+				ht += '<option value="'+(gpi++)+'">No assignment</option><br />' ;
+				gpiooutprops.forEach(gout => {
+					ht += '<option value="'+(gpi++)+'">'+gout.name +'</option><br />' ;
+				}) ;
+				ht += '</select></td></tr>' ;
+			}) ;
+			document.getElementById("dev_to_gpio").innerHTML = ht ;
+		}) ;
+	} ) ;
+} ;
+
+function onchange_gpio_to_dev(gpi,si){
+	gpioinprops[gpi].targetdev = parseInt(si) ;
+}
+
+function onchange_dev_to_gpio(di,si){
+	devinprops[di].targetgpio = parseInt(si) ;
+}
+
+</script>
+</head>
+<body>
+<h2>GPIO-HomeAppliances example</h2>
+To use Arduino as gpio terminal, write <a href="https://github.com/SonyCSL/ArduinoKadecot" target="_blank">this sketch</a> to the arduino and modify ~/.kadecot/v1/plugins/net.kadecot.serial/ports.txt to specify corresponding serial port device.<br />
+If you do not have ECHONET Lite devices, you can use this Emulator.
+<hr />
+<h3>GPIO to device</h3>
+<table id='gpio_to_dev' border='1'></table>
+<h3>Device to GPIO</h3>
+<table id='dev_to_gpio' border='1'></table>
+</body>
+</html>

@@ -4,8 +4,6 @@
 <script src='http://app.kadecot.net/js/kadecot.m.js'></script>
 <script>
 
-const PROTOCOL = 'serial' ; //'socket' ;
-
 onload = function(){
 	// Initialization
 	kadecot_init({host:location.hostname}).then( function(re){
@@ -19,19 +17,21 @@ onload = function(){
 
 		sdevs.forEach( sdev=>{
 			var PROTOCOL = sdev.protocol ;
-			if( sdev.deviceType == 'gpio'){
-				sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.gpiopins').then(setup=>{
-					sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.get',{pin:setup.in[0]}).then( re1 =>{
-						log('Pin '+setup.in[0]+' value : '+JSON.stringify(re1)) ;
-					} ) ;
 
-					var v = 0.8 ;
-					setInterval( ()=>{
-						sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.set',{pin:setup.out[0],value:v}) ;
-						v = 1 - v ;
-					},500)
-				}) ;
+			sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.gpiopins').then(setup=>{
+				sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.get',{pin:setup.in[0]}).then( re1 =>{
+					log('Pin '+setup.in[0]+' value : '+JSON.stringify(re1)) ;
+				} ) ;
 
+			}) ;
+
+			var v = 0.8 ;
+			setInterval( ()=>{
+				sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.set',{pin:setup.out[0],value:v}) ;
+				v = 1 - v ;
+			},500)
+
+			/*{ // Access to raw data
 				sdev.sub(
 					// A string called 'Topic'.
 					'net.kadecot.'+PROTOCOL+'.topic.in'
@@ -42,9 +42,9 @@ onload = function(){
 				)
 				// Optionally set success callback
 				.then( function(){ log( 'Successfully subscribed' ) ; } ) ;
-			} else {
 
-				// Use PubSub to monitor serial data 
+
+				// Use PubSub to monitor raw data 
 				sdev.sub(
 					// A string called 'Topic'.
 					'net.kadecot.'+PROTOCOL+'.topic.message'
@@ -69,12 +69,10 @@ onload = function(){
 						// Procedure-dependent parameter.
 						,{"value":""+curval}
 					)
-					// Optionally set call result callback
-					//.then( log ) ;
 
 					curval = 1-curval ;
 				},5000 ) ;
-			}
+			}*/
 		} ) ;
 	} ) ;
 
@@ -92,6 +90,7 @@ function log(text){
 </head>
 <body>
 <h2>Serial example</h2>
-If you use cocoabit, we recommend to use <a href="cocoabit/cocoabit.bin">this binary</a> and <a href="cocoabit/CocoaBit.ino">source</a>.
+To use Arduino as gpio terminal, write <a href="https://github.com/SonyCSL/ArduinoKadecot" target="_blank">this sketch</a> to the arduino and modify ~/.kadecot/v1/plugins/net.kadecot.serial/ports.txt to specify corresponding serial port device.<br />
+If you use cocoabit, we recommend to use <a href="cocoabit/cocoabit.bin">this binary</a> (<a href="cocoabit/CocoaBit.ino">source</a>.)
 </body>
 </html>
