@@ -10,7 +10,7 @@ var devinprops = [] , devoutprops = [] , gpioinprops = [] , gpiooutprops = [] ;
 
 onload = function(){
 	// Initialization
-	kadecot_init({host:location.hostname}).then( function(re){
+	kadecot_init().then( function(re){
 		d( re.devices ) ;	// devices list
 		var gpios = re.querydevices({ deviceType:'gpio'}) ;
 		var aircons = re.querydevices({ deviceType:'HomeAirConditioner'}) ;
@@ -202,8 +202,11 @@ function onchange_dev_to_gpio(di,si){
 <body>
 <h2>GPIO-HomeAppliances example</h2>
 To use Arduino as gpio terminal, write <a href="https://github.com/SonyCSL/ArduinoKadecot" target="_blank">this sketch</a> to the arduino and modify ~/.kadecot/v1/plugins/net.kadecot.serial/ports.txt to specify corresponding serial port device.<br />
-If you do not have ECHONET Lite devices, you can use this Emulator.
+Japanese instruction is <a href="http://qiita.com/sgrowd/items/9ef56370a49f4f10c96c" target="_blank">here</a>.
+If you do not have ECHONET Lite devices, you can use <a href="https://github.com/SonyCSL/MoekadenRoom" target="_blank">this Emulator</a>.<br />
+If you have CocoaBit, check <a href="https://github.com/SonyCSL/CocoaBitKadecot" target="_blank">this repository</a>. You can access CocoaBit as remote GPIO device.
 <hr />
+
 <h3>GPIO to device</h3>
 <table id='gpio_to_dev' border='1'></table>
 <h3>Device to GPIO</h3>

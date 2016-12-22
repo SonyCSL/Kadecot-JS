@@ -65,14 +65,17 @@ function init(portname){
 	var id ;
 
 	var waitlist = {} ;
-	var sp = new serialport(portname, {
-	    baudRate: 9600,
-	    /*dataBits: 8,
-	    parity: 'none',
-	    stopBits: 1,
-	    flowControl: false,*/
-	    parser: serialport.parsers.readline(SEP)
-	});
+	var sp ;
+		try {
+			sp = new serialport(portname, {
+		    baudRate: 9600,
+		    /*dataBits: 8,
+		    parity: 'none',
+		    stopBits: 1,
+		    flowControl: false,*/
+		    parser: serialport.parsers.readline(SEP)
+		});
+	} catch( e => {console.error(e); return ;})
 
 	function sendToDevice(txt){
 		return new Promise((ac,rj)=>{

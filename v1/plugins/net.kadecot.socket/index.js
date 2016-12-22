@@ -156,9 +156,9 @@ function init_main(connection){
 					connection[terms[0]] = terms[1].split(',').map(numstr=>parseInt(numstr)) ;
 				}) ;
 
-				connection.isgpio = ()=>{return true;} ;
+				connection.isgpio = true ;
 			} else
-				connection.isgpio = ()=>{return false;} ;
+				connection.isgpio = false ;
 
 			if( connections[ msg ] != undefined ){
 				connection.send('Duplicate connection of '+msg) ;
@@ -171,13 +171,13 @@ function init_main(connection){
 			connections[ id ] = connection ;
 
 			// uuid, deviceType, description, nickname
-			pluginInterface.registerDevice( id , (connection.isgpio()?'gpio':'socket') , 'Socket connection of '+id , id ).then(re=>{
+			pluginInterface.registerDevice( id , (connection.isgpio?'gpio':'socket') , 'Socket connection of '+id , id ).then(re=>{
 				console.log('Device registartion success:'+id+':socket');
 			}).catch( e=>{
 				console.error('Device registartion error:'+JSON.stringify(e));
 			}) ;
 		} else {
-			if( connection.isgpio() ){
+			if( connection.isgpio ){
 				var msg_sp = msg.trim().split(':') ;
 				if( msg_sp.length == 3 ){
 					switch( msg_sp[0] ){
