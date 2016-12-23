@@ -37,7 +37,7 @@ for( var i=0 ; i<=user_num ; ++i ){
 	var username = 'user'+i ;
 	var pwd = Math.random().toString(36).slice(-8) ;
 
-	if( i==0 )	{ username = 'user' ; pwd = 'pass' ; }
+	if( i==0 )	{ username = 'guest' ; pwd = 'pass' ; }
 	else 		{ users_str += ',' ; }
 
 	u.secret = autobahn.auth_cra.derive_key(pwd , u.salt , 100 , 16 ) ;
