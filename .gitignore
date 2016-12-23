@@ -3,7 +3,7 @@ node_modules/
 .crossbar/key.pub
 .crossbar/node.pid
 logs/out.log
-logs/err.logZ
+logs/err.log
 v1/plugins/net.kadecot.local/
 v1/plugins/net.kadecot.external/clients.json
 
