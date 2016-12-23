@@ -11,7 +11,7 @@ v1/plugins/net.kadecot.external/clients.json
 
 ### Node ###
 # Logs
-logs
+#logs
 *.log
 npm-debug.log*
 
