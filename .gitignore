@@ -2,6 +2,8 @@ node_modules/
 .crossbar/key.priv
 .crossbar/key.pub
 .crossbar/node.pid
+logs/out.log
+logs/err.logZ
 v1/plugins/net.kadecot.local/
 v1/plugins/net.kadecot.external/clients.json
 
