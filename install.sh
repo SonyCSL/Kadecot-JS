@@ -7,9 +7,9 @@ SUDO_PATH=$(command -v sudo)
 # sudo がない環境でも sudo をつけられるようにする
 function sudo () {
   if [ -n $SUDO_PATH ];then
-    eval $SUDO_PATH $@
+    $SUDO_PATH "$@"
   else
-    eval $@
+    "$@"
   fi
 }
 
