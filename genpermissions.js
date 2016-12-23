@@ -2,12 +2,11 @@
 
 var user_num = 0 ;	// default 0 users
 var workdir = '../' ;
-var bBridgeMode = false ;
 
 for( var aai=2;aai<process.argv.length;++aai ){
 	if( process.argv[aai] == '0' )		user_num = 0 ;
 	else if(parseInt(process.argv[aai]))	user_num = parseInt(process.argv[aai]) ;
-	else					{ bBridgeMode = true ; workdir = process.argv[aai] ; }
+	else					workdir = process.argv[aai] ;
 }
 
 var autobahn ;
@@ -38,7 +37,7 @@ for( var i=0 ; i<=user_num ; ++i ){
 	var username = 'user'+i ;
 	var pwd = Math.random().toString(36).slice(-8) ;
 
-	if( i==0 )	{ username = 'user' ; if( !bBridgeMode ) pwd = 'pass' ; }
+	if( i==0 )	{ username = 'user' ; pwd = 'pass' ; }
 	else 		{ users_str += ',' ; }
 
 	u.secret = autobahn.auth_cra.derive_key(pwd , u.salt , 100 , 16 ) ;
