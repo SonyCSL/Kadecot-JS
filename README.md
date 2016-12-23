@@ -34,8 +34,22 @@ $ bash <(curl -skL https://git.io/kadecotjs-install)
 Run crossbar.io with Kadecot|JS by:
 
 ```sh
+$ kadecot startfg
+```
+
+Alternatively, you can run kadecot background by:
+```sh
 $ kadecot start
 ```
+In this case, you can stop or restart kadecot by:
+```sh
+$ kadecot stop
+```
+```sh
+$ kadecot restart
+```
+The crossbar log file is stored in ~/.kadecot/logs/
+
 
 Crossbar setting file exists under [.crossbar](.crossbar) directory.
 
