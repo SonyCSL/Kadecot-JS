@@ -19,7 +19,7 @@ case $COMMAND in
     pkill -f 'crossbar'
     cd $HOME/.kadecot
     export ROOTPASS=`cat /dev/urandom| tr -dc 'A-Za-z0-9'| head -c 20`
-    nohup crossbar start > ./out.log 2> ./err.log < /dev/null &
+    nohup crossbar start > ./logs/out.log 2> ./logs/err.log < /dev/null &
     ;;
   update)
     echo "Updating Kadecot|JS"
