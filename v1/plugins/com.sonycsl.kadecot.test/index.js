@@ -20,7 +20,9 @@ exports.init = function() {
           }
         }]);
 
+var c=0 ;
         setInterval( ()=>{
+pluginInterface.log('Pub:'+(c++)) ;
           pluginInterface.publish( "TestTopic",["TestObject"],{message:'Dummy publication from TestObject'}) ;
         },3000) ;
       }

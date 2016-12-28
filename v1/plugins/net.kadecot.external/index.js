@@ -17,7 +17,7 @@ exports.init = function() {
 
 	clients.forEach( client => {
 		var wamp_session , wamp_connection;
-		var subscriptions = {} ;
+		var subscriptions = {} , subsessions = {} ;
 
 		// device_info_array:[uuid,deviceType,description,nickname]
 		pluginInterface.registerDevice.apply(pluginInterface,client.device_info_array).then( re => {	// Nothing returned
@@ -112,7 +112,10 @@ exports.init = function() {
 							do{ 
 								subs_id = getHashKey();
 							} while ( subscriptions[subs_id]!=undefined ) ;
-							subscriptions[subs_id] = subscription ;
+							subscriptions[subs_id] = {subscription:subscription,sessionid:sessionid} ;
+							if( subsessions[sessionid] == undefined )
+								subsessions[sessionid] = {} ;
+							subsessions[sessionid][subs_id] = subscription ;
 							console.log('ReqPub : Subscribe success:' /*+JSON.stringify(r)*/) ;
 							acpt(subs_id);
 						}).catch( function(e){
@@ -124,16 +127,32 @@ exports.init = function() {
 					,'unreqpub' : (args,acpt,rjct) =>{
 						// just unsubscribe the topic and return success ack by acpt()
 						var subs_id = args[0] ;
-						var subscription = subscriptions[subs_id] ;
-						if( subscription == undefined ){
+						var subinfo = subscriptions[subs_id] ;
+						if( subinfo == undefined ){
 							rjct('Subscription id does not exist.') ;
 							return ;
 						}
 						delete subscriptions[subs_id] ;
+						delete subsessions[subinfo.sessionid][subs_id] ;
 
-						wamp_session.unsubscribe(subscription).then(
-							re=>{console.log('PPQQ:Successfully unsubscribed');acpt(re);}
-							).catch(e=>{console.error('PPQQ:Unsubscription failed:');rjct(e);}) ;
+						wamp_session.unsubscribe(subinfo.subscription).then(acpt).catch(rjct) ;
+					}
+					,'unreqpuball' : (args,acpt,rjct) =>{
+						// just unsubscribe the topic and return success ack by acpt()
+						var session_id = args[0] ;
+						var ss = subsessions[session_id] ;
+						if( ss == undefined ){	acpt() ; return ; }
+						delete subsessions[session_id] ;
+
+						var promises = [] ;
+						for( var subs_id in ss ){
+							promises.push(new Promise((ac,rj)=>{
+								delete subscriptions[subs_id] ;
+								wamp_session.unsubscribe(ss[subs_id]).then(ac).catch(rj) ;
+							})) ;
+						}
+
+						Promise.all(promises).then(acpt).catch(rjct) ;
 					}
 				} ;
 
