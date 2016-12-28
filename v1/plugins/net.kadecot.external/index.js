@@ -116,7 +116,7 @@ exports.init = function() {
 							if( subsessions[sessionid] == undefined )
 								subsessions[sessionid] = {} ;
 							subsessions[sessionid][subs_id] = subscription ;
-							console.log('ReqPub : Subscribe success:' /*+JSON.stringify(r)*/) ;
+							//console.log('ReqPub : Subscribe success:' /*+JSON.stringify(r)*/) ;
 							acpt(subs_id);
 						}).catch( function(e){
 							console.log('ReqPub : Subscribe unsuccessful:' /*+JSON.stringify(e)*/) ;
@@ -187,6 +187,7 @@ exports.init = function() {
 					Promise.all(unsubPromises).then( ()=>{
 						console.log('Successfully unsubscribed all topics.') ;
 						subscriptions = {} ;
+						subsessions = {} ;
 						wamp_connection.close() ;
 					} ) ;
 				}) ;
