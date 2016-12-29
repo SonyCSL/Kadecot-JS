@@ -71,29 +71,29 @@ class PluginInterface {
    */
   registerDevice (uuid, deviceType, description, nickname) {
     return new Promise( (acpt,rjct) => {
-	const deviceInfo = {
-	      uuid: uuid,
-	      protocol: this.pluginPrefix.split('.').reverse()[0],
-	      deviceType: deviceType,
-	      description: description,
-	      nickname: nickname,
-	      deviceIdMap: {}
-	};
-	this.devices[uuid] = deviceInfo;
+    	const deviceInfo = {
+    	      uuid: uuid,
+    	      protocol: this.pluginPrefix.split('.').reverse()[0],
+    	      deviceType: deviceType,
+    	      description: description,
+    	      nickname: nickname,
+    	      deviceIdMap: {}
+    	};
+    	this.devices[uuid] = deviceInfo;
 
-	var ps = [] ;
-	this.sessions.forEach(session => {
-		ps.push(
-			session.call('admin.registerdevice', [this.pluginPrefix], deviceInfo)
-		) ;
-	}) ;
+    	var ps = [] ;
+    	this.sessions.forEach(session => {
+    		ps.push(
+    			session.call('admin.registerdevice', [this.pluginPrefix], deviceInfo)
+    		) ;
+    	}) ;
 
-	Promise.all(ps).then(re=>{
-		for( var si=0;si<this.sessions.length;++si ){
-			this.devices[uuid].deviceIdMap[this.sessions[si].id] = re[si] ;
-		}
-		acpt( {success:true,text:'Registration successful.'} ) ;
-	}).catch(rjct) ;
+    	Promise.all(ps).then(re=>{
+    		for( var si=0;si<this.sessions.length;++si ){
+    			this.devices[uuid].deviceIdMap[this.sessions[si].id] = re[si] ;
+    		}
+    		acpt( {success:true,text:'Registration successful.'} ) ;
+    	}).catch(rjct) ;
     }) ;
   }
 
@@ -104,15 +104,15 @@ class PluginInterface {
    */
   unregisterDevice (uuid) {
     return new Promise( (acpt,rjct) => {
-	var ps = [] ;
-	this.sessions.forEach(session => {
-		ps.push( session.call('admin.unregisterdevice', [uuid]) ) ;
-	}) ;
-	Promise.all(ps).then(() => {
-		this.devices[uuid] = undefined;
-		this.log('Device '+uuid+' unregistered.') ;
-		acpt(uuid) ;
-	}) ;
+    	var ps = [] ;
+    	this.sessions.forEach(session => {
+    		ps.push( session.call('admin.unregisterdevice', [uuid]) ) ;
+    	}) ;
+    	Promise.all(ps).then(() => {
+    		this.devices[uuid] = undefined;
+    		this.log('Device '+uuid+' unregistered.') ;
+    		acpt(uuid) ;
+    	}) ;
     } ) ;
   }
 

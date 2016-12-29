@@ -182,23 +182,42 @@ exports.init = function(_REALM){
 		        var plugin_prefix = args[0];
 		        var d = kwargs; //JSON.parse(JSON.stringify(args[0])) ;
 		        var key = plugin_prefix + "." + d.uuid;
-		        if (devices[key] != undefined) {
-			  if( devices[key].deviceIdMap[ session.id ] == undefined )
-			    devices[key].deviceIdMap[ session.id ] = deviceid_count++ ;
-			  devices[key].status = true ;
-		          log('Device '+devices[key].deviceIdMap[ session.id ]
-				+':'+d.protocol+':'+d.deviceType+'/'+d.uuid+' re-registered for realm '+realm);
 
-			  return devices[key].deviceIdMap[ session.id ] ;
+		        if (devices[key] != undefined) {
+					if( devices[key].deviceIdMap[ session.id ] == undefined )
+						devices[key].deviceIdMap[ session.id ] = deviceid_count++ ;
+					devices[key].status = true ;
+
+			        log('Device '+devices[key].deviceIdMap[ session.id ]
+						+':'+d.protocol+':'+d.deviceType+'/'+d.uuid+' re-registered for realm '+realm);
+
+			        session.publish('admin.ondevicechanged',[],{
+			        	reason:'DEVICE_REGISTERED_AGAIN'
+			        	,description:'Device registered again'
+			        	,protocol:d.protocol
+			        	,deviceType:d.deviceType
+			        	,uuid:d.uuid
+			        	,deviceId:devices[key].deviceIdMap[ session.id ]
+			        }) ;
+
+					return devices[key].deviceIdMap[ session.id ] ;
 		        }
 
-			var newDevId = deviceid_count++;
+				var newDevId = deviceid_count++;
 		        d.status = true;
 		        d.prefix = plugin_prefix;
-			d.deviceIdMap[ session.id ] = newDevId ;
+				d.deviceIdMap[ session.id ] = newDevId ;
 		        devices[key] = d;
 
 		        log('Device '+newDevId+':'+kwargs.protocol+':'+kwargs.deviceType+'/'+kwargs.uuid+' registered for realm '+realm);
+		        session.publish('admin.ondevicechanged',[],{
+		        	reason:'DEVICE_REGISTERED'
+		        	,description:'Device registered'
+		        	,protocol:d.protocol
+		        	,deviceType:d.deviceType
+		        	,uuid:d.uuid
+		        	,deviceId:newDevId
+		        }) ;
 
 		        return newDevId ;
 		      }), session.register('admin.unregisterdevice', function(args, kwargs, details) {
@@ -207,6 +226,16 @@ exports.init = function(_REALM){
 		        if (devices[key] != undefined) {
 		          devices[key].status = false;
 		        }
+		        var d = devices[key] ;
+   		        session.publish('admin.ondevicechanged',[],{
+		        	reason:'DEVICE_UNREGISTERED'
+		        	,description:'Device unregistered'
+		        	,protocol:d.protocol
+		        	,deviceType:d.deviceType
+		        	,uuid:d.uuid
+		        	,deviceId:d.deviceIdMap[session.id]
+		        }) ;
+
 		        return {
 		          success: true
 		        };
