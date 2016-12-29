@@ -31,6 +31,14 @@
             "publish": false,
             "subscribe": false
           }
+        }, {
+          "uri": "admin.ondevicechanged",
+          "allow": {
+            "call": false,
+            "register": false,
+            "publish": false,
+            "subscribe": true
+          }
         }]
       },{
         "name": "superuser",
