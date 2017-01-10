@@ -86,7 +86,7 @@ You can further enshort the URL by using online URL enshort services such as [bi
 ## WAMP API
 
 ### Samples
-The easiest way to understand how JSONP API works is to see sample files that you can find by accessing `http://[Kadecot|JS IP]:31413/samples/index.html` from your web browser.
+The easiest way to understand how WAMP API works is to see sample files that you can find by accessing `http://[Kadecot|JS IP]:31413/samples/index.html` from your web browser.
 
 <hr />
 ![KadecotQMaker9](readme.resrc/Tutorials.png)
@@ -94,7 +94,7 @@ The easiest way to understand how JSONP API works is to see sample files that yo
 
 You can click buttons on top of the page.
 
-### Unkind tutorial of WAMP API
+### Unkind and incomplete tutorial of WAMP API
 To use WAMP API, please include the Kadecot library as follows.
 ```html
 <script src='http://[Kadecot|JS IP]:31413/js/kadecot.m.js'></script>
