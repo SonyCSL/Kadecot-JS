@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ./v1/plugins/com.sonycsl.kadecot.gotapi
+cd $HOME/.kadecot/v1/plugins/com.sonycsl.kadecot.gotapi
 
 # First, install dependencies
 npm i

@@ -9,10 +9,11 @@ function log(msg) {
 }
 //////////////////////////////////////
 // Load libraries
-var fs, autobahn;
+var fs, autobahn, cryptico;
 try {
   fs = require('fs');
   autobahn = require('autobahn');
+  cryptico = require('cryptico');
 } catch (e) { // When running in browser, AutobahnJS will be included without a module system
 }
 var PluginInterface = require('./plugin-interface.js');
@@ -258,17 +259,38 @@ exports.init = function(_REALM){
 
 
   function start_web_jsonp_server(){
-
+  	var rsaKey ;
 	htserv = require('./htserv.js')({
 	    routerURL: LOCAL_ROUTER_URL,
 	    realm: REALM,
 	    username: default_user_name,
 	    secret: default_user_secret,
 	    callbacks: {
-	      // called when /api?func=CALLBACK_NAME&KEY1=VALUE1&KEY2=VALUE2..  is accessed.
-	      CALLBACK_NAME: function (re) {
-		log('API access to func=testapi. Params='+JSON.stringify(re)) ;
+	      initExternalPlugin: function(re){
+			rsaKey = cryptico.generateRSAKey(Math.random().toString(36).substring(2), 1024);
+			var pubkey = cryptico.publicKeyString(rsaKey);       
+
+	      	var fcontents = fs.readFileSync('v1/resrc/initExternalPlugin.html', 'utf-8') ;
+	      	return fcontents.split('%%__PUBKEY__%%').join(pubkey) ;
 	      }
+	      , recvExternalPluginSettings: function(re){
+	      	if( rsaKey == null ){
+	      		return {success:false,error:'No key stored yet'} ;
+	      	}
+			var t = decodeURIComponent(re.result) ;
+			var result = JSON.parse(cryptico.decrypt(t,rsaKey).plaintext) ;
+			delete rsaKey ;
+
+			result.realm = 'v1.0' ; // should be configurable in the future
+			fs.writeFileSync('v1/plugins/net.kadecot.external/clients.json',JSON.stringify([result])) ;
+			return 	'<!DOCTYPE HTML><html><body>Please restart Kadecot to connect to new external plugin.</body></html>' ;
+	      }
+	      /*
+	      // called when /api?func=CALLBACK_NAME&KEY1=VALUE1&KEY2=VALUE2..  is accessed.
+	      ,CALLBACK_NAME: function (re) {
+			log('API access to func=testapi. Params='+JSON.stringify(re)) ;
+	      }*/
+
 	    }
 	}).start(31413);
   }

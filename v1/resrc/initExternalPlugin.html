@@ -1,0 +1,44 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script src='/js/jquery-3.1.1.min.js'></script>
+<script>
+function parseURLArgs(){
+	var urlArgs = {} ;
+	if( location.search.length<5 ) return urlArgs ;
+
+	var eqs = location.search.substring(1).split('&') ;
+	if( eqs.length==0 ) return urlArgs ;
+
+	eqs.forEach( eq => {
+		var ts = eq.split('=') ;
+		if( ts.length<2 ) return ;
+		urlArgs[ts[0]] = ts[1] ;
+	}) ;
+
+	return urlArgs ;
+}
+
+onload = function(){
+	window.onclk = function(){
+		var url = $('#oauthsite')[0].value ;
+		if( url.indexOf('http://')!=0 && url.indexOf('https://')!=0 ){
+			alert( 'Please input valid URL' ) ;
+			return ;
+		}
+
+		location.href = url+'?cb='
+			+ encodeURIComponent(location.protocol+'//'+location.host+location.pathname+'?func=recvExternalPluginSettings')
+			+ '&pubkey=%%__PUBKEY__%%';
+	} ;
+} ;
+</script>
+</head>
+<body>
+<div id='urlInputDiv'>
+<b>Please input Kadecot external service setup URL</b><br />
+(URL depends on which service you connect. Currently there is no public information available.)<br />
+<input type='text' id='oauthsite'></input><input type='button' onclick='onclk()' value='Open'></input>
+</div>
+</body>
+</html>

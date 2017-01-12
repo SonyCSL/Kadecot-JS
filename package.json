@@ -15,6 +15,7 @@
     "websocket": "^1.0.23"
   },
   "devDependencies": {
+    "cryptico": "^1.0.2",
     "eslint-plugin-html": "1.5.2"
   },
   "scripts": {

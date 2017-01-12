@@ -3,7 +3,7 @@
 const express = require('express');
 const path = require('path');
 const autobahn = require('autobahn');
-const JSONPRouterFactory = require('./htserv/JSONPRouter');
+const JSONPRouterFactory = require('./JSONPRouter');
 
 class HTTPServer {
   constructor (realm, routerURL, username, secret, callbacks) {
@@ -49,18 +49,20 @@ class HTTPServer {
     this.app = express();
 
     this.app.get('/api', (req, res) => {
-      if (typeof this.callbacks[req.query.func] === 'function') {
-        this.callbacks[req.query.func](req.query);
-        res.jsonp({
-          success: true
-        });
-        return;
-      }
+    	if (typeof this.callbacks[req.query.func] === 'function') {
+	        var re = this.callbacks[req.query.func](req.query);
+	        switch( typeof re ){
+	        case 'string' : res.send(re) ; break ;
+	        case 'object' : res.jsonp(re) ; break ;
+	        default : res.jsonp({ success: true });
+	        }
+      	} else res.jsonp({ success: false , error: 'No such api exists.' });
     });
 
+    // JSONP response
+    this.app.use(`/jsonp/${this.realm}/devices`, JSONPRouterFactory(this));
     this.app.use(express.static(path.resolve(__dirname, './htdocs')));
 
-    this.app.use(`/jsonp/${this.realm}/devices`, JSONPRouterFactory(this));
   }
 
   start (portNo) {
