@@ -182,7 +182,7 @@ function automaticInstall () {
   installNode && \
   installKadecotJs && \
   echo -e "\n*** The installation was successful. ***"
-  echo -e "\nRun Kadecot|JS by hitting `kadecot startfg', and"
+  echo -e "\nRun Kadecot|JS by hitting 'kadecot startfg', and"
   echo -e "\naccess http://KADECOT_IP_ADDRESS:31413/ from your web browser."
   exit 0
 }
