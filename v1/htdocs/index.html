@@ -25,25 +25,35 @@
     <section class="section">
       <div class="container">
         <div class="content">
-          <h2>Links</h2>
-          <hr>
+          <h2>Kadecot|JS commands</h2>
+          <hr />
+          <ul>
+            <li>Start Kadecot|JS foreground : <b>kadecot startfg</b></li>
+            <li>Start Kadecot|JS background : <b>kadecot start</b></li>
+            <li>Stop background Kadecot|JS : <b>kadecot stop</b></li>
+            <li>Stop and start Kadecot|JS background : <b>kadecot restart</b></li>
+          </ul>
+          <h2>Additional settings</h2>
+          <hr />
+          <ul>
+            <li>A commandline to build JSONP API URL Generator:<br /><b>cd ${HOME}/.kadecot/v1/htdocs/APIQueryGenerator/;npm install;npm run build</b></li>
+            <li>A commandline to setup GotAPI server (usually runs on a smartphone) IP address Setup the server as open as possible!<br /><b>${HOME}/.kadecot/v1/tools/initGotAPI.sh</b></li>
+            <li><a href="/api?func=initExternalPlugin">Setting tool for external plugin</a></li>
+          </ul>
+          <h2>Apps</h2>
+          <hr />
           <ul>
             <li>
               <a onclick="window.open('/APIQueryGenerator/?k=' + location.hostname,'_blank');">JSONP API URL Generator</a><br />
-              Please type 'cd ${HOME}/.kadecot/v1/htdocs/APIQueryGenerator/;npm install;npm run build' before you first access this app (may take time).
+              As mentioned above, please type '<b>cd ${HOME}/.kadecot/v1/htdocs/APIQueryGenerator/;npm install;npm run build</b>' before you first access this app (may take long time..be patient!).
             </li>
             <li>
               <a href="/samples/index.html">WAMP API Samples</a>
             </li>
-            <li>
-              <a href="/api?func=initExternalPlugin">External plugin setup</a>
-            </li>
           </ul>
 
-          <h2>Information</h2>
-          <hr>
-          If you want to connect to GotAPI server, please run $(HOME)/.kadecot/v1/tools/initGotAPI.sh.
           <h3>Open Ports</h3>
+          <hr />
           <ul>
             <li>JSONP : 31413</li>
             <li>WAMP : 41314</li>
@@ -52,6 +62,7 @@
             <li>SOCKET GPIO : 41317</li>
           </ul>
           <h3>LICENSES</h3>
+          <hr />
           <b>GNU AGPL 3.0</b>
           <ul>
             <li><a href="http://crossbar.io/" target="_blank">Crossbar.io</a></li>
