@@ -143,3 +143,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Allow in htdocs
+!*/htdocs/**/dist
