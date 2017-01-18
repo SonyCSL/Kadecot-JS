@@ -216,5 +216,30 @@ This application uses [crossbar.io](http://crossbar.io/docs/Installation-on-Cent
 - [MoekadenRoom](http://kadecot.net/blog/1479/) : ECHONET Lite device emulator (Run this on different IP from Kadecot)
 - [Kadecot for Android](https://play.google.com/store/apps/details?id=com.sonycsl.Kadecot)
 
+## Licenses
+
+### GNU AGPL 3.0
+-<a href="http://crossbar.io/" target="_blank">Crossbar.io</a>
+
+### MIT
+
+- <a href="https://github.com/SonyCSL/Kadecot-JS" target="_blank">Kadecot|JS</a>
+- <a href="https://jquery.com/" target="_blank">JQuery</a>
+- <a href="http://autobahn.ws/js/" target="_blank">Autobahn|JS</a>
+- <a href="https://github.com/futomi/node-echonet-lite" target="_blank">node-echonet-lite</a>
+- <a href="https://www.npmjs.com/package/cosmiconfig" target="_blank">cosmiconfig</a>
+- <a href="https://github.com/mzabriskie/axios" target="_blank">axios</a>
+- <a href="https://github.com/lodash/lodash" target="_blank">lodash</a>
+- <a href="https://www.npmjs.com/package/serialport" target="_blank">serialport</a>
+- <a href="https://github.com/postcss/postcss-js" target="_blank">postcss-js</a>
+- <a href="https://github.com/postcss/postcss-import" target="_blank">postcss-import</a>
+- <a href="https://github.com/postcss/postcss-url" target="_blank">postcss-url</a>
+- <a href="https://github.com/MoOx/postcss-cssnext" target="_blank">postcss-cssnext</a>
+- <a href="https://github.com/postcss/postcss-reporter" target="_blank">postcss-reporter</a>
+
+### Apache 2
+- <a href="https://github.com/theturtle32/WebSocket-Node" target="_blank">WebSocket-Node</a>
+- <a href="https://github.com/nomiddlename/log4js-node" target="_blank">log4js</a>
+
 ## Acknowledgements
 - [Futomi Hatano](https://github.com/futomi) helped me a lot to quickly modify his [node-echonet-lite library](https://www.npmjs.com/package/node-echonet-lite) to match my request. Thank you very much!!

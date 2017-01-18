@@ -6,6 +6,8 @@ var pluginInterface;
 exports.init = function() {
 	pluginInterface = this ;
 
+	setEOJDocs('BaseDevice',re=>{ baseDeviceEPCStr = JSON.stringify(re.epc); }) ;
+
 	EL.init((err) => {
 		if(err) { // An error was occurred
 			pluginInterface.log('Init error:'+JSON.stringify(err)) ;
@@ -182,6 +184,7 @@ function registerELDevice( address,eojArray ){
 					function genProcResult(bSet,uuidArray,argObj){
 						return new Promise(function(acept2,rjct2){
 
+
 							if( uuidArray.length == 0 ){
 								rjct2('UUID array cannot be empty') ;
 							} else {
@@ -189,9 +192,22 @@ function registerELDevice( address,eojArray ){
 									console.log('two or more uuids cannot be accepted') ;
 
 								var dev = EOJs[uuidArray[0]] ;
+								var epc = argObj.propertyName ;
+								if( !isFinite(epc) ){
+									epc = parseInt(epc) ;
+									if( !isFinite(epc) ){
+										epc = dev.doc.epc[argObj.propertyName].value ;
+										if( !isFinite(epc) ){
+											rjct2('vaild EPC is not provided.') ;
+											return ;
+										}
+									}
+								}
+
 								var args = [
-									dev.address,dev.eoj,dev.doc.epc[argObj.propertyName].value
+									dev.address,dev.eoj,epc
 									,(err,res)=>{
+
 										if( err )	rjct2(res) ;
 										else {
 											var pv ;
@@ -211,7 +227,7 @@ function registerELDevice( address,eojArray ){
 									}
 								] ;
 
-								//console.log('EL '+(bSet?'set':'get')+' call:'+args[0]+','+args[1]+','+args[2])
+								console.log('EL '+(bSet?'set':'get')+' call:'+args[0]+','+args[1]+','+args[2])
 
 								if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
 								else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
@@ -267,6 +283,7 @@ function onELDeviceFound(res,callback){
 }
 
 var fs = require('fs');
+var baseDeviceEPCStr ;
 
 function setEOJDocs(eoj_hex, onget_cb) {
   var csvpath = 'v1/plugins/'+pluginInterface.pluginPrefix+'/db/0x' + eoj_hex + '.csv';
@@ -284,7 +301,7 @@ function setEOJDocs(eoj_hex, onget_cb) {
       var retobj = {
         protocol: 'echonetlite',
         deviceType: objName,
-        epc: {}
+        epc: (baseDeviceEPCStr == undefined ? {} : JSON.parse(baseDeviceEPCStr) )
       };
 
       function isMandatory(checkStr){
@@ -319,6 +336,7 @@ function setEOJDocs(eoj_hex, onget_cb) {
     }
   });
 }
+
 
 function convSpaceSplittedPhraseIntoWikiName(instr) {
   var ret = '';
