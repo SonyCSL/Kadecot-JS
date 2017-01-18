@@ -73,6 +73,8 @@ function initWebsocketServer(){
 	});
 	server.listen(WEBSOCKET_PORT);
 
+	console.log('Listening websocket on port '+WEBSOCKET_PORT);
+
 	var wsServer = new WebSocketServer({
 	    httpServer: server, autoAcceptConnections: false
 	});
