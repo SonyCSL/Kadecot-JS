@@ -42,8 +42,7 @@
   	this procedure returns current value of the specified pin.
 
 Topics
-  net.kadecot.socket.topic.in( {"pin":PINNUMBER} ) ;
-  	PINNUMBER : an integer digit that should be one of input pins
+  net.kadecot.socket.topic.in ;
   	if the value is changed, the new value may be automatically published.
   	(Not always, depending on the client's implementation)
 */

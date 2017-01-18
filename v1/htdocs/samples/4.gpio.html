@@ -19,17 +19,24 @@ onload = function(){
 			var PROTOCOL = sdev.protocol ;
 
 			sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.gpiopins').then(setup=>{
-				sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.get',{pin:setup.in[0]}).then( re1 =>{
-					log('Pin '+setup.in[0]+' value : '+JSON.stringify(re1)) ;
-				} ) ;
+				setup.in.forEach(pinno=>{
+					sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.get',{pin:pinno}).then( re1 =>{
+						log('Pin '+pinno+' value : '+JSON.stringify(re1)) ;
+					} ) ;
 
+				}) ;
+
+				var v = 0.8 ;
+				setInterval( ()=>{
+					sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.set',{pin:setup.out[0],value:v}) ;
+					v = 1 - v ;
+				},500)
+
+				sdev.sub('net.kadecot.'+PROTOCOL+'.topic.in',repub=>{
+					log('Published:'+JSON.stringify(repub)) ;
+				})
 			}) ;
 
-			var v = 0.8 ;
-			setInterval( ()=>{
-				sdev.rpc('net.kadecot.'+PROTOCOL+'.procedure.set',{pin:setup.out[0],value:v}) ;
-				v = 1 - v ;
-			},500)
 
 			/*{ // Access to raw data
 				sdev.sub(
