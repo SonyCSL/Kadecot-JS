@@ -227,7 +227,7 @@ function registerELDevice( address,eojArray ){
 									}
 								] ;
 
-								console.log('EL '+(bSet?'set':'get')+' call:'+args[0]+','+args[1]+','+args[2])
+								//console.log('EL '+(bSet?'set':'get')+' call:'+args[0]+','+args[1]+','+args[2])
 
 								if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
 								else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
