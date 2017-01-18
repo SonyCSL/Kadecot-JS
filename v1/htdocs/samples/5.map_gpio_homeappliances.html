@@ -124,6 +124,10 @@ onload = function(){
 					}) ) ;
 					promises.push( new Promise( (ac2,re2)=>{
 						gpio.rpc('net.kadecot.'+PROTOCOL+'.procedure.gpiopins').then(setup=>{
+							if( !(setup.in instanceof Array) || !(setup.out instanceof Array) ){
+								ac2() ;
+								return ;
+							}
 							setup.in.forEach( pin_in => {
 								map_pinin_to_propidx[pin_in] = gpioinprops.length ;
 
@@ -151,7 +155,7 @@ onload = function(){
 					} ) ) ;
 				} ) ;
 
-				Promise.all(promises).then(ac) ;
+				Promise.all(promises).then(ac).catch(ac) ;
 			})
 		]).then(()=>{
 			// Display
