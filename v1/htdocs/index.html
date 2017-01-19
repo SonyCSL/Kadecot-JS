@@ -26,6 +26,9 @@
     <section class="section">
       <div class="container">
         <div class="content">
+          <h2>Devices list</h2>
+          <hr />
+          <div id='devlist_tbl'></div>
           <h2>Kadecot|JS commands</h2>
           <hr />
           <ul>
@@ -96,4 +99,22 @@
       testerLink.setAttribute('href', './APIQueryGenerator/?k=' + location.hostname);
     </script -->
   </body>
+    <script src='/js/kadecot.m.js'></script>
+    <script>
+    	onload = function(){
+    		kadecot_init({host:location.hostname}).then( function(kres){
+    			var ht = '<table border="1"><tr><td>Device ID</td><td>Protocol</td><td>deviceType</td><td>UUID</td></tr>' ;
+    			kres.devices.forEach( function(dev){
+    				ht += '<tr>'
+    					+ '<td>'+dev.deviceId+'</td>'
+    					+ '<td>'+dev.protocol+'</td>'
+    					+ '<td>'+dev.deviceType+'</td>'
+    					+ '<td>'+dev.uuid+'</td>'
+    					+ '</tr>' ;
+    			}) ;
+    			ht += '</table>' ;
+    			document.getElementById('devlist_tbl').innerHTML = ht ;
+		    }) ;
+    	} ;
+    </script>
 </html>
