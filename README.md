@@ -220,9 +220,6 @@ This application uses [crossbar.io](http://crossbar.io/docs/Installation-on-Cent
 
 ## Licenses
 
-### GNU AGPL 3.0
--<a href="http://crossbar.io/" target="_blank">Crossbar.io</a>
-
 ### MIT
 
 - <a href="https://github.com/SonyCSL/Kadecot-JS" target="_blank">Kadecot|JS</a>
@@ -242,6 +239,9 @@ This application uses [crossbar.io](http://crossbar.io/docs/Installation-on-Cent
 ### Apache 2
 - <a href="https://github.com/theturtle32/WebSocket-Node" target="_blank">WebSocket-Node</a>
 - <a href="https://github.com/nomiddlename/log4js-node" target="_blank">log4js</a>
+
+### GNU AGPL 3.0
+-　<a href="http://crossbar.io/" target="_blank">Crossbar.io</a>
 
 ## Acknowledgements
 - [Futomi Hatano](https://github.com/futomi) helped me a lot to quickly modify his [node-echonet-lite library](https://www.npmjs.com/package/node-echonet-lite) to match my request. Thank you very much!!
