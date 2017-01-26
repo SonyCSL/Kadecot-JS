@@ -11,7 +11,7 @@ var devinprops = [] , devoutprops = [] , gpioinprops = [] , gpiooutprops = [] ;
 onload = function(){
 	// Initialization
 	kadecot_init().then( function(re){
-		d( re.devices ) ;	// devices list
+		d( re.devices ) ;	// show devices list
 		var gpios = re.querydevices({ deviceType:'gpio'}) ;
 		var aircons = re.querydevices({ deviceType:'HomeAirConditioner'}) ;
 		var lights = re.querydevices({ deviceType:'GeneralLighting'}) ;
@@ -26,6 +26,17 @@ onload = function(){
 			d( 'No home appliances found.' ) ;
 			return ;
 		}
+
+		var stDevList = localStorage.devlist ;
+		var stMappings = localStorage.mappings ;
+		if( stDevList != JSON.stringify(re.devices) ){
+			stDevList = JSON.stringify(re.devices) ;
+			stMappings = '{"g2d":{},"d2g":{}}' ;
+			localStorage.devlist = stDevList ;
+			localStorage.mappings = stMappings ;
+		}
+		stDevList = JSON.parse( stDevList ) ;
+		stMappings = JSON.parse( stMappings ) ;
 
 		Promise.all([
 			new Promise( (ac,re)=>{
@@ -67,9 +78,9 @@ onload = function(){
 
 				Promise.all(promises).then(ac) ;
 			} )
+			/*
 			, new Promise( (ac,re)=>{
 				ac() ;
-				/*
 				var promises = [] ;
 				// Setup shades
 				shades.forEach(dev=>{
@@ -103,8 +114,8 @@ onload = function(){
 					} ) ) ;
 				}) ;
 				Promise.all(promises).then(ac) ;
-				*/
 			} )
+			*/
 			, new Promise( (ac,re)=>{
 				var promises = [] ;
 
@@ -163,12 +174,19 @@ onload = function(){
 			var ht = '<tr><th>GPIO</th><th>Device</th></tr>' ;
 			var gpi=0 ;
 			gpioinprops.forEach( gpin => {
+				var sel = -1 ;
+				if( stMappings.g2d[gpi] != undefined ){
+					onchange_gpio_to_dev(gpi , stMappings.g2d[gpi] /*Should be a string*/ ) ;
+					sel = parseInt(stMappings.g2d[gpi]) ;	// Number
+				}
+
 				ht += '<tr><td>'+gpin.name+'</td><td>' ;
 				ht += '<select onchange="onchange_gpio_to_dev('+(gpi++)+',this.value)">' ;
 				var doi = -1 ;
-				ht += '<option value="'+(doi++)+'">No assignment</option><br />' ;
+				ht += '<option value="'+(doi++)+'"'+(sel==-1?' selected':'')+'>No assignment</option><br />' ;
 				devoutprops.forEach(devout => {
-					ht += '<option value="'+(doi++)+'">'+devout.name +'</option><br />' ;
+					ht += '<option value="'+doi+'"'+(sel==doi?' selected':'')+'>'+devout.name +'</option><br />' ;
+					++doi ;
 				}) ;
 				ht += '</select></td></tr>' ;
 			}) ;
@@ -179,12 +197,19 @@ onload = function(){
 			ht = '<tr><th>Device</th><th>GPIO</th></tr>' ;
 			var di=0 ;
 			devinprops.forEach( din => {
+				var sel = -1 ;
+				if( stMappings.d2g[di] != undefined ){
+					onchange_dev_to_gpio(di , stMappings.d2g[di] /*Should be a string*/ ) ;
+					sel = parseInt(stMappings.d2g[di]) ;	// Number
+				}
+
 				ht += '<tr><td>'+din.name+'</td><td>' ;
 				ht += '<select onchange="onchange_dev_to_gpio('+(di++)+',this.value)">' ;
 				var gpi = -1 ;
-				ht += '<option value="'+(gpi++)+'">No assignment</option><br />' ;
+				ht += '<option value="'+(gpi++)+'"'+(sel==-1?' selected':'')+'>No assignment</option><br />' ;
 				gpiooutprops.forEach(gout => {
-					ht += '<option value="'+(gpi++)+'">'+gout.name +'</option><br />' ;
+					ht += '<option value="'+gpi+'"'+(sel==gpi?' selected':'')+'>'+gout.name +'</option><br />' ;
+					++gpi ;
 				}) ;
 				ht += '</select></td></tr>' ;
 			}) ;
@@ -195,10 +220,16 @@ onload = function(){
 
 function onchange_gpio_to_dev(gpi,si){
 	gpioinprops[gpi].targetdev = parseInt(si) ;
+
+	stMappings.g2d[gpi] = si ;
+	localStorage.mappings = JSON.stringify(stMappings) ;
 }
 
 function onchange_dev_to_gpio(di,si){
 	devinprops[di].targetgpio = parseInt(si) ;
+
+	stMappings.d2g[di] = si ;
+	localStorage.mappings = JSON.stringify(stMappings) ;
 }
 
 </script>
