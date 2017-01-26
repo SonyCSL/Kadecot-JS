@@ -88,7 +88,7 @@ exports.init = function() {
 + uuid : Kadecot内部で同一性判定に用いる、唯一の機器ID文字列。できればいつ、どのような状況で機器登録する場合も、ハードウェアが同じであれば同じ値になるとベストです。ネットを使う機器の場合は、Macアドレスなんかにするといいかもしれません。
 + deviceType : 機器の種類を表す文字列。プロトコル内に、API体系(ProcedureやTopicの名前や個数など)が違う機器が混在する場合、このdeviceTypeで区別してください。例えば、echonetliteプラグインでは、機器の種類ごとに異なるdeviceTypeが割り当てられています。サンプルではuuidと同じ値になっていますが、違う値にしても問題ありません。
 + description : 機器を説明する文章です。あまり重要ではありません。
-+ nickname : ユーザーが機器を認識しやすくするための名前文字列。例えば「リビングの照明」など。途中で変わっても大丈夫です。サンプルではuuidと同じ値になっていますが、違う値にしても問題ありません。
++ nickname : ユーザーが機器を認識しやすくするための名前文字列。例えば「リビングの照明」など。サンプルではuuidと同じ値になっていますが、違う値にしても問題ありません。
 + 登録が成功したときのコールバック関数。引数にはステータスが返ってきます。
 
 #### registerProcedures : Procedureの登録
@@ -107,7 +107,7 @@ pluginInterface.registerProcedures()の引数は配列で、複数のProcedure�
 }
 ```
 
-このように、nameはProcedure名、procedureは引数を二つ持つ関数です。
+このように、nameはProcedure名、procedureは引数を二つ持つ関数です。  
 APIクライアントから見ると、先頭にプレフィックス（プラグインが入っているディレクトリ名）と、".procedure."が付与された文字列になりますので、
 
 net.kadecot.test.procedure.TestProcedure
@@ -134,14 +134,14 @@ Publishしたい場合は事前の登録など必要ありません。Publishし
 pluginInterface.publish( "TestTopic",["TestObject"],
 	{message:'Dummy publication from TestObject'}) ;
 ```
-一つ目の引数はtopic名です。APIクライアントから見ると、戦闘にプレフィックスと".topic."という文字列が足されますので、結局
+一つ目の引数はtopic名です。APIクライアントから見ると、先頭にプレフィックスと".topic."という文字列が足されますので、結局
 
 net.kadecot.test.topic.TestTopic
 
 というTopicにSubscribeしているAPIクライアントに値が配信されます。
 
 二つ目の引数は配列で、送信元のデバイスのuuid (機器登録時に設定したもの。文字列) を要素に持ちます。
-複数デバイスからの同時Publishは、試したことがないのでやめておいた方が無難です。
+配列にはなっていますが、複数デバイスからの同時Publishは、試したことがないのでやめておいた方が無難です。
 
 三つめの引数は、APIクライアントに送信したい情報本体です。フォーマットは自由です。
 
