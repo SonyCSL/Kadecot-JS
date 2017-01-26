@@ -8,6 +8,10 @@ var d = console.log ;
 
 var devinprops = [] , devoutprops = [] , gpioinprops = [] , gpiooutprops = [] ;
 
+var stDevList = localStorage.devlist ;
+var stMappings = localStorage.mappings ;
+
+
 onload = function(){
 	// Initialization
 	kadecot_init().then( function(re){
@@ -27,8 +31,6 @@ onload = function(){
 			return ;
 		}
 
-		var stDevList = localStorage.devlist ;
-		var stMappings = localStorage.mappings ;
 		if( stDevList != JSON.stringify(re.devices) ){
 			stDevList = JSON.stringify(re.devices) ;
 			stMappings = '{"g2d":{},"d2g":{}}' ;
