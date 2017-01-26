@@ -9,7 +9,7 @@ The following video demonstrates Kadecot|JS + littleBits Arduino + ECHONET Lite 
 
 Kadecot|JS is essentially an extensible protocol converter, from device-specific one to unified WebAPI, based on JSONP or [WAMP](http://wamp-proto.org/). WAMP is a very convenient websocket-based WebAPI backend, which supports both PubSub and RPC styled information delivery.
 
-![PubSub/RPC](readme.resrc/pubsubrpc.png)
+![PubSub/RPC](docs/pubsubrpc.png)
 
 On top of WAMP, we added a JSON-based original payload. Through this API, you can easily access devices from major web browsers.
 
@@ -68,7 +68,7 @@ The other is WAMP API. It allows access to full functionalities of Kadecot|JS, w
 
 There is an interactive API URL generator for JSONP API. Access `http://[Kadecot|JS IP]:31413/` to open the following tool.
 
-![KadecotQMaker1](readme.resrc/KadecotQMaker1.png)
+![KadecotQMaker1](docs/KadecotQMaker1.png)
 
 You can choose your favorite device (from the blue dropdown list tagged as "Device") , and the property (function name) from the "Method" dropdown list.
 
@@ -76,7 +76,7 @@ You then will find the description of the selected property on the right side. P
 
 On top of the page, you get the URL of JSONP API command. You can press blue button to copy the entire command string, or press the green "Run" button to try API execution.
 
-![KadecotQMaker9](readme.resrc/KadecotQMaker9.png)
+![KadecotQMaker9](docs/KadecotQMaker9.png)
 
 This URL can also be used for JSONP call, that allows cross-domain access from other Web Apps. The callback function name should be supplied as 'callback' key (supplied as a GET parameter).
 
@@ -89,7 +89,7 @@ You can further enshort the URL by using online URL enshort services such as [bi
 The easiest way to understand how WAMP API works is to see sample files that you can find by accessing `http://[Kadecot|JS IP]:31413/samples/index.html` from your web browser.
 
 <hr />
-![KadecotQMaker9](readme.resrc/Tutorials.png)
+![KadecotQMaker9](docs/Tutorials.png)
 <hr />
 
 You can click buttons on top of the page.
@@ -177,7 +177,9 @@ $ npm install
 
 ## Plugin development
 
-You can easily add new protocol by adding a custom plugin folder with index.js file and reboot. Please check the example plugin (.kadecot/v1/plugins/com.sonycsl.kadecot.test/index.js).
+You can easily add new protocol by adding a custom plugin folder with index.js file and reboot. Please enable the sample plugin (rename .kadecot/v1/plugins/net.kadecot.test/index.sample.js to index.js).
+
+Japanese document is [here](docs/plugin-development.md)
 
 ## Difference from Android Kadecot:
 
