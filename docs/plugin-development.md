@@ -112,7 +112,7 @@ APIクライアントから見ると、先頭にプレフィックス（プラ�
 
 net.kadecot.test.procedure.TestProcedure
 
-というProcedureが定義されることになります。
+というProcedureが定義されることになります。(net.kadecot.externalだけは複数のオンラインプラグインを束ねる役割のため、例外的に少し異なる命名規則になります。)
 処理の中身はprocedureで定義される関数の中で書きます。ここではJSONオブジェクトを返答していますので、即座にこのオブジェクトがAPIクライアントに返されます。このオブジェクトの中身は自由です。
 
 返答を作るのに時間がかかる場合は、Promiseを返すこともできます。この場合は次のようになるでしょう。
@@ -138,7 +138,7 @@ pluginInterface.publish( "TestTopic",["TestObject"],
 
 net.kadecot.test.topic.TestTopic
 
-というTopicにSubscribeしているAPIクライアントに値が配信されます。
+というTopicにSubscribeしているAPIクライアントに値が配信されます。(net.kadecot.externalだけは例外的に少し異なる命名規則になります。)
 
 二つ目の引数は配列で、送信元のデバイスのuuid (機器登録時に設定したもの。文字列) を要素に持ちます。
 配列にはなっていますが、複数デバイスからの同時Publishは、試したことがないのでやめておいた方が無難です。
