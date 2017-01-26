@@ -45,7 +45,7 @@ onload = function(){
 				var promises = [] ;
 
 				// Setup aircons and lights
-				aircons.concat(lights).forEach(dev=>{
+				aircons.concat(lights).concat(shades).forEach(dev=>{
 					promises.push( new Promise( (ac2,re2)=>{
 						// input.
 						var entry_in = {
