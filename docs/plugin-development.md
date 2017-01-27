@@ -17,10 +17,9 @@ net.kadecot.test.procedure.TestProcedure
 
 net.kadecot.test.topic.TestTopic
 
-というTopicを実装しています。
-Topicには３秒おきに100回（５分間）Publishされ、そののちにTestObjectが削除されます。
+というTopicを実装しています。KadecotのControl Panel(ポート31413)を開くと、５分間だけTestObjectという機器が登録されていることがわかると思います。
 
-KadecotのControl Panel(ポート31413)を開くと、５分間だけTestObjectという機器が登録されていることがわかると思います。
+Topicには３秒おきに100回（５分間）Publishされ、そののちにTestObjectのstatusがfalseになります（機器情報そのものが削除されるわけではありません）。
 
 プラグインの機能は、機器の登録と削除、ProcedureとTopicの定義ですので、このサンプルには全て含まれていることになります。
 
@@ -30,7 +29,7 @@ KadecotのControl Panel(ポート31413)を開くと、５分間だけTestObject�
 
 まず、プラグインはKadecot起動時に.kadecot/v1/pluginsの下のディレクトリをスキャンすることで行われます。フォルダの下にindex.jsがあればこのファイルがエントリーポイントになります。index.jsがなければプラグインにはなりません。このスキャンは起動時にしか行われないので、新たなプラグインを追加したらKadecotのrestartが必要です。
 
-ディレクトリ名は「プレフィックス」と呼び、重要な意味があります。プラグインが実現するProcedureやTopicは、必ずこの名前からはじまることになります。名前の衝突を避けるため、お持ちのドメイン名を逆に並べてお使いください。Sony CSLではcom.sonycsl.kadecotとnet.kadecotを使っています。
+ディレクトリ名は「プレフィックス」と呼び、重要な意味があります。プラグインが実現するProcedureやTopicは、必ずこの名前からはじまることになります。名前の衝突を避けるため、お持ちのドメイン名を逆に並べてお使いください。Sony CSLではcom.sonycsl.kadecotとnet.kadecotを使っています。（com.sonycsl.kadecotはAndroid版との互換性のために使っているもので、ゆくゆくはAndroid版と同時にnet.kadecotに一本化したいと思っています）
 
 サンプルプラグインのソースは次のようになっています。
 
@@ -108,12 +107,12 @@ pluginInterface.registerProcedures()の引数は配列で、複数のProcedure�
 ```
 
 このように、nameはProcedure名、procedureは引数を二つ持つ関数です。  
-APIクライアントから見ると、先頭にプレフィックス（プラグインが入っているディレクトリ名）と、".procedure."が付与された文字列になりますので、
+APIクライアントから見ると、nameの先頭にプレフィックス（プラグインが入っているディレクトリ名）と、".procedure."が付与された文字列になりますので、
 
 net.kadecot.test.procedure.TestProcedure
 
-というProcedureが定義されることになります。(net.kadecot.externalだけは複数のオンラインプラグインを束ねる役割のため、例外的に少し異なる命名規則になります。)
-処理の中身はprocedureで定義される関数の中で書きます。ここではJSONオブジェクトを返答していますので、即座にこのオブジェクトがAPIクライアントに返されます。このオブジェクトの中身は自由です。
+というProcedureが定義されることになります。(net.kadecot.externalだけは複数のオンラインプラグインを束ねる役割のため、例外的に少し異なる変換規則になります。)
+処理の中身はprocedureで定義される関数の中で書きます。ここではJSONオブジェクトをreturnしていますので、即座にこのオブジェクトがAPIクライアントに返されます。このオブジェクトの中身は自由です。
 
 返答を作るのに時間がかかる場合は、Promiseを返すこともできます。この場合は次のようになるでしょう。
 
@@ -138,7 +137,7 @@ pluginInterface.publish( "TestTopic",["TestObject"],
 
 net.kadecot.test.topic.TestTopic
 
-というTopicにSubscribeしているAPIクライアントに値が配信されます。(net.kadecot.externalだけは例外的に少し異なる命名規則になります。)
+というTopicにSubscribeしているAPIクライアントに値が配信されます。(procedureと同様、net.kadecot.externalだけは例外的に少し異なる変換規則になります。)
 
 二つ目の引数は配列で、送信元のデバイスのuuid (機器登録時に設定したもの。文字列) を要素に持ちます。
 配列にはなっていますが、複数デバイスからの同時Publishは、試したことがないのでやめておいた方が無難です。
@@ -154,7 +153,82 @@ pluginInterface.unregisterDevice( "TestObject") ;
 
 プラグインの作り方は以上です。
 
-## プラグインのブートシーケンス
+## Kadeotブートの流れ
+
+Kadecotはcrossbarのゲストプロセスとして立ち上げられます。[.crossbar/config.json](.crossbar/config.json)の一番下にその設定が書いてあります。
+まず[main.js](main.js)が起動し、ここは空っぽで、そこから呼び出される[v1/provider.js](v1/provider.js)がメインロジックです。このv1というのは、現在用いているRealmを表しています。将来的にAPIがバージョンアップした場合、v1はそのまま生かして新たな部分を追加していくためにこうしています。ただし、v1内でもパーミッション制御のために、さらに細かくRealmを分けています。詳しくは後述しますが、このサブRealmの名前はv1.0とかv1.1とか、ドットで区切って数字を追加することにしています。CrossbarではRealmは動的に追加できないらしいので、.crossbar/config.jsonにあらかじめ定義してあります（デフォルトだとv1.0だけ追加されています）。
+
+#### 管理プラグインの接続
+
+さて、Kadecotの主な機能はプラグインにあるので、管理プラグイン[provider.js](v1/provider.js)では他のプラグインの管理をするのが主な役割です。
+
+管理プラグインは最初にスーパーユーザーとしてCrossbarに接続します。認証には[CrossbarのAuthentication機能](http://crossbar.io/docs/Authentication/)を用いています。CrossbarのAuthentication機能は、ユーザーを認証するための４つの方法を提供しています。スーパーユーザーはstaticなWAMP-Ticketによる認証で、ユーザー名（Crossbarの用語でいえばrole）はsuperuser、パスワードは起動時に動的に生成されます。[kadecot](kadecot)という起動スクリプトの中にROOTPASSという環境変数を生成しているところがあります。これをCrossbarと管理プラグインの双方で取得し、superuserのパスワードとして用います。
+
+一般ユーザーはDynamicなWAMP-CRA認証で、ユーザーが接続してきたときにその認証情報が正しいかどうかの確認は管理プラグインが行います。そこで、スーパーユーザーがCrossbarに接続したら、このKadecotに接続可能なユーザー一覧（アカウント情報）を取得します。アカウント情報は[users.json](users.json)に書かれています。
+
+[CrossbarのAuthentication機能](http://crossbar.io/docs/Authentication/)では、様々なprocedureのcallやregister、topicのsubscribeとpublishが可能かどうか、それぞれ認可レベルを細かく設定することができます。スーパーユーザーは全てのprocedure,topicへの自由なアクセス権限を持ちます。他のユーザーはCrossbarから提供される管理機能であるwamp.からはじまるprocedure,topicにはアクセスできず、さらにKadecotで提供される管理機能,admin.からはじまるものも、procedureはcallだけ、topicはアクセス不可になっています。例外的に、機器の変更通知を受け取るためのadmin.ondevicechangedというtopicのみsubscribe可です。このあたりの設定は、全て[.crossbar/config.json](.crossbar/config.json)の中に書いてあります。
+
+管理プラグインは、ユーザー認証機能を実装するとともに、以下のprocedureを実装します。
+
+**com.sonycsl.kadecot.provider.procedure.getDeviceList**
+
+APIクライアントからの要求に応じてデバイス一覧を提供するためのものです。互換性のために昔と同じprocedure名になっていますが、本当はadmin.devicelistとかにしたいところです。
+
+**admin.registerplugin**
+
+プラグインがCrossbarに接続したときに、その接続情報を教えてもらうためのものです。
+もし、このprocedure呼び出し時にプラグインから渡ってくるprefix(ディレクトリ名)が、実際にないものだった場合はwamp.session.killというCrossbar独自procedureにより、このプラグインを切り離します。
+
+**admin.registerdevice**
+
+プラグインでデバイスが見つかった時に、その情報を教えてもらうためのものです。
+
+**admin.unregisterdevice**
+
+プラグインでデバイスが削除された時に、その通知を受け取るためのものです。
+
+また、機器構成が変わったことを検知したときには、次のtopicにそのことをpublishします。
+
+**admin.ondevicechanged**
+
+さらに、プラグインセッション（プラグインとCrossbarとの接続）が何らかの原因により切れたことを検知するために、以下のCrossbar独自topicにsubscribeします。
+
+**wamp.session.on_leave**
 
 
 
+##### ※Realmによる切り分け
+
+管理プラグインは、定義されているすべてのRealmに接続し、上記の処理を行います。実はKadecotは最初からマルチユーザーに対応しており、ログイン時のアカウントに応じて別のRealmに接続を転送します。管理プラグインだけでなく、次に説明する各デバイスプラグインも同様です。この機能は、Realmごとに違う構成のプラグインを接続し、APIクライアント対して見せる機能を柔軟に切り替えるためのものです。
+ただし、この機能は未完成であり、接続するプラグインを変化させるためのUIもありません。将来課題です。
+
+#### プラグインの起動と接続
+
+認証の設定が終わったら、いよいよプラグインをロードします。[provider.js](v1/provider.js)内connect_plugins()の中でその処理を行っています。プラグインフォルダ内をスキャンし、見つけたディレクトリごとに、Crossbarへの接続を行います。この時の認証は、最初の一般ユーザー(デフォルトユーザー)として行いますので、権限も限られています。
+
+#### セッション確立後の処理
+
+セッションが確立したら、PluginInterfaceオブジェクトを作ります。この時の処理は、[v1/plugin-interface.js](v1/plugin-interface.js)に書かれています。
+
+まず、つながったこと自体を管理プラグインに通知するために、admin.registerpluginを呼び出します。もしこのときまでにすでにデバイスが見つかっている場合はadmin.registerdeviceを、さらに登録したいprocedureがある場合はその登録も行います。実際には最初の接続時にすでにデバイスが見つかっているようなことは稀ですが、一旦管理プラグインとの接続が切れ、その後再接続できた場合などに、既知のデバイスやprocedureが存在することがあり、迅速に復帰することができます。
+
+PluginInterface内の残りの処理としては、様々なプラグインから使われる共通の関数、registerDevice(), unregisterDevice(), registerProcedures(), publish()を作ります。
+
+PluginInterfaceができあがったら、それを引数としてディレクトリ内index.jsを起動します。
+プラグイン内ではPluginInterfaceを介して機器登録やprocedure/topicなどの処理を記述します。本ドキュメント最初の方でご説明したとおりです。
+
+## 設定の変更
+
+プラグインとは直交な話ですが、Realm（アカウント）を増やすには、[v1/tools/genAccounts.sh](v1/tools/genAccounts.sh)をお使いください。
+
+## 他のWAMPルータに入れ替えるには
+
+Kadecotの本質的なところはプラグインにあります。Crossbar.ioは高機能で使いやすいのですが、Pythonで実行されていることもあり、パフォーマンスの問題もありますので、他のルータに入れ替えたいと思う方もいるかもしれません。また、プラグインとルータの間の通信もWAMPなので、プラグインとルータが別サーバ上で実装されていてもよいのではと考える方もいるでしょう。プラグインの実装を変えずにそういったことが実現できれば便利です。以下、そうするにはどうしたらいいか、想像ベースでメモしてみます。
+
+一番簡単にそれを実現するには、PluginInterfaceを入れ替えるのがよいです。プラグイン本体が直接Kadecot固有機能やWAMPに触れることはなく、PluginInterfaceのregisterDevice(), unregisterDevice(), registerProcedures(), publish()を介して機能を定義しています。プラグイン起動時に、exportされているinit()を呼んでください。
+プラグインの中には、外部からファイルを読み込むものもありますので（例えばv1/plugins/net.kadecot.serial/ports.txtなど）、プラグインが存在する相対パスは併せておいた方が無難でしょう。
+
+このアプローチを取れば、Kadecotのプラグインを他のシステムで用いることができるでしょう。しかし、Kadecot APIを用いたクライアントからの見え方はかなり異なるものになるでしょう。
+API互換を達成するには、認証機能やRealmを合わせるなどの工夫も必要になると思います。どのレベルでこれを実現するかは難しいところかもしれませんが、PluginInterfaceは変更せず、新システムの側でwamp.*やadmin.*の機能を実装するという手もあります。基本的に普通のWAMPのRPC,PubSubのフレームワークで実現されています。
+
+sessionidをやり取りしている部分があり、これはプラグインが外れてしまった場合やパーミッション管理のために使っていますが、API互換を実現するためには外した方がよいかもしれません。
