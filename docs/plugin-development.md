@@ -27,7 +27,7 @@
 
 ## プラグインの実行
 
-プラグインは直接WAMPのアクセスを行ったりセッション情報を管理プラグインに送ったりすることはなく、常にPluginInterfaceオブジェクトを介して行います。下図「接続管理」とは、Kadecotで用いているWAMP RooterであるCrossbarの独自機能を用いて、プラグインの死活管理などを行います。
+プラグインは直接WAMPのアクセスを行ったりセッション情報を管理プラグインに送ったりすることはなく、常にPluginInterfaceオブジェクトを介して行います。下図「接続管理情報」とは、Kadecotで用いているWAMP RooterであるCrossbarの独自機能を用いた、プラグインの接続状況に関する情報などです。
 
 ![PluginExecution](PluginExecution.png)
 
