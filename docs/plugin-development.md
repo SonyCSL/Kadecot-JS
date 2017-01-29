@@ -8,18 +8,18 @@
 
 ## サンプルプラグイン
 
-** $(HOME)/.kadecot/v1/plugins/net.kadecot.test/index.sample.js **
+**$(HOME)/.kadecot/v1/plugins/net.kadecot.test/index.sample.js**
 
 はサンプルプラグインのソースです。
 このファイルをindex.jsにリネームし、Kadecotをrestartすると動くので試してみてください。
 
 このプラグイン内では、TestObjectという機器オブジェクトを登録し、その中で
 
-** net.kadecot.test.procedure.TestProcedure **
+**net.kadecot.test.procedure.TestProcedure**
 
 というProcedureと、
 
-** net.kadecot.test.topic.TestTopic **
+**net.kadecot.test.topic.TestTopic**
 
 というTopicを実装しています。KadecotのControl Panel(ポート31413)を開くと、TestObjectという機器が登録されていることがわかると思います。Topicには３秒おきに100回（５分間）Publishされ、そののちにTestObjectのstatusがfalseになります（機器情報そのものが削除されるわけではありません）。
 
