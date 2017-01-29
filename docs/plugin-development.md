@@ -2,24 +2,34 @@
 
 プラグインの仕組みと作り方について解説します。
 
+プラグインとはKadecot|JS (以下Kadecot) の中心的な機能を提供する部分です。つまり、機器ごとに異なるプロトコルをWAMPに変換し、Kadecot APIの体系で使えるようにします。以下、プラグインの動作と作り方について説明しますが、WAMPに関する基本的概念(Procedure文字列を用いたRPC、Topic文字列を用いたPubSub)については既知とします。
+
+![RPCPubSub](RPC_PubSub.png)
+
 ## サンプルプラグイン
 
-$(HOME)/.kadecot/v1/plugins/net.kadecot.test/index.sample.js
+** $(HOME)/.kadecot/v1/plugins/net.kadecot.test/index.sample.js **
 
 はサンプルプラグインのソースです。
 このファイルをindex.jsにリネームし、Kadecotをrestartすると動くので試してみてください。
 
 このプラグイン内では、TestObjectという機器オブジェクトを登録し、その中で
 
-net.kadecot.test.procedure.TestProcedure
+** net.kadecot.test.procedure.TestProcedure **
 
 というProcedureと、
 
-net.kadecot.test.topic.TestTopic
+** net.kadecot.test.topic.TestTopic **
 
 というTopicを実装しています。KadecotのControl Panel(ポート31413)を開くと、TestObjectという機器が登録されていることがわかると思います。Topicには３秒おきに100回（５分間）Publishされ、そののちにTestObjectのstatusがfalseになります（機器情報そのものが削除されるわけではありません）。
 
 プラグインの機能は、機器の登録と削除、ProcedureとTopicの定義ですので、このサンプルには全て含まれていることになります。
+
+## プラグインの実行
+
+プラグインは直接WAMPのアクセスを行ったりセッション情報を管理プラグインに送ったりすることはなく、常にPluginInterfaceオブジェクトを介して行います。下図「接続管理」とは、Kadecotで用いているWAMP RooterであるCrossbarの独自機能を用いて、プラグインの死活管理などを行います。
+
+![PluginExecution](PluginExecution.png)
 
 ## プラグインの書き方
 
@@ -158,15 +168,18 @@ pluginInterface.unregisterDevice( "TestObject") ;
 
 # Kadecotブートの流れ
 
+![PluginBootFlow](PluginBootFlow.png)
+
 Kadecotはcrossbarのゲストプロセスとして立ち上げられます。[.crossbar/config.json](.crossbar/config.json)の一番下にその設定が書いてあります。
 まず[main.js](main.js)が起動し、ここはラッパーで、そこから呼び出される管理プラグイン[v1/provider.js](v1/provider.js)がメインロジックです。このv1というのは、現在用いているRealmを表しています。将来的にAPIがバージョンアップした場合、v1はそのまま生かして新たな部分を追加していくためにこうしています。ただし、実際にはv1内でもユーザー管理のために、さらに細かくRealmを分けています。詳しくは後述しますが、このサブRealmの名前はv1.0とかv1.1とか、ドットで区切って数字を追加することにしています。CrossbarではRealmは動的に追加できないらしいので、.crossbar/config.jsonにあらかじめ定義してあります。
 デフォルトだとデフォルトユーザー用のv1.0だけ追加されています。増やすには、[v1/tools/genAccounts.sh](v1/tools/genAccounts.sh)を使うことができます。
 
 #### 管理プラグインの接続
 
-さて、Kadecotの主な機能はプラグインにあるので、管理プラグイン[provider.js](v1/provider.js)では他のプラグインの管理をするのが主な役割です。それ以外に、JSONPサーバの立ち上げも行います。JSONPサーバの実体は[v1/JSONPRouter.js](v1/JSONPRouter.js)にありますが、本ドキュメントでは説明しません。単なる普通のAPIクライアントのRPCコールのラッパーを提供しているだけです。
+管理プラグイン[provider.js](v1/provider.js)は他のプラグインの管理をするのが主な役割です。それ以外に、JSONPサーバの立ち上げも行います。JSONPサーバの実体は[v1/JSONPRouter.js](v1/JSONPRouter.js)にありますが、本ドキュメントでは説明しません。単なる普通のWAMP APIクライアントのRPCコールのラッパーを提供しているだけです。
 
-管理プラグインは最初にスーパーユーザーとしてCrossbarに接続します。認証には[CrossbarのAuthentication機能](http://crossbar.io/docs/Authentication/)を用いています。CrossbarのAuthentication機能は、ユーザーを認証するための４つの方法を提供しています。スーパーユーザーはstaticなWAMP-Ticketによる認証で、ユーザー名（Crossbarの用語でいえばrole）はsuperuser、パスワードは起動時に動的に生成されます。[kadecot](kadecot)という起動スクリプトの中にROOTPASSという環境変数を生成しているところがあります。これをCrossbarと管理プラグインの双方で取得し、superuserのパスワードとして用います。
+管理プラグインは最初に**スーパーユーザー**としてCrossbarに接続します。認証には[CrossbarのAuthentication機能](http://crossbar.io/docs/Authentication/)を用いています。WAMPそのものにも認証機能があるようですが、どこまでがWAMP標準機能で、どこがCrossbar独自機能なのかはわかりません。すみません。
+いずれにせよCrossbarのAuthentication機能は、ユーザーを認証するための４つの方法を提供しています。スーパーユーザーはstaticなWAMP-Ticketによる認証で、ユーザー名（Crossbarの用語でいえばrole）はsuperuser、パスワードは起動時に動的に生成されます。[kadecot](kadecot)という起動スクリプトの中にROOTPASSという環境変数を生成しているところがあります。これをCrossbarと管理プラグインの双方で取得し、superuserのパスワードとして用います。
 
 APIクライアント（一般ユーザー）やプラグインはDynamicなWAMP-CRA認証です。他のクライアントが接続してきたときにその認証情報が正しいかどうかの確認も管理プラグインが行います（この認証は、常にRealm v1で行います）。そこで、スーパーユーザーがCrossbarに接続したら、このKadecotに接続可能なユーザー一覧（アカウント情報）を取得します。アカウント情報は[users.json](users.json)に書かれています。
 
@@ -200,6 +213,10 @@ APIクライアントからの要求に応じてデバイス一覧を提供す�
 さらに、プラグインセッション（プラグインとCrossbarとの接続）が何らかの原因により切れたことを検知するために、以下のCrossbar独自topicにsubscribeします。
 
 **wamp.session.on_leave**
+
+
+#### 実行時
+
 
 ##### Realmによるユーザーへの機能切り分け（実装中）
 
