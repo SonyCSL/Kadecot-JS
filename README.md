@@ -26,8 +26,8 @@ On top of WAMP, we added a JSON-based original payload. Through this API, you ca
 ### Installation
 You can install Kadecot|JS on most Linux OS by the following one-line command on bash shell (curl and git are prerequisite):
 
-```sh
-bash> bash <(curl -skL https://git.io/kadecotjs-install)
+```bash
+$ bash <(curl -skL https://git.io/kadecotjs-install)
 ```
 It may take several minutes to install all necessary libraries (about 5 to 10 minutes on Raspberry Pi 3. Please be patient!)
 
