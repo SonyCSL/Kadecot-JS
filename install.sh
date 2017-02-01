@@ -50,9 +50,9 @@ function installPip () {
     else
       # pip のアップデート
       echo "Installing pip (Please wait)"
-      sudo pip install -U pip >/dev/null
-      sudo pip install -U setuptools >/dev/null
-      sudo pip install -U six >/dev/null
+      sudo -H pip install -U pip >/dev/null
+      sudo -H pip install -U setuptools >/dev/null
+      sudo -H pip install -U six >/dev/null
       echo -e "Done.\n"
       return 0
     fi
@@ -84,7 +84,8 @@ function installCrossbar () {
   echo "Installing Crossbar.io (Please wait)"
 
   # Crossbar のインストール（1行目）に失敗したら，エラーを返す（2行目）
-  ( sudo pip install "crossbar>=${CROSSBAR_VERSION}" >/dev/null ) || \
+　# -Hオプションは、ルート権限でユーザーディレクトリに.cacheを掘ろうとして怒られることがあるため。
+  ( sudo -H pip install "crossbar>=${CROSSBAR_VERSION}" >/dev/null ) || \
   ( ( echo -e "\n*** Exec \"Install Required Packages\" first. ***\n" >&2 ) && return 255 )
 
   echo -e "Done.\n"
