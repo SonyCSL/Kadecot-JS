@@ -184,30 +184,29 @@ function registerELDevice( address,eojArray ){
 					function genProcResult(bSet,uuidArray,argObj){
 						return new Promise(function(acept2,rjct2){
 
-
 							if( uuidArray.length == 0 ){
 								rjct2('UUID array cannot be empty') ;
 							} else {
 								if( uuidArray.length>1 )
 									console.log('two or more uuids cannot be accepted') ;
-
 								var dev = EOJs[uuidArray[0]] ;
 								var epc = argObj.propertyName ;
-								if( !isFinite(epc) ){
-									epc = parseInt(epc) ;
-									if( !isFinite(epc) ){
+
+								if( typeof epc == 'string' ){
+									if( isFinite(epc) ) epc = parseInt(epc) ;
+									else {
 										epc = dev.doc.epc[argObj.propertyName].value ;
 										if( !isFinite(epc) ){
 											rjct2('vaild EPC is not provided.') ;
 											return ;
 										}
+
 									}
 								}
 
 								var args = [
 									dev.address,dev.eoj,epc
 									,(err,res)=>{
-
 										if( err )	rjct2(res) ;
 										else {
 											var pv ;
@@ -223,11 +222,13 @@ function registerELDevice( address,eojArray ){
 												,propertyValue:pv
 												,digest:res.message.prop[0].edt
 											}) ;
+
 										}
 									}
 								] ;
 
-								//console.log('EL '+(bSet?'set':'get')+' call:'+args[0]+','+args[1]+','+args[2])
+								//if( bSet )	console.log('EL set:'+args[0]+','+args[1]+','+args[2]+','+JSON.stringify(argObj.propertyValue)) ;
+								//else		console.log('EL get:'+args[0]+','+JSON.stringify(args[1])+','+args[2]) ;
 
 								if( bSet )	EL.setPropertyValue(args[0],args[1],args[2],(new Buffer(argObj.propertyValue)),args[3]) ;
 								else		EL.getPropertyValue(args[0],args[1],args[2],args[3]) ;
@@ -317,6 +318,13 @@ function setEOJDocs(eoj_hex, onget_cb) {
           dblines.shift();
           continue;
         }
+
+        // Very heuristic dirty parser to fit into yaml name
+        l = l.split('“') ;
+        var lss = l.shift() ;
+        l.forEach(lt => {lss += 'G' + lt.substring(0,1).toLowerCase()+lt.substring(1);}) ;
+       	l = lss ;
+        l = l.split('”').join('H') ;
         var t = l.split(',');
         var epcName = convSpaceSplittedPhraseIntoWikiName(t[1]);
         retobj.epc[epcName] = {
