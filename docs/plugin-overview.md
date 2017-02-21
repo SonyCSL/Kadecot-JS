@@ -84,4 +84,4 @@ JSONP APIサーバは31413ポートに開かれるWebサーバです。JSONPに�
 
 # 実装についてもっと知りたい場合は
 
-[plugin-development.md](docs/plugin-development.md)を参照してください。
+[plugin-development.md](plugin-development.md)を参照してください。

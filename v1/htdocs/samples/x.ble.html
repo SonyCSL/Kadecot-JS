@@ -1,0 +1,27 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script src='http://app.kadecot.net/js/kadecot.m.js'></script>
+<script>
+
+onload = function(){
+	kadecot_init().then( function(k){
+		var mb = k.querydevices({protocol:'ble',deviceType:'MESHButton'}) ;
+		if( mb.length==0 ) log('Not found') ;
+		else
+			mb[0].sub('net.kadecot.ble.topic.message',log) ;
+	} ) ;
+} ;
+
+
+function log(text){
+	var ele = document.createElement("hr");
+	var str = document.createTextNode( typeof text == 'string' ? text : JSON.stringify(text) );
+	ele.appendChild(str);
+	document.body.appendChild(ele);
+}
+</script>
+</head>
+<body>
+</body>
+</html>

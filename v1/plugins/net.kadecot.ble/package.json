@@ -1,0 +1,22 @@
+{
+  "name": "node_mesh_button",
+  "version": "0.1.0",
+  "description": "A script for accessing Sony MESH",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/comoc/node_mesh_button.git"
+  },
+  "keywords": [
+    "MESH"
+  ],
+  "author": "Akihiro Komori",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comoc/node_mesh_button/issues"
+  },
+  "homepage": "https://github.com/comoc/node_mesh_button#readme"
+}

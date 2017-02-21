@@ -179,7 +179,7 @@ $ npm install
 
 You can easily add new protocol by adding a custom plugin folder with index.js file and reboot. Please enable the sample plugin (rename .kadecot/v1/plugins/net.kadecot.test/index.sample.js to index.js).
 
-Japanese document is [here](docs/plugin-development.md)
+Japanese document is [here](docs/plugin-overview.md)
 
 ## Difference from Android Kadecot:
 
