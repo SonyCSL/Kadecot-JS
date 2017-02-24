@@ -81,7 +81,7 @@
             <li><a href="https://github.com/MoOx/postcss-cssnext" target="_blank">postcss-cssnext</a></li>
             <li><a href="https://github.com/postcss/postcss-reporter" target="_blank">postcss-reporter</a></li>
           </ul>
-          <b>GNU AGPL 3.0</b>
+          <b>AGPL 3.0</b>
           <ul>
             <li><a href="http://crossbar.io/" target="_blank">Crossbar.io</a></li>
           </ul>
@@ -103,13 +103,15 @@
     <script>
     	onload = function(){
     		kadecot_init({host:location.hostname}).then( function(kres){
-    			var ht = '<table border="1"><tr><td>Device ID</td><td>Protocol</td><td>deviceType</td><td>UUID</td></tr>' ;
+    			var ht = '<table border="1"><tr><td>Device ID</td><td>Nickname</td><td>Protocol</td><td>deviceType</td><td>Prefix</td></tr>' ;
     			kres.devices.forEach( function(dev){
     				ht += '<tr>'
     					+ '<td>'+dev.deviceId+'</td>'
+    					+ '<td>'+dev.nickname+'</td>'
     					+ '<td>'+dev.protocol+'</td>'
     					+ '<td>'+dev.deviceType+'</td>'
-    					+ '<td>'+dev.uuid+'</td>'
+    					+ '<td>'+dev.prefix+'</td>'
+    					//+ '<td>'+dev.uuid+'</td>'
     					+ '</tr>' ;
     			}) ;
     			ht += '</table>' ;
