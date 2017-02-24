@@ -103,14 +103,14 @@
     <script>
     	onload = function(){
     		kadecot_init({host:location.hostname}).then( function(kres){
-    			var ht = '<table border="1"><tr><td>Device ID</td><td>Nickname</td><td>Protocol</td><td>deviceType</td><td>Prefix</td></tr>' ;
+    			var ht = '<table border="1"><tr><td>Device ID</td><td>Nickname</td><td>Protocol</td><td>deviceType</td></tr>' ;
     			kres.devices.forEach( function(dev){
     				ht += '<tr>'
     					+ '<td>'+dev.deviceId+'</td>'
     					+ '<td>'+dev.nickname+'</td>'
     					+ '<td>'+dev.protocol+'</td>'
     					+ '<td>'+dev.deviceType+'</td>'
-    					+ '<td>'+dev.prefix+'</td>'
+    					//+ '<td>'+dev.prefix+'</td>'
     					//+ '<td>'+dev.uuid+'</td>'
     					+ '</tr>' ;
     			}) ;
