@@ -17,7 +17,7 @@ Crossbar.ioのゲストプロセスとして起動されるメインのプラグ
 v1/pluginsの下の、ユニークな名前のディレクトリの下に配置されるmain.jsをエントリーポイントとしたプラグインです。管理プラグインによって起動されます。その時に引数として、WAMPルータとのコネクションも保持している、PluginInterfaceオブジェクトを受けとります。このオブジェクトを用いて、機器発見や消失の通知や、RPC/PubSubの機能実装を行います。
 
 + 外部プラグイン
-v1/plugons/net.kadecot.external/main.jsに配置されている、外部サービスに接続するためのプラグインです。通常プラグインとほとんど同様ですが、topicやprocedureの命名規則がわずかに異なります。
+v1/plugins/net.kadecot.external/main.jsに配置されている、外部サービスに接続するためのプラグインです。通常プラグインとほとんど同様ですが、topicやprocedureの命名規則がわずかに異なります。
 
 ![PluginBootFlow](PluginBootFlow.png)
 
@@ -44,7 +44,10 @@ WAMPセッションが確立したら、管理プラグインはPluginInterface�
 
 プラグイン側の処理としては、新しい機器を見つけたり、接続が切れたりした場合にPluginInterfaceオブジェクトのメソッドを用いて逐一管理プラグインにそれを通知します。管理プラグインはその情報を用いて、機器リストを作り、死活情報も保存していきます。また、procedureやtopicなどを登録し、処理の本体を実装するときにもPluginInterafceの目祖度呼び出しを行います。
 
-プラグインとWAMPルータとの接続が切れると、Crossbar.ioでは特定のtopicにそれが通知されますので、管理プラグインはその情報を用いて危機管理に役立てます。
+プラグインとWAMPルータとの接続が切れると、Crossbar.ioでは特定のtopicにそれが通知されますので、管理プラグインはその情報を用いて機器管理に役立てます。
+
+![PluginExecution](PluginExecution.png)
+
 
 #### JSONP APIサーバ立ち上げ
 
