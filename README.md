@@ -1,3 +1,5 @@
+<font color='red'>This repository is not maintained actively. If you are still interested in WebAPI for ECHONET Lite, I recommend you to check [PicoGW](https://github.com/KAIT-HEMS/PicoGW) by Kanagawa Institute of Technology.</font>
+
 # Kadecot|JS Overview
 
 Kadecot|JS is an open-source home gateway server implemented by Node.js + [Crossbar.io](http://crossbar.io/), runs on Raspberry pi 3 or other linux-based platforms.  
