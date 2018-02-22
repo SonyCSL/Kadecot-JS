@@ -1,4 +1,4 @@
-<font color='red'>This repository is not maintained actively. If you are still interested in WebAPI for ECHONET Lite, I recommend you to check [PicoGW](https://github.com/KAIT-HEMS/PicoGW) by Kanagawa Institute of Technology.</font>
+<font color='red'>This repository is not maintained actively. If you are still interested in WebAPI for ECHONET Lite, I recommend you to check [PicoGW](https://github.com/KAIT-HEMS/node-picogw) by Kanagawa Institute of Technology.</font>
 
 # Kadecot|JS Overview
 
